@@ -9,3 +9,7 @@ Projet pour mettre à jour le site internet du club Trampoline Intercité. Conç
 - Permettre l'obtention d'informations efficacement
 - Faciliter la modification de l'information fournie
 - Faciliter les mises à jour régulières ou spontannées
+
+### Déploiement en production
+
+La branche main est automatiquement deployée en production.
