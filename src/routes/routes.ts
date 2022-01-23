@@ -24,5 +24,13 @@ enum CommunicationRoutes {
 	RULES = "reglements",
 }
 
-export const Routes = { ...BaseRoutes, ...ActivityRoutes, ...TeamRoutes, ...CommunicationRoutes };
-export type Route = typeof BaseRoutes & typeof ActivityRoutes & typeof TeamRoutes & typeof CommunicationRoutes;
+enum StaticRoutes {
+	SPORT_N_ROLL = "https://app.sportnroll.com/#/registration/21ef84af-f7c1-4f3e-a182-729a8ca963f8",
+}
+
+export const Routes = { ...BaseRoutes, ...ActivityRoutes, ...TeamRoutes, ...CommunicationRoutes, ...StaticRoutes };
+export type Route = typeof BaseRoutes &
+	typeof ActivityRoutes &
+	typeof TeamRoutes &
+	typeof CommunicationRoutes &
+	typeof StaticRoutes;
