@@ -1,3 +1,4 @@
+import "material-icons/iconfont/material-icons.css";
 import "@styles/globals.scss";
 
 import { AppProps } from "next/app";

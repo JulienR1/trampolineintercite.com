@@ -1,3 +1,15 @@
 @import "resets.scss";
 @import "fonts.scss";
 @import "colors.scss";
+
+@import "../src/components/styles.scss";
+
+:root {
+	@for $i from 0 through 10 {
+		--padding-#{$i}: calc(0.15em * (#{$i} + 1));
+	}
+
+	@for $i from 0 through 20 {
+		--delay-#{$i}: calc(50ms * (#{$i} + 1));
+	}
+}
