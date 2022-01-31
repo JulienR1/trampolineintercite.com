@@ -1,0 +1,131 @@
+@import "./../../../styles/mixins/focusBorder.scss";
+
+@mixin dropdown__options__slider--open {
+	@include laptop {
+		.dropdown__title .dropdown__option {
+			color: var(--text-contrast);
+		}
+	}
+
+	.dropdown__options {
+		visibility: visible;
+		transition-delay: 0ms;
+
+		.dropdown__options__slider {
+			transform: translateY(0%);
+			opacity: 1;
+		}
+	}
+}
+
+.dropdown {
+	background: var(--background-primary);
+	font-size: var(--text-size-4);
+	position: relative;
+	text-align: center;
+	display: block;
+
+	.dropdown__title {
+		font-weight: var(--bold);
+		overflow: hidden;
+		display: flex;
+		width: 100%;
+
+		.dropdown__option {
+			flex: 1;
+			align-self: center;
+		}
+
+		.dropdown__toggle {
+			cursor: pointer;
+			user-select: none;
+			transition: all var(--delay-6) ease;
+
+			span {
+				font-size: 1.3em;
+			}
+		}
+	}
+
+	.dropdown__options {
+		position: absolute;
+		visibility: hidden;
+		font-size: 0.8em;
+		overflow: hidden;
+		display: block;
+		width: 100%;
+		top: 100%;
+		left: 0;
+
+		background-color: var(--background-primary);
+		transition: visibility 0s ease var(--delay-6);
+
+		.dropdown__options__slider {
+			opacity: 0;
+			transform: translateY(-100%);
+			transition: opacity var(--delay-6) ease, transform var(--delay-6) ease;
+
+			.dropdown__listoption .dropdown__option {
+				padding: var(--padding-1);
+			}
+
+			.dropdown__option {
+				display: block;
+				line-height: 1em;
+
+				&.dropdown__option--interactable {
+					cursor: pointer;
+				}
+			}
+		}
+	}
+
+	&.dropdown--toggled {
+		.dropdown__title .dropdown__toggle {
+			transform: rotate(180deg);
+		}
+
+		@include dropdown__options__slider--open;
+	}
+
+	.dropdown__option {
+		@include focus-border;
+	}
+}
+
+.dropdown.dropdown--hoverable {
+	&:hover,
+	&:focus,
+	&:focus-within {
+		@include dropdown__options__slider--open;
+	}
+}
+
+@include laptop {
+	.dropdown {
+		.dropdown__title,
+		.dropdown__options {
+			text-align: left;
+		}
+
+		.dropdown__options .dropdown__options__slider {
+			border-left: 0.2em solid var(--contrast);
+		}
+
+		.dropdown__title {
+			background-color: var(--contrast);
+		}
+
+		.dropdown__option {
+			color: var(--text-primary);
+			transition: background-color var(--delay-2) ease, color var(--delay-2) ease;
+
+			&:hover,
+			&:focus,
+			&:focus-within {
+				color: var(--text-contrast);
+				background-color: var(--contrast);
+			}
+		}
+	}
+}
