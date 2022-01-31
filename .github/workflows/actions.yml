@@ -8,7 +8,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - run: |
+      - name: Lint
+        run: |
           npm install
           npm run lint
   test:
@@ -18,7 +19,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - run: |
+      - name: Tests
+        run: |
           npm install
           npm run test
   build:
@@ -29,6 +31,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
-      - run: |
+      - name: Build
+        run: |
           npm install
           npm run build
