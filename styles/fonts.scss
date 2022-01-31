@@ -1,2 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap");
+
 :root {
+	--thin: 100;
+	--light: 300;
+	--regular: 400;
+	--bold: 700;
+	--black: 900;
+
+	@for $i from 0 through 10 {
+		--text-size-#{$i}: calc(4px * (1 + #{$i}));
+	}
+}
+
+* {
+	font-family: "Lato", Arial, Helvetica, sans-serif;
+	font-weight: var(--regular);
+	color: var(--text-primary);
 }

@@ -1,0 +1,18 @@
+@mixin focus-border {
+	&:focus,
+	&:focus-within {
+		position: relative;
+
+		&::after {
+			content: "";
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: block;
+			position: absolute;
+			background: transparent;
+			border: 2px solid var(--background-opposite);
+		}
+	}
+}
