@@ -1,11 +1,11 @@
+import { useClickOutside, useKeyPress, useTouch } from "@trampo/hooks";
+import { Keys } from "@trampo/resources/keys";
 import classNames from "classnames";
 import { useRef, useState } from "react";
 
 import { Icon, IconFontset, IconName } from "../icon";
-import { useClickOutside, useKeyPress, useTouch } from "@trampo/hooks";
-import { DropdownOption, IDropdownOption } from "./DropdownOption";
 import { DropdownListOption } from "./DropdownListOption";
-import { Keys } from "@trampo/resources/keys";
+import { DropdownOption, IDropdownOption } from "./DropdownOption";
 
 interface IProps {
 	title: IDropdownOption;

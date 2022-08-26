@@ -1,6 +1,6 @@
-import Link from "next/link";
-import classNames from "classnames";
 import { Route } from "@trampo/routes";
+import classNames from "classnames";
+import Link from "next/link";
 
 export interface IDropdownOption {
 	label: string;

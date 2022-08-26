@@ -1,7 +1,6 @@
-import Link from "next/link";
-import { Routes } from "@trampo/routes";
 import { Dropdown } from "@trampo/components/dropdown";
 import { Header } from "@trampo/components/header";
+import { Routes } from "@trampo/routes";
 
 export default function Home() {
 	return (

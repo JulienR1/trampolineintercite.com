@@ -1,5 +1,5 @@
-import path from "path";
 import { readdirSync, readFileSync } from "fs";
+import path from "path";
 
 describe("Component styles", () => {
 	it("should import every stylesheet in the components folder", () => {
