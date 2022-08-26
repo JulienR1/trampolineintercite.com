@@ -1,5 +1,6 @@
-import path from "path";
 import { existsSync, readdirSync } from "fs";
+import path from "path";
+
 import { Routes } from "./routes";
 
 describe("Router", () => {
