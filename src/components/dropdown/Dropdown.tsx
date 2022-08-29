@@ -13,7 +13,7 @@ interface IProps {
   className?: string;
 }
 
-export default function Dropdown({ title, options, className }: IProps) {
+export function Dropdown({ title, options, className }: IProps) {
   const [isOpened, setIsOpened] = useState(false);
   const { isTouch } = useTouch();
 

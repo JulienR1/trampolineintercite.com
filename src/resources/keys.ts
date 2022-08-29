@@ -1,3 +1,4 @@
 export enum Keys {
-	Escape = "Escape",
+  Escape = "Escape",
+  Enter = "Enter",
 }
