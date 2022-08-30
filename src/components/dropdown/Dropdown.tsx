@@ -1,7 +1,7 @@
 import { useClickOutside, useKeyPress, useTouch } from "@trampo/hooks";
 import { Keys } from "@trampo/resources/keys";
 import classNames from "classnames";
-import { useCallback, useRef, useState } from "react";
+import { CSSProperties, useCallback, useRef, useState } from "react";
 
 import { Icon, IconFontset, IconName } from "../icon";
 import { DropdownListOption } from "./DropdownListOption";
@@ -11,9 +11,10 @@ interface IProps {
   title: IDropdownOption;
   options: IDropdownOption[];
   className?: string;
+  pushContent?: boolean;
 }
 
-export function Dropdown({ title, options, className }: IProps) {
+export function Dropdown({ title, options, className, pushContent }: IProps) {
   const [isOpened, setIsOpened] = useState(false);
   const { isTouch } = useTouch();
 
@@ -51,7 +52,11 @@ export function Dropdown({ title, options, className }: IProps) {
         )}
       </div>
 
-      <div className="dropdown__options">
+      <div
+        className={classNames("dropdown__options", {
+          "dropdown__options--pushContent": pushContent,
+        })}
+        style={{ "--optionCount": options.length } as CSSProperties}>
         <ul className={"dropdown__options__slider"}>
           {options.map(option => (
             <DropdownListOption key={option.label} {...option} />

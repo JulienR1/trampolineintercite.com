@@ -1,5 +1,2 @@
-import Router from "./router";
-import { Route,Routes } from "./routes";
-
-export type { Route };
-export { Routes, Router };
+export * from "./router";
+export * from "./routes";

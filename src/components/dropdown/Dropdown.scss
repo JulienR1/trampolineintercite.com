@@ -10,6 +10,7 @@
   .dropdown__options {
     visibility: visible;
     transition-delay: 0ms;
+    max-height: calc(var(--optionCount) * (var(--padding-1) * 2 + 1em));
 
     .dropdown__options__slider {
       transform: translateY(0%);
@@ -20,19 +21,19 @@
 
 .dropdown {
   background: var(--background-primary);
-  font-size: var(--text-size-4);
+  font-size: var(--text-size-8);
   position: relative;
   text-align: center;
   display: block;
 
   .dropdown__title {
     font-weight: var(--bold);
+    justify-content: center;
     overflow: hidden;
     display: flex;
     width: 100%;
 
     .dropdown__option {
-      flex: 1;
       align-self: center;
     }
 
@@ -56,9 +57,11 @@
     width: 100%;
     top: 100%;
     left: 0;
+    max-height: 0;
 
     background-color: var(--background-primary);
-    transition: visibility 0s ease var(--delay-6);
+    transition: max-height ease var(--delay-6),
+      visibility 0s ease var(--delay-6);
 
     .dropdown__options__slider {
       opacity: 0;
@@ -78,6 +81,10 @@
         }
       }
     }
+  }
+
+  .dropdown__options--pushContent {
+    position: relative;
   }
 
   &.dropdown--toggled {
