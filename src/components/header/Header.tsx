@@ -79,6 +79,7 @@ export function Header({ router }: IProps) {
             ) : (
               <Link href={routeDetails.route} key={routeDetails.route}>
                 <a
+                  aria-label={routeDetails.label}
                   className={classNames("header__link", "header__link--title", {
                     "header__link--home": routeDetails.route === Routes.HOME,
                   })}>

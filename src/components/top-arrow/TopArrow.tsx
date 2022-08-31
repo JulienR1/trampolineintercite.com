@@ -5,7 +5,10 @@ export function TopArrow() {
   const [isVisible, setIsVisible] = useState(false);
 
   const scrollToTop = useCallback(
-    () => window.scrollTo({ top: 0, left: 0, behavior: "smooth" }),
+    () =>
+      "scrollBehavior" in document.documentElement
+        ? window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+        : window.scrollTo(0, 0),
     [],
   );
 
@@ -18,9 +21,11 @@ export function TopArrow() {
 
   return (
     <button
+      aria-label="Scroll to top" // TODO: Translate i18n
       className={classNames("topArrow", { "topArrow--visible": isVisible })}
-      onClick={scrollToTop}>
-      <div className="topArrow__container" />
+      onClick={scrollToTop}
+      tabIndex={0}>
+      <div aria-hidden="true" className="topArrow__container" />
     </button>
   );
 }
