@@ -11,7 +11,7 @@
   .dropdown__options {
     visibility: visible;
     transition-delay: 0ms;
-    max-height: calc(var(--optionCount) * (var(--padding-1) * 2 + 1em));
+    max-height: calc(var(--optionCount) * (var(--padding-2) * 2 + 1em));
 
     .dropdown__options__slider {
       transform: translateY(0%);
@@ -71,7 +71,7 @@
       transition: opacity var(--delay-6) ease, transform var(--delay-6) ease;
 
       .dropdown__listoption .dropdown__option {
-        padding: var(--padding-1);
+        padding: var(--padding-2);
       }
 
       .dropdown__option {
@@ -141,6 +141,7 @@
       transition: background-color var(--delay-2) ease,
         color var(--delay-2) ease;
       white-space: nowrap;
+      font-weight: var(--bold);
 
       &:hover,
       &:focus,

@@ -1,9 +1,13 @@
-import { useClickOutside, useScreenSize } from "@trampo/hooks";
+import {
+  useClickOutside,
+  useFilteredRouter,
+  useScreenSize,
+} from "@trampo/hooks";
 import { LAPTOP } from "@trampo/resources/screen-sizes";
 import { Router, Routes } from "@trampo/routes";
 import classNames from "classnames";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Dropdown } from "../dropdown";
 import { DropdownRef } from "../dropdown/types";
@@ -17,9 +21,10 @@ interface IProps {
 export function Header({ router }: IProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const headerToggleRef = useRef<HeaderToggleRef>(null);
-  const [isOpened, setIsOpened] = useState(false);
-
   const dropdownRefs = useRef<(DropdownRef | undefined)[]>([]);
+
+  const [isOpened, setIsOpened] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   const blurHeader = useCallback(() => {
     headerToggleRef.current.setValue(false);
@@ -29,8 +34,19 @@ export function Header({ router }: IProps) {
   const { size: screenSize } = useScreenSize();
   useClickOutside(headerRef, blurHeader);
 
+  const headerRouter = useFilteredRouter(router, { isHeader: true });
+
+  const onScroll = useCallback(() => setHasScrolled(window.scrollY > 0), []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [onScroll]);
+
   return (
-    <header ref={headerRef} className="header">
+    <header
+      ref={headerRef}
+      className={classNames("header", { "header--scroll": hasScrolled })}>
       <div className={"header__mobile"}>
         <Link href={Routes.HOME}>
           <a className="header__link header__link--home">
@@ -45,11 +61,11 @@ export function Header({ router }: IProps) {
           "header__navigation--expanded": isOpened,
         })}>
         <div className="header__navigationTray">
-          {router.map((routeDetails, index) =>
+          {headerRouter.map((routeDetails, index) =>
             routeDetails.subroutes ? (
               <Dropdown
-                ref={el => (dropdownRefs.current[index] = el)}
                 key={routeDetails.route}
+                ref={el => (dropdownRefs.current[index] = el)}
                 title={{ label: routeDetails.label, href: routeDetails.route }}
                 options={routeDetails.subroutes.map(subroute => ({
                   label: subroute.label,
@@ -62,8 +78,15 @@ export function Header({ router }: IProps) {
               />
             ) : (
               <Link href={routeDetails.route} key={routeDetails.route}>
-                <a className="header__link header__link--title">
-                  {routeDetails.label}
+                <a
+                  className={classNames("header__link", "header__link--title", {
+                    "header__link--home": routeDetails.route === Routes.HOME,
+                  })}>
+                  {routeDetails.route === Routes.HOME ? (
+                    <Logo />
+                  ) : (
+                    routeDetails.label
+                  )}
                 </a>
               </Link>
             ),

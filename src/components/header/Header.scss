@@ -1,9 +1,14 @@
 @import "../../../styles/mixins/shadows.scss";
 
+$defaultHeight: 74px;
+$desktopHeight: 90px;
+$scrollHeight: 55px;
+
 .header {
+  top: 0;
+  height: $defaultHeight;
   display: block;
-  position: relative;
-  height: 74px;
+  position: sticky;
   background-color: var(--background-primary);
 }
 
@@ -57,6 +62,24 @@
 }
 
 @include laptop {
+  .header {
+    height: $desktopHeight;
+    max-height: $desktopHeight;
+    transition: max-height ease var(--delay-6);
+  }
+
+  .header__link--home {
+    aspect-ratio: 0.8;
+  }
+
+  .header--scroll {
+    max-height: $scrollHeight;
+
+    .header__link--home {
+      aspect-ratio: 1.1;
+    }
+  }
+
   .header__mobile {
     display: none;
   }
@@ -96,6 +119,10 @@
     &:focus-within {
       color: var(--text-contrast);
       background-color: var(--contrast);
+    }
+
+    &.header__link--home {
+      background-color: var(--background-primary);
     }
   }
 

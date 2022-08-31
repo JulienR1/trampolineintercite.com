@@ -4,11 +4,24 @@ export type RouteDetails = {
   label: string;
   route: Route;
   subroutes?: RouteDetails[];
+  modifiers?: Modifier[];
 };
+
+export enum Modifier {
+  DISABLED,
+  HEADER_ONLY,
+  FOOTER_ONLY,
+  DESKTOP_ONLY,
+}
 
 export type Router = RouteDetails[];
 
 export const router: RouteDetails[] = [
+  {
+    label: "Accueil",
+    route: Routes.HOME,
+    modifiers: [Modifier.FOOTER_ONLY],
+  },
   {
     label: "À propos",
     route: Routes.ABOUT,
@@ -27,6 +40,11 @@ export const router: RouteDetails[] = [
       { label: "Compétitif", route: Routes.ACTIVITY_COMPETITIVE },
       { label: "Comment s'inscrire", route: Routes.REGISTRATION_PROCESS },
     ],
+  },
+  {
+    label: "Accueil",
+    route: Routes.HOME,
+    modifiers: [Modifier.HEADER_ONLY, Modifier.DESKTOP_ONLY],
   },
   {
     label: "Horaire",
