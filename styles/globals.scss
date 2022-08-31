@@ -5,6 +5,10 @@
 
 @import "../src/components/styles.scss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   @for $i from 0 through 10 {
     --padding-#{$i}: calc(0.15em * (#{$i} + 1));
