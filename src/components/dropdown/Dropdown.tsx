@@ -1,26 +1,38 @@
 import { useClickOutside, useKeyPress, useTouch } from "@trampo/hooks";
 import { Keys } from "@trampo/resources/keys";
 import classNames from "classnames";
-import { CSSProperties, useCallback, useRef, useState } from "react";
+import {
+  CSSProperties,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 import { Icon, IconFontset, IconName } from "../icon";
 import { DropdownListOption } from "./DropdownListOption";
 import { DropdownOption, IDropdownOption } from "./DropdownOption";
+import { DropdownRef } from "./types";
 
 interface IProps {
   title: IDropdownOption;
   options: IDropdownOption[];
   className?: string;
+  titleClassName?: string;
   pushContent?: boolean;
+  onConfirmation: () => void;
 }
 
-export function Dropdown({ title, options, className, pushContent }: IProps) {
+export const Dropdown = forwardRef<DropdownRef, IProps>(function (
+  { title, options, className, titleClassName, pushContent, onConfirmation },
+  ref,
+) {
   const [isOpened, setIsOpened] = useState(false);
   const { isTouch } = useTouch();
 
   const closeDropdown = useCallback(() => {
     if (dropdownRef.current?.contains(document.activeElement)) {
-      // TODO: find a way to focus the next element
       (document.activeElement as HTMLElement).blur();
     }
     setIsOpened(false);
@@ -34,6 +46,8 @@ export function Dropdown({ title, options, className, pushContent }: IProps) {
   useClickOutside(dropdownRef, () => setIsOpened(false));
   useKeyPress(Keys.Escape, closeDropdown);
 
+  useImperativeHandle(ref, () => ({ close: closeDropdown }));
+
   return (
     <div
       ref={dropdownRef}
@@ -43,8 +57,12 @@ export function Dropdown({ title, options, className, pushContent }: IProps) {
         { "dropdown--hoverable": !isTouch },
         className,
       ])}>
-      <div className="dropdown__title">
-        <DropdownOption {...title} />
+      <div className={"dropdown__title"}>
+        <DropdownOption
+          {...title}
+          className={titleClassName}
+          onClick={onConfirmation}
+        />
         {isTouch && (
           <div className="dropdown__toggle" onClick={() => toggleDropdown()}>
             <Icon icon={IconName.Expand} fontset={IconFontset.Outlined} />
@@ -59,10 +77,14 @@ export function Dropdown({ title, options, className, pushContent }: IProps) {
         style={{ "--optionCount": options.length } as CSSProperties}>
         <ul className={"dropdown__options__slider"}>
           {options.map(option => (
-            <DropdownListOption key={option.label} {...option} />
+            <DropdownListOption
+              key={option.label}
+              {...option}
+              onClick={onConfirmation}
+            />
           ))}
         </ul>
       </div>
     </div>
   );
-}
+});

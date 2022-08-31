@@ -5,32 +5,48 @@ import Link from "next/link";
 export interface IDropdownOption {
   label: string;
   href?: Route;
+  onClick?: () => void;
   onSelect?: () => void;
+  className?: string;
 }
 
-export function DropdownOption({ label, href, onSelect }: IDropdownOption) {
+export function DropdownOption({
+  label,
+  href,
+  onClick,
+  onSelect,
+  className,
+}: IDropdownOption) {
   const isInteractable = new Boolean(href || onSelect).valueOf();
-  const className = classNames([
+  const allClassName = classNames([
     "dropdown__option",
     { "dropdown__option--interactable": isInteractable },
+    className,
   ]);
 
   if (href) {
     return (
       <Link href={`${href}`}>
-        <a className={className}>{label}</a>
+        <a className={allClassName} onClick={onClick}>
+          {label}
+        </a>
       </Link>
     );
   }
   if (onSelect) {
     return (
-      <button className={className} onClick={() => onSelect?.()}>
+      <button
+        className={allClassName}
+        onClick={() => {
+          onClick?.();
+          onSelect?.();
+        }}>
         {label}
       </button>
     );
   }
   return (
-    <p tabIndex={0} className={className}>
+    <p tabIndex={0} className={allClassName} onClick={onClick}>
       {label}
     </p>
   );

@@ -1,4 +1,5 @@
 @import "./../../../styles/mixins/focusBorder.scss";
+@import "./../../../styles/mixins/shadows.scss";
 
 @mixin dropdown__options__slider--open {
   @include laptop {
@@ -32,6 +33,7 @@
     overflow: hidden;
     display: flex;
     width: 100%;
+    height: 100%;
 
     .dropdown__option {
       align-self: center;
@@ -51,7 +53,7 @@
   .dropdown__options {
     position: absolute;
     visibility: hidden;
-    font-size: 0.8em;
+    font-size: 0.85em;
     overflow: hidden;
     display: block;
     width: 100%;
@@ -112,21 +114,33 @@
   .dropdown {
     .dropdown__title,
     .dropdown__options {
+      width: fit-content;
       text-align: left;
     }
 
-    .dropdown__options .dropdown__options__slider {
-      border-left: 0.2em solid var(--contrast);
+    .dropdown__options {
+      min-width: 115%;
+      @include shadow;
     }
 
-    .dropdown__title {
-      background-color: var(--contrast);
+    .dropdown__options .dropdown__options__slider {
+      border-left: 0.15em solid var(--contrast);
+    }
+
+    .dropdown__listoption {
+      display: block;
+      width: 100%;
     }
 
     .dropdown__option {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      align-items: center;
       color: var(--text-primary);
       transition: background-color var(--delay-2) ease,
         color var(--delay-2) ease;
+      white-space: nowrap;
 
       &:hover,
       &:focus,
