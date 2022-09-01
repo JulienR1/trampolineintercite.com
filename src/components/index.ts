@@ -4,3 +4,4 @@ export * from "./header-toggle";
 export * from "./icon";
 export * from "./logo";
 export * from "./top-arrow";
+export * from "./partner";
