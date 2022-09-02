@@ -1,0 +1,21 @@
+@import "./../../../styles/mixins/focusBorder.scss";
+
+.skipNav {
+  display: block;
+  position: fixed;
+  z-index: calc(var(--navigation) + 1);
+  cursor: pointer;
+  top: 0;
+}
+
+.skipNav__link {
+  display: block;
+  transform: translateY(-100%);
+  font-weight: var(--bold);
+  padding: var(--padding-4);
+  transition: all ease var(--delay-3);
+
+  @include focus {
+    transform: translateY(0);
+  }
+}

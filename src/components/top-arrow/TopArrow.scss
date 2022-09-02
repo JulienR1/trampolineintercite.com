@@ -14,7 +14,7 @@
   transition: all ease var(--delay-4);
   visibility: hidden;
   opacity: 0;
-  z-index: 10;
+  z-index: calc(var(--navigation) + 1);
 
   .topArrow__container {
     display: block;

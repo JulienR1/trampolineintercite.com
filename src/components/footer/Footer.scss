@@ -11,6 +11,7 @@
 
 .footer {
   font-size: 15px;
+  z-index: var(--navigation);
 }
 
 .footer__section {
@@ -124,7 +125,7 @@
     display: inline;
   }
 
-  .footer__listItem {
+  .footer__partnerItem {
     height: 10em;
   }
 }

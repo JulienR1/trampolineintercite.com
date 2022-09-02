@@ -10,7 +10,7 @@ $scrollHeight: 55px;
   display: block;
   position: sticky;
   background-color: var(--background-primary);
-  z-index: 100;
+  z-index: var(--navigation);
 }
 
 .header__mobile {

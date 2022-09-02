@@ -43,7 +43,7 @@ export function Header() {
     <header
       ref={headerRef}
       className={classNames("header", { "header--scroll": hasScrolled })}>
-      <div className={"header__mobile"}>
+      <div className="header__mobile">
         <Link href={Routes.HOME}>
           <a className="header__link header__link--home">
             <Logo />

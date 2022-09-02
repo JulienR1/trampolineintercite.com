@@ -7,3 +7,4 @@ export * from "./top-arrow";
 export * from "./footer";
 export * from "./partner";
 export * from "./smart-link";
+export * from "./skip-navigation";

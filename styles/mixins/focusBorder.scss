@@ -2,6 +2,7 @@
   &:focus,
   &:focus-within {
     @include focus-border;
+    @content;
   }
 }
 
