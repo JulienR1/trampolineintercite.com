@@ -1,9 +1,5 @@
 @import "../../../styles/mixins/shadows.scss";
 
-$defaultHeight: 74px;
-$desktopHeight: 90px;
-$scrollHeight: 55px;
-
 .header {
   top: 0;
   height: $defaultHeight;

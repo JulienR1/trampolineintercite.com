@@ -27,12 +27,11 @@ export function Header() {
     dropdownRefs.current.forEach(dropdown => dropdown?.close());
   }, []);
 
-  const { size: screenSize } = useScreenSize();
-  useClickOutside(headerRef, blurHeader);
-
-  const headerRouter = useFilteredRouter(router, { isHeader: true });
-
   const onScroll = useCallback(() => setHasScrolled(window.scrollY > 0), []);
+
+  useClickOutside(headerRef, blurHeader);
+  const { size: screenSize } = useScreenSize();
+  const headerRouter = useFilteredRouter(router, { isHeader: true });
 
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
@@ -45,7 +44,7 @@ export function Header() {
       className={classNames("header", { "header--scroll": hasScrolled })}>
       <div className="header__mobile">
         <Link href={Routes.HOME}>
-          <a className="header__link header__link--home">
+          <a className="header__link header__link--home" onClick={blurHeader}>
             <Logo />
           </a>
         </Link>
@@ -75,6 +74,7 @@ export function Header() {
             ) : (
               <Link href={routeDetails.route} key={routeDetails.route}>
                 <a
+                  onClick={blurHeader}
                   aria-label={routeDetails.label}
                   className={classNames("header__link", "header__link--title", {
                     "header__link--home": routeDetails.route === Routes.HOME,

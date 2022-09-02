@@ -49,10 +49,12 @@
 }
 
 .footer__link {
-  text-decoration: underline;
   cursor: pointer;
-
   @include focus;
+}
+
+.footer__link--underline {
+  text-decoration: underline;
 }
 
 .footer__contentlist {
@@ -81,11 +83,9 @@
   font-weight: var(--bold);
 }
 
-.footer__navigationItem,
-.footer__navigationHeader,
-.footer__linkItem {
-  cursor: pointer;
-  @include focus;
+.footer__navigationHeader {
+  width: fit-content;
+  margin: 0 auto;
 }
 
 .footer__navigationItem {

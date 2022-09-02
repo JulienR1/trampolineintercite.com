@@ -17,7 +17,9 @@ export function FooterNavigation({ routerFilter }: IProps) {
           <div key={routeDetails.route} className="footer__content">
             <h4 className="footer__content footer__navigationHeader">
               <Link href={routeDetails.route}>
-                <a aria-label={routeDetails.label}>{routeDetails.label}</a>
+                <a aria-label={routeDetails.label} className="footer__link">
+                  {routeDetails.label}
+                </a>
               </Link>
             </h4>
             {routeDetails.subroutes && (
@@ -26,7 +28,9 @@ export function FooterNavigation({ routerFilter }: IProps) {
                   <li key={subroute.route}>
                     <h5 className="footer__navigationItem">
                       <Link href={subroute.route}>
-                        <a aria-label={subroute.label}>{subroute.label}</a>
+                        <a aria-label={subroute.label} className="footer__link">
+                          {subroute.label}
+                        </a>
                       </Link>
                     </h5>
                   </li>

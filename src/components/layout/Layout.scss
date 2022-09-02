@@ -1,0 +1,5 @@
+#main {
+  display: block;
+  position: relative;
+  min-height: calc(100vh - min($desktopHeight, $defaultHeight, $scrollHeight));
+}

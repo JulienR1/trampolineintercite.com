@@ -19,7 +19,7 @@ export function FooterCopyright() {
         <span className="footer__content">
           <a
             href={Routes.JROUSSEAU}
-            className="footer__link"
+            className="footer__link footer__link--underline"
             aria-label="Conception Julien Rousseau">
             Julien Rousseau
           </a>
