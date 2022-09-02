@@ -16,7 +16,7 @@ export enum Modifier {
 
 export type Router = RouteDetails[];
 
-export const router: RouteDetails[] = [
+export const router: Router = [
   {
     label: "Accueil",
     route: Routes.HOME,
@@ -53,5 +53,13 @@ export const router: RouteDetails[] = [
   {
     label: "Contact",
     route: Routes.CONTACT,
+  },
+];
+
+export const secondaryRouter: Router = [
+  {
+    label: "S'inscrire en ligne",
+    route: Routes.SPORT_N_ROLL,
+    modifiers: [Modifier.DISABLED],
   },
 ];

@@ -4,4 +4,6 @@ export * from "./header-toggle";
 export * from "./icon";
 export * from "./logo";
 export * from "./top-arrow";
+export * from "./footer";
 export * from "./partner";
+export * from "./smart-link";

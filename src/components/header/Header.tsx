@@ -4,7 +4,7 @@ import {
   useScreenSize,
 } from "@trampo/hooks";
 import { LAPTOP } from "@trampo/resources/screen-sizes";
-import { Router, Routes } from "@trampo/routes";
+import { router, Routes } from "@trampo/routes";
 import classNames from "classnames";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -14,11 +14,7 @@ import { DropdownRef } from "../dropdown/types";
 import { HeaderToggle, HeaderToggleRef } from "../header-toggle";
 import { Logo } from "../logo";
 
-interface IProps {
-  router: Router;
-}
-
-export function Header({ router }: IProps) {
+export function Header() {
   const headerRef = useRef<HTMLDivElement>(null);
   const headerToggleRef = useRef<HeaderToggleRef>(null);
   const dropdownRefs = useRef<(DropdownRef | undefined)[]>([]);
