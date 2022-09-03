@@ -1,14 +1,10 @@
 import inquirer from "inquirer";
 import { join } from "path";
 import { unlinkSync } from "fs";
-import { MigrationHistory } from "../types.js";
 import { getFiles } from "./utils.js";
+import { CommandFunc } from "./types.js";
 
-export async function remove(
-  migrationHistory: MigrationHistory,
-  args: string[],
-  repository: string,
-): Promise<MigrationHistory> {
+export const remove: CommandFunc = async ({ migrationHistory, repository }) => {
   if (migrationHistory.currentMigration.length === 0) {
     throw new Error("No file to remove in current migration.");
   }
@@ -28,9 +24,11 @@ export async function remove(
 
   const files = getFiles(fileToRemove);
 
-  migrationHistory.currentMigration.pop();
+  migrationHistory.currentMigration = migrationHistory.currentMigration.filter(
+    (file: string) => file !== fileToRemove,
+  );
   unlinkSync(join(repository, files.up));
   unlinkSync(join(repository, files.down));
 
   return migrationHistory;
-}
+};

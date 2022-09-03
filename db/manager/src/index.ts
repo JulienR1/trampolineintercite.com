@@ -11,11 +11,10 @@ import { getRepository, getWorkingDirectory } from "./working-directory.js";
     const migrationHistory = await getMigrationHistory(workingDirectory);
 
     const command = getCommand();
-    const repository = await getRepository(workingDirectory);
     const updatedHistory = await executeCommand(
       command,
       migrationHistory,
-      repository,
+      workingDirectory,
     );
 
     await updateMigrationHistory(updatedHistory, workingDirectory);

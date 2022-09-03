@@ -1,42 +1,6 @@
-import inquirer from "inquirer";
 import { createConnection, ConnectionConfig } from "mysql";
-import { readdirSync } from "fs";
-import { config } from "dotenv";
-import { join } from "path";
 
-async function getDatabaseConfig(
-  repository: string,
-): Promise<ConnectionConfig> {
-  const filesInRoot = readdirSync(join(repository, "..", ".."));
-  const envFiles = filesInRoot.filter(filename => /^\.env.*$/g.test(filename));
-  const configNames = envFiles.map(config =>
-    (config.replace(/.env\.?/g, "") ?? "default").toUpperCase(),
-  );
-
-  if (configNames?.length === 0) {
-    throw new Error("Could not find any configuration files.");
-  }
-
-  const selectedConfig =
-    configNames.length === 1
-      ? configNames[0]
-      : (
-          await inquirer.prompt([
-            {
-              name: "selectedConfig",
-              message: "Select a database configuration",
-              choices: configNames,
-              type: "list",
-            },
-          ])
-        ).selectedConfig;
-
-  const configurationFile =
-    envFiles[
-      configNames.findIndex(configName => configName === selectedConfig)
-    ];
-
-  config({ path: join(repository, "..", "..", configurationFile) });
+async function getDatabaseConfig(): Promise<ConnectionConfig> {
   const dbConfig: ConnectionConfig = {
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
@@ -59,10 +23,10 @@ async function getDatabaseConfig(
   return dbConfig;
 }
 
-export async function executeSQL(repository: string, sql: string | string[]) {
+export async function executeSQL(sql: string | string[]) {
   const sqlToExecute = Array.isArray(sql) ? sql : [sql];
 
-  const config = await getDatabaseConfig(repository);
+  const config = await getDatabaseConfig();
   const connection = createConnection(config);
 
   let success = false;

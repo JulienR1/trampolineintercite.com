@@ -1,4 +1,5 @@
 import { MigrationHistory } from "../types.js";
+import { getRepository, selectEnvironment } from "../working-directory.js";
 import { add } from "./add.js";
 import { migrate } from "./migrate.js";
 import { remove } from "./remove.js";
@@ -40,7 +41,7 @@ export function getCommand(): CommandPayload {
 export async function executeCommand(
   { command, args }: CommandPayload,
   migrationHistory: MigrationHistory,
-  repository: string,
+  workingDirectory: string,
 ) {
   const mapping = {
     [Command.ADD]: add,
@@ -48,8 +49,16 @@ export async function executeCommand(
     [Command.MIGRATE]: migrate,
     [Command.ROLLBACK]: rollback,
   };
+
+  const environment = await selectEnvironment(workingDirectory);
+  const repository = getRepository(workingDirectory);
+
   return (
-    (await mapping[command](migrationHistory, args, repository)) ??
-    migrationHistory
+    (await mapping[command]({
+      migrationHistory,
+      args,
+      repository,
+      environment,
+    })) ?? migrationHistory
   );
 }

@@ -1,13 +1,13 @@
 import { join } from "path";
-import { closeSync, openSync } from "fs";
-import { MigrationHistory } from "../types.js";
 import { getFiles } from "./utils.js";
+import { closeSync, openSync } from "fs";
+import { CommandFunc } from "./types.js";
 
-export function add(
-  migrationHistory: MigrationHistory,
-  args: string[],
-  repository: string,
-): MigrationHistory {
+export const add: CommandFunc = async ({
+  migrationHistory,
+  repository,
+  args,
+}) => {
   const requestedName = args[0];
   if (!requestedName) {
     throw new Error("Missing filename in command.");
@@ -21,4 +21,4 @@ export function add(
   closeSync(openSync(join(repository, files.down), "w"));
 
   return migrationHistory;
-}
+};
