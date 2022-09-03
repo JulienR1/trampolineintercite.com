@@ -13,7 +13,7 @@ export const add: CommandFunc = async ({
     throw new Error("Missing filename in command.");
   }
 
-  const filename = [new Date().valueOf(), requestedName].join("_");
+  const filename = [Date.now(), requestedName].join("_");
   migrationHistory.currentMigration.push(filename);
 
   const files = getFiles(filename);

@@ -1,5 +1,9 @@
 import { MigrationHistory } from "../types.js";
-import { getRepository, selectEnvironment } from "../working-directory.js";
+import {
+  getBackupDirectory,
+  getRepository,
+  selectEnvironment,
+} from "../working-directory.js";
 import { add } from "./add.js";
 import { migrate } from "./migrate.js";
 import { remove } from "./remove.js";
@@ -52,6 +56,7 @@ export async function executeCommand(
 
   const environment = await selectEnvironment(workingDirectory);
   const repository = getRepository(workingDirectory);
+  const backupDir = getBackupDirectory(workingDirectory);
 
   return (
     (await mapping[command]({
@@ -59,6 +64,7 @@ export async function executeCommand(
       args,
       repository,
       environment,
+      backupDir,
     })) ?? migrationHistory
   );
 }

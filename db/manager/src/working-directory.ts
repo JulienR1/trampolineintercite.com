@@ -33,6 +33,14 @@ export const getRepository = (workingDir: string) => {
   return repoPath;
 };
 
+export const getBackupDirectory = (workingDir: string) => {
+  const backupPath = join(workingDir, "backups");
+  if (!existsSync(backupPath)) {
+    mkdirSync(backupPath);
+  }
+  return backupPath;
+};
+
 export const selectEnvironment = async (workingDir: string) => {
   const filesInRoot = readdirSync(join(workingDir, ".."));
   const envFiles = filesInRoot.filter(filename => /^\.env.*$/g.test(filename));

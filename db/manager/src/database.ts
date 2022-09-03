@@ -1,4 +1,7 @@
+import { spawn } from "child_process";
+import { createWriteStream } from "fs";
 import { createConnection, ConnectionConfig } from "mysql";
+import { join } from "path";
 
 async function getDatabaseConfig(): Promise<ConnectionConfig> {
   const dbConfig: ConnectionConfig = {
@@ -67,4 +70,35 @@ export async function executeSQL(sql: string | string[]) {
   }
 
   return success;
+}
+
+export async function backup(backupDir: string) {
+  const filename = `${Date.now().toString()}.dump.sql`;
+  const writeStream = createWriteStream(join(backupDir, filename));
+
+  console.log("Creating backup ..");
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const dump = spawn("mysqldump", [
+        "--user",
+        process.env.DATABASE_USER as string,
+        `-p${process.env.DATABASE_PASSWORD}`,
+        "--host",
+        process.env.DATABASE_HOST as string,
+        "--port",
+        process.env.DATABASE_PORT as string,
+        process.env.DATABASE_NAME as string,
+      ]);
+
+      dump.stdout
+        .pipe(writeStream)
+        .on("finish", () => {
+          console.log("Backup complete");
+          resolve();
+        })
+        .on("error", err => reject(err));
+    });
+  } catch (err) {
+    throw err;
+  }
 }
