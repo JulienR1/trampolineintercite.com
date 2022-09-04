@@ -1,8 +1,9 @@
-import { join } from "path";
 import { readFileSync } from "fs";
-import { getFiles } from "./utils.js";
-import { CommandFunc } from "./types.js";
+import { join } from "path";
+
 import { backup, executeSQL } from "../database.js";
+import { CommandFunc } from "./types.js";
+import { getFiles } from "./utils.js";
 
 export const migrate: CommandFunc = async ({
   migrationHistory,

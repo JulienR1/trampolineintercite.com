@@ -1,8 +1,9 @@
+import { unlinkSync } from "fs";
 import inquirer from "inquirer";
 import { join } from "path";
-import { unlinkSync } from "fs";
-import { getFiles } from "./utils.js";
+
 import { CommandFunc } from "./types.js";
+import { getFiles } from "./utils.js";
 
 export const remove: CommandFunc = async ({ migrationHistory, repository }) => {
   if (migrationHistory.currentMigration.length === 0) {

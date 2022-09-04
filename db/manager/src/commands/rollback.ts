@@ -1,5 +1,6 @@
-import { join } from "path";
 import { readFileSync } from "fs";
+import { join } from "path";
+
 import { executeSQL } from "../database.js";
 import { CommandFunc } from "./types.js";
 import { getFiles } from "./utils.js";

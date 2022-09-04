@@ -1,5 +1,6 @@
-import { join } from "path";
 import { existsSync, readFileSync, writeFileSync } from "fs";
+import { join } from "path";
+
 import { MigrationHistory } from "./types.js";
 
 const migrationHistoryFileName = "history.json";

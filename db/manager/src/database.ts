@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
 import { createWriteStream } from "fs";
-import { createConnection, ConnectionConfig } from "mysql";
+import { ConnectionConfig, createConnection } from "mysql";
 import { join } from "path";
 
 async function getDatabaseConfig(): Promise<ConnectionConfig> {
@@ -36,9 +36,9 @@ export async function executeSQL(sql: string | string[]) {
 
   try {
     await new Promise<void>(resolve =>
-      connection.beginTransaction(async err => {
-        if (err) {
-          throw err;
+      connection.beginTransaction(async error => {
+        if (error) {
+          throw error;
         }
 
         await sqlToExecute.forEach(async query => {

@@ -1,7 +1,7 @@
-import inquirer from "inquirer";
-import { existsSync, mkdirSync, readdirSync } from "fs";
-import { join } from "path";
 import { config } from "dotenv";
+import { existsSync, mkdirSync, readdirSync } from "fs";
+import inquirer from "inquirer";
+import { join } from "path";
 
 export async function getWorkingDirectory() {
   const targetDir = join(process.cwd(), "db");
@@ -44,8 +44,8 @@ export const getBackupDirectory = (workingDir: string) => {
 export const selectEnvironment = async (workingDir: string) => {
   const filesInRoot = readdirSync(join(workingDir, ".."));
   const envFiles = filesInRoot.filter(filename => /^\.env.*$/g.test(filename));
-  const configNames = envFiles.map(config =>
-    (config.replace(/.env\.?/g, "") ?? "default").toUpperCase(),
+  const configNames = envFiles.map(configuration =>
+    (configuration.replace(/.env\.?/g, "") ?? "default").toUpperCase(),
   );
 
   if (configNames?.length === 0) {

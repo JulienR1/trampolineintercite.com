@@ -3,7 +3,7 @@ import {
   getMigrationHistory,
   updateMigrationHistory,
 } from "./migration-history.js";
-import { getRepository, getWorkingDirectory } from "./working-directory.js";
+import { getWorkingDirectory } from "./working-directory.js";
 
 (async function run() {
   try {

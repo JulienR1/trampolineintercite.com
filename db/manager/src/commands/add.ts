@@ -1,7 +1,8 @@
-import { join } from "path";
-import { getFiles } from "./utils.js";
 import { closeSync, openSync } from "fs";
+import { join } from "path";
+
 import { CommandFunc } from "./types.js";
+import { getFiles } from "./utils.js";
 
 export const add: CommandFunc = async ({
   migrationHistory,
