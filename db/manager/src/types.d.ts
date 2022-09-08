@@ -1,9 +1,9 @@
 export interface MigrationHistory {
-  currentMigration: Migration;
-  migrations: Migration[];
+  currentMigration: Filename[];
+  migrations: Directory[];
   databases: { [key: Environment]: number };
 }
 
-export type Migration = Filename[];
+export type Directory = string;
 export type Filename = string;
 export type Environment = string;

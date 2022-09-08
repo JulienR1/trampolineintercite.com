@@ -1,24 +1,30 @@
-import { readFileSync } from "fs";
+import { copyFileSync, readFileSync, rmdirSync, unlinkSync } from "fs";
 import { join } from "path";
 
 import { executeSQL } from "../database.js";
 import { CommandFunc } from "./types.js";
-import { getFiles } from "./utils.js";
+import { getFiles, getFilesInDirectory } from "./utils.js";
 
 export const rollback: CommandFunc = async ({
   migrationHistory,
   repository,
   environment,
 }) => {
-  const lastMigration =
+  const lastMigrationDir =
     migrationHistory.migrations[migrationHistory.migrations.length - 1] ?? [];
-  const filePaths = lastMigration.map((filename: string) =>
-    join(repository, getFiles(filename).down),
+  const migrationFiles = getFilesInDirectory(
+    join(repository, lastMigrationDir),
   );
+  const filenames = migrationFiles
+    .filter(migrationFile => /.*\.down\.sql/g.test(migrationFile))
+    .map((migrationFile: string) => migrationFile.replace(".down.sql", ""));
 
-  if (lastMigration.length > 0) {
+  if (migrationFiles.length > 0) {
     const sql = await Promise.all(
-      filePaths
+      filenames
+        .map((filename: string) =>
+          join(repository, lastMigrationDir, getFiles(filename).down),
+        )
         .reverse()
         .map((filepath: string) => readFileSync(filepath, "utf-8")),
     );
@@ -26,9 +32,11 @@ export const rollback: CommandFunc = async ({
     const success = await executeSQL(sql);
 
     if (success) {
+      restoreMigration(lastMigrationDir, repository);
+
       migrationHistory.migrations.pop();
       migrationHistory.currentMigration = [
-        ...lastMigration,
+        ...filenames,
         ...migrationHistory.currentMigration,
       ];
       migrationHistory.databases[environment]--;
@@ -41,3 +49,16 @@ export const rollback: CommandFunc = async ({
 
   return migrationHistory;
 };
+
+function restoreMigration(migrationDir: string, repository: string) {
+  const dirPath = join(repository, migrationDir);
+  const files = getFilesInDirectory(dirPath);
+
+  files.forEach((filename: string) => {
+    const filePath = join(dirPath, filename);
+    const targetPath = join(repository, filename);
+    copyFileSync(filePath, targetPath);
+    unlinkSync(filePath);
+  });
+  rmdirSync(dirPath);
+}

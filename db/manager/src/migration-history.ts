@@ -52,7 +52,9 @@ function validateHistory(migrationHistory: MigrationHistory): boolean {
   if (
     !("migrations" in migrationHistory) ||
     !Array.isArray(migrationHistory.migrations) ||
-    migrationHistory.migrations.some(migration => !Array.isArray(migration))
+    migrationHistory.migrations.some(
+      migration => Array.isArray(migration) && typeof migration !== "string",
+    )
   ) {
     return false;
   }
