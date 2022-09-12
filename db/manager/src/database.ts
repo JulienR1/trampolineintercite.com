@@ -3,7 +3,7 @@ import { createWriteStream } from "fs";
 import { ConnectionConfig, createConnection } from "mysql";
 import { join } from "path";
 
-async function getDatabaseConfig(): Promise<ConnectionConfig> {
+function getDatabaseConfig(): ConnectionConfig {
   const dbConfig: ConnectionConfig = {
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
@@ -29,7 +29,7 @@ async function getDatabaseConfig(): Promise<ConnectionConfig> {
 export async function executeSQL(sql: string | string[]) {
   const sqlToExecute = Array.isArray(sql) ? sql : [sql];
 
-  const config = await getDatabaseConfig();
+  const config = getDatabaseConfig();
   const connection = createConnection(config);
 
   let success = false;

@@ -9,3 +9,12 @@ export interface IPartner {
     };
   };
 }
+
+export interface IPartnerData {
+  website_link: string;
+  label: string;
+  width: number;
+  height: number;
+  url: string;
+  alt: string;
+}

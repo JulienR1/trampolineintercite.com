@@ -5,6 +5,7 @@ import {
   readFileSync,
   unlinkSync,
 } from "fs";
+import inquirer from "inquirer";
 import { join } from "path";
 
 import { backup, executeSQL } from "../database.js";
@@ -57,7 +58,16 @@ export const migrate: CommandFunc = async ({
   ];
 
   if (migrationsToExecute.length > 0) {
-    await backup(backupDir);
+    const { doBackup } = await inquirer.prompt([
+      {
+        message: "Do you want to backup the current database?",
+        type: "confirm",
+        name: "doBackup",
+      },
+    ]);
+    if (doBackup) {
+      await backup(backupDir);
+    }
 
     const sql = await Promise.all(
       migrationsToExecute.map((filepath: string) =>
