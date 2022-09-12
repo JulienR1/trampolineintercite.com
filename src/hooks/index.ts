@@ -3,3 +3,5 @@ export * from "./use-keypress";
 export * from "./use-touch";
 export * from "./use-screen-size";
 export * from "./use-filtered-router";
+export * from "./use-async-memo";
+export * from "./use-is-mounted";

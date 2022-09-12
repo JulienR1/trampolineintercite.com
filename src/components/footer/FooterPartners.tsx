@@ -1,19 +1,10 @@
-import { IPartner } from "@trampo/models";
+import { Partner } from "@trampo/components";
+import { useAsyncMemo } from "@trampo/hooks";
 
-import { Partner } from "../partner";
+import { fetchPartners } from "./service";
 
 export function FooterPartners() {
-  // TODO: replace with service
-  const partners: IPartner[] = [
-    {
-      label: "Ville de Trois-Rivières",
-      websiteUrl: "https://www.v3r.net/",
-      img: {
-        src: "https://www.v3r.net/wp-content/themes/v3r/Images/icons/logo-v3r-v2.svg",
-        size: { width: 100, height: 100 },
-      },
-    },
-  ];
+  const partners = useAsyncMemo(fetchPartners, []) ?? [];
 
   if (partners.length === 0) {
     return null;
