@@ -9,3 +9,4 @@ export * from "./partner";
 export * from "./smart-link";
 export * from "./skip-navigation";
 export * from "./layout";
+export * from "./loader";
