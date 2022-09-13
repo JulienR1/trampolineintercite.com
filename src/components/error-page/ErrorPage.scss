@@ -5,9 +5,9 @@
   display: grid;
   margin: 0 auto;
   min-height: 80vh;
-  align-items: center;
-  grid-template-columns: 1fr 0.1em 1fr;
+  grid-template-rows: 1fr 0.1em 1fr;
   font-size: var(--text-size-12);
+  text-align: center;
 }
 
 .errorPage__column {
@@ -18,23 +18,21 @@
 
   &:first-of-type {
     width: 4em;
-    margin-right: 1em;
-    justify-self: flex-end;
+    justify-self: center;
+    align-self: flex-end;
+    margin-bottom: 1em;
+    transform: translateX(0.4em);
   }
 
   &:last-of-type {
     display: flex;
     flex-direction: column;
-    margin-left: 1em;
     justify-content: center;
   }
 }
 
 .errorPage__separator {
-  display: block;
-  width: 0.1em;
-  height: 3em;
-  background-color: var(--background-opposite);
+  display: none;
 }
 
 .errorPage__title {
@@ -49,4 +47,33 @@
 .errorPage__link {
   cursor: pointer;
   @include focus;
+}
+
+@include laptop {
+  .errorPage {
+    text-align: left;
+    align-items: center;
+    grid-template-rows: none;
+    grid-template-columns: 1fr 0.1em 1fr;
+  }
+
+  .errorPage__column {
+    &:first-of-type {
+      margin-right: 1em;
+      justify-self: flex-end;
+      align-self: center;
+    }
+
+    &:last-of-type {
+      margin-left: 1em;
+    }
+  }
+
+  .errorPage__separator {
+    display: block;
+    width: 0.1em;
+    height: 3em;
+    margin: 0 auto;
+    background-color: var(--background-opposite);
+  }
 }
