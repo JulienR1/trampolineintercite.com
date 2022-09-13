@@ -1,0 +1,52 @@
+@import "../../../styles/mixins/focusBorder.scss";
+
+.errorPage {
+  width: 60%;
+  display: grid;
+  margin: 0 auto;
+  min-height: 80vh;
+  align-items: center;
+  grid-template-columns: 1fr 0.1em 1fr;
+  font-size: var(--text-size-12);
+}
+
+.errorPage__column {
+  position: relative;
+  display: block;
+  height: 4em;
+  flex: 1;
+
+  &:first-of-type {
+    width: 4em;
+    margin-right: 1em;
+    justify-self: flex-end;
+  }
+
+  &:last-of-type {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1em;
+    justify-content: center;
+  }
+}
+
+.errorPage__separator {
+  display: block;
+  width: 0.1em;
+  height: 3em;
+  background-color: var(--background-opposite);
+}
+
+.errorPage__title {
+  font-weight: var(--black);
+  font-size: 1.2em;
+}
+
+.errorPage__content {
+  font-size: 0.75em;
+}
+
+.errorPage__link {
+  cursor: pointer;
+  @include focus;
+}

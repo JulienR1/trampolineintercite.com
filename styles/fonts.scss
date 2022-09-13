@@ -7,7 +7,7 @@
   --bold: 700;
   --black: 900;
 
-  @for $i from 0 through 10 {
+  @for $i from 0 through 15 {
     --text-size-#{$i}: calc(2px * (1 + #{$i}));
   }
 }
