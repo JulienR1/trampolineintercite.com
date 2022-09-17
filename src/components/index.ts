@@ -11,3 +11,4 @@ export * from "./skip-navigation";
 export * from "./layout";
 export * from "./loader";
 export * from "./error-page";
+export * from "./map";
