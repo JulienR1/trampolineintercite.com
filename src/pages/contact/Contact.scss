@@ -1,0 +1,18 @@
+@import "../../../styles/resolutions.scss";
+@import "../../../styles/mixins/focusBorder.scss";
+
+.contactMap {
+  height: 35vh;
+  max-height: 500px;
+}
+
+@include tablet {
+  .contactMap {
+    height: 28vh;
+  }
+}
+
+@include laptop {
+  .contactMap {
+  }
+}

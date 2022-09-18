@@ -5,11 +5,12 @@ import { IconName } from "./IconName";
 
 interface IProps {
   icon: IconName;
-  fontset?: IconFontset;
+  fontset: IconFontset;
+  className?: string;
 }
 
-export function Icon({ icon, fontset }: IProps) {
+export function Icon({ icon, fontset, className }: IProps) {
   const iconClass = ["material-icons", fontset?.toString()].join("-");
-  const allClasses = classNames(iconClass, "icon");
+  const allClasses = classNames(iconClass, "icon", className);
   return <span className={allClasses}>{icon ?? "Help"}</span>;
 }

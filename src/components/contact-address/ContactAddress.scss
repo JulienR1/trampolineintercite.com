@@ -1,0 +1,36 @@
+@import "../../../styles/resolutions.scss";
+@import "../../../styles/mixins/focusBorder.scss";
+
+.contactAddress__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contactAddress__content--icon {
+  flex-direction: row;
+  align-items: center;
+}
+
+.contactAddress__content--padding {
+  padding: var(--padding-3) 0;
+}
+
+.contactAddress__link {
+  cursor: pointer;
+  @include focus;
+}
+
+.contactAddress__text {
+  text-align: center;
+}
+
+.contactAddress__text--icon {
+  font-size: 1.4em;
+  padding-right: var(--padding-0);
+}
+
+.contactAddress__text--title {
+  font-size: 1.3em;
+  font-weight: var(--bold);
+}

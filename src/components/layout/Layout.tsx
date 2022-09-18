@@ -27,9 +27,9 @@ export function Layout({ children }: IProps) {
         <title>{pageTitle}</title>
       </Head>
 
-      <SkipNavigation skipTarget="#main" />
+      <SkipNavigation skipTarget="#content" />
       <Header />
-      <main id="main">{children}</main>
+      <div id="content">{children}</div>
       <Footer />
       <TopArrow />
     </>
