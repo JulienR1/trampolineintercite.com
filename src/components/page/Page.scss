@@ -1,0 +1,44 @@
+@import "../../../styles/resolutions.scss";
+
+.page {
+  width: 100%;
+  display: block;
+  position: relative;
+  font-size: var(--text-size-6);
+  padding: var(--padding-6) 0;
+}
+
+.page__title {
+  font-weight: var(--bold);
+  font-size: 1.4em;
+  text-align: center;
+}
+
+.page__wrapper {
+  width: 100%;
+  display: block;
+  position: relative;
+}
+
+.page__separator {
+  --width: 40%;
+  height: 0.15em;
+  display: block;
+  width: var(--width);
+  margin: var(--padding-6) calc((100% - var(--width)) / 2);
+  background-color: var(--background-opposite);
+}
+
+.page__section {
+  width: 100%;
+  display: block;
+  position: relative;
+  padding: var(--padding-6) 0;
+}
+
+@include laptop {
+  .page {
+    font-size: var(--text-size-7);
+    padding: var(--padding-8) 0;
+  }
+}
