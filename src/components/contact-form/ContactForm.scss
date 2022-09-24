@@ -1,0 +1,57 @@
+@import "../../../styles/mixins/focusBorder.scss";
+@import "../../../styles/mixins/shadows.scss";
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 80%;
+  padding: var(--padding-6) 0;
+}
+
+.contactForm__input {
+  padding: var(--padding-3) var(--padding-4);
+  margin: var(--padding-1) 0;
+  border: 1px solid var(--background-partial-shadow);
+  border-radius: 4px;
+  @include shadow--offsetDownLight;
+}
+
+.contactForm__input--area {
+  min-height: 12em;
+}
+
+.contactForm__button {
+  margin: var(--padding-6) auto;
+  display: block;
+  width: fit-content;
+  border-radius: 8px;
+  font-weight: var(--black);
+  color: var(--text-contrast);
+  padding: var(--padding-3) var(--padding-9);
+  transition: all ease var(--delay-4);
+  background-color: var(--contrast);
+  cursor: pointer;
+  @include shadow--offsetDownLight;
+  @include focus;
+
+  &:hover {
+    @include shadow--offsetDown;
+  }
+}
+
+.contactForm__feedback {
+  padding: var(--padding-4) 0;
+  font-weight: var(--bold);
+  text-align: center;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.contactForm__feedback--success {
+  color: var(--success);
+}
+
+.contactForm__feedback--failed {
+  color: var(--contrast);
+}

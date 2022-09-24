@@ -9,3 +9,7 @@
 @mixin shadow--offsetDown {
   box-shadow: 0px 4px 4px var(--background-shadow);
 }
+
+@mixin shadow--offsetDownLight {
+  box-shadow: 0px 4px 4px var(--background-shadowLight);
+}

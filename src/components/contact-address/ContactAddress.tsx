@@ -1,4 +1,4 @@
-import { formatPhone } from "@trampo/utils";
+import { formatPhone } from "@trampo/lib/app";
 
 import { Icon, IconFontset, IconName } from "../icon";
 import { PageSeparator } from "../page";
@@ -11,9 +11,7 @@ interface IProps {
 export const ContactAddress = ({ phone, email }: IProps) => {
   return (
     <>
-      <h3 className="contactAddress__text contactAddress__text--title">
-        Église Ste-Cécile
-      </h3>
+      <h3 className="page__subtitle">Église Ste-Cécile</h3>
 
       <p className="contactAddress__content contactAddress__content--padding">
         <span className="contactAddress__text">550 rue des Commissaires</span>
