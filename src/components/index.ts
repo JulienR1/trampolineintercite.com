@@ -15,3 +15,4 @@ export * from "./map";
 export * from "./page";
 export * from "./contact-address";
 export * from "./contact-form";
+export * from "./form";
