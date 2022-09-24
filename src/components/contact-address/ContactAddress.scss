@@ -34,3 +34,13 @@
   font-size: 1.3em;
   font-weight: var(--bold);
 }
+
+@include large {
+  .contactAddress__content {
+    justify-content: flex-start;
+  }
+
+  .contactAddress__text {
+    text-align: left;
+  }
+}

@@ -11,7 +11,7 @@ interface IProps {
 export const ContactAddress = ({ phone, email }: IProps) => {
   return (
     <>
-      <h3 className="page__subtitle">Église Ste-Cécile</h3>
+      <h3 className="page__subtitle contactAddress__text">Église Ste-Cécile</h3>
 
       <p className="contactAddress__content contactAddress__content--padding">
         <span className="contactAddress__text">550 rue des Commissaires</span>
@@ -45,7 +45,7 @@ export const ContactAddress = ({ phone, email }: IProps) => {
         </p>
       </a>
 
-      <PageSeparator />
+      <PageSeparator className="hide--large" />
 
       <p className="contactAddress__content">
         <span className="contactAddress__text">

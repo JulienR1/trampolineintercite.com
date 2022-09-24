@@ -21,3 +21,9 @@ html {
     --delay-#{$i}: calc(50ms * (#{$i} + 1));
   }
 }
+
+@include large {
+  .hide--large {
+    opacity: 0;
+  }
+}

@@ -27,7 +27,7 @@
 }
 
 .page__separator {
-  --width: 40%;
+  --width: min(40%, 200px);
   height: 0.15em;
   display: block;
   width: var(--width);

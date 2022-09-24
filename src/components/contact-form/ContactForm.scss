@@ -6,6 +6,8 @@
   flex-direction: column;
   margin: 0 auto;
   width: 80%;
+  max-width: 500px;
+  font-size: var(--text-size-6);
   padding: var(--padding-6) 0;
 }
 
