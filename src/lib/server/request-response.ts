@@ -6,6 +6,10 @@ export class RequestReponse {
     return res.status(200).json(err("Invalid request"));
   }
 
+  public static ServerError(res: NextApiResponse, error?: string) {
+    return res.status(200).json(err(`Server error: ${error ?? "unknown"}`));
+  }
+
   public static Ok(res: NextApiResponse, payload?: unknown) {
     return res.status(200).json(ok(payload));
   }
