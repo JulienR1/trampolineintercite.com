@@ -37,6 +37,7 @@
   overflow: hidden;
   height: fit-content;
   padding-bottom: 6px;
+  pointer-events: none;
 }
 
 .header__navigationTray {
@@ -52,10 +53,14 @@
   padding-bottom: var(--padding-4);
 }
 
-.header__navigation--expanded .header__navigationTray {
-  transform: translateY(0);
-  visibility: visible;
-  opacity: 1;
+.header__navigation--expanded {
+  pointer-events: all;
+
+  .header__navigationTray {
+    transform: translateY(0);
+    visibility: visible;
+    opacity: 1;
+  }
 }
 
 @include laptop {
@@ -86,6 +91,7 @@
     @include shadow--offsetDown;
     padding: 0;
     overflow: visible;
+    pointer-events: all;
   }
 
   .header__navigationTray {
