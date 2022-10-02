@@ -1,9 +1,8 @@
-import { api } from "@trampo/lib/app";
 import { EmailContact } from "@trampo/lib/shared";
-import { Method } from "@trampo/types";
 import { useCallback, useEffect, useState } from "react";
 
 import { Form, TextAreaInput, TextInput } from "../form";
+import { sendContactMail } from "./service";
 
 enum MessageStatus {
   NONE = "none",
@@ -14,13 +13,15 @@ enum MessageStatus {
 export const ContactForm = () => {
   const [messageStatus, setMessageStatus] = useState(MessageStatus.NONE);
 
-  const handleSubmit = useCallback(async (formData: EmailContact) => {
-    const response = await api<{ ok: boolean }>("/api/contact/mail", {
-      body: JSON.stringify(formData),
-      method: Method.POST,
-    });
-    setMessageStatus(response.ok ? MessageStatus.SENT : MessageStatus.FAILED);
-  }, []);
+  const handleSubmit = useCallback(
+    (formData: EmailContact) =>
+      sendContactMail(
+        formData,
+        () => setMessageStatus(MessageStatus.SENT),
+        () => setMessageStatus(MessageStatus.FAILED),
+      ),
+    [],
+  );
 
   useEffect(() => {
     let timeout;
