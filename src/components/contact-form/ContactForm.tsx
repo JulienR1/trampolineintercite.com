@@ -17,8 +17,8 @@ export const ContactForm = () => {
     (formData: EmailContact) =>
       sendContactMail(
         formData,
-        () => setMessageStatus(MessageStatus.SENT),
         () => setMessageStatus(MessageStatus.FAILED),
+        () => setMessageStatus(MessageStatus.SENT),
       ),
     [],
   );

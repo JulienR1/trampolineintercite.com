@@ -14,5 +14,5 @@ export const sendContactMail = async (
     method: Method.POST,
   });
 
-  return response.ok ? onSuccess() : onError();
+  return response.isOk() && response.value.ok ? onSuccess() : onError();
 };
