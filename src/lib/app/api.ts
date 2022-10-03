@@ -1,18 +1,25 @@
+import { err, ok, Result } from "@trampo/types";
+
 export const api = async <T>(
   input: RequestInfo | URL,
   init?: RequestInit,
-): Promise<T | undefined> => {
+): Promise<Result<T>> => {
   const headers = { "Content-Type": "application/json" };
   const response = await fetch(input, {
     ...init,
     headers: { ...headers, ...(init?.headers ?? {}) },
   });
 
-  if (response.ok) {
-    const { value } = await response.json();
-    return value;
+  if (!response.ok) {
+    return err(new Error("The request did not resolve correctly."));
   }
-  return undefined;
+
+  const { error, value } = await response.json();
+  if (error) {
+    return err(new Error(error));
+  }
+
+  return ok(value);
 };
 
 // TODO: include timeout on requests

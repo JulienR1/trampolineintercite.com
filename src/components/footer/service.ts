@@ -3,5 +3,5 @@ import { IPartner } from "@trampo/models";
 
 export const fetchPartners = async () => {
   const partners = await api<IPartner[]>("/api/partners");
-  return partners ?? [];
+  return partners.isOk() ? partners.value : [];
 };
