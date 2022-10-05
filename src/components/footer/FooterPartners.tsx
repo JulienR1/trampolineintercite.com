@@ -17,10 +17,9 @@ export function FooterPartners() {
         {partners.map(partner => (
           <li key={partner.label} className="footer__partnerItem">
             <Partner
-              img={partner.img.src}
+              img={partner.img}
               label={partner.label}
               websiteUrl={partner.websiteUrl}
-              size={partner.img.size}
             />
           </li>
         ))}

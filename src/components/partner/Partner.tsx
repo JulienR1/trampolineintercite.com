@@ -1,15 +1,15 @@
+import { IImage } from "@trampo/models";
 import Image from "next/image";
 import { CSSProperties } from "react";
 
 interface IProps {
   label: string;
   websiteUrl: string;
-  img: string;
-  size: { width: number; height: number };
+  img: IImage;
 }
 
-export function Partner({ label, websiteUrl, img, size }: IProps) {
-  const aspectRatio = size.width / size.height;
+export function Partner({ label, websiteUrl, img }: IProps) {
+  const aspectRatio = img.width / img.height;
 
   return (
     <div className="partner" title={label}>
@@ -21,7 +21,12 @@ export function Partner({ label, websiteUrl, img, size }: IProps) {
         <figure
           className="partner__figure"
           style={{ "--aspect-ratio": aspectRatio } as CSSProperties}>
-          <Image src={img} alt={label} layout={"fill"} objectFit={"contain"} />
+          <Image
+            src={img.src}
+            alt={label ?? img.alt}
+            layout={"fill"}
+            objectFit={"contain"}
+          />
         </figure>
       </a>
     </div>
