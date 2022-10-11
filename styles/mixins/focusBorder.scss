@@ -17,6 +17,7 @@
     height: 100%;
     display: block;
     position: absolute;
+    pointer-events: none;
     background: transparent;
     border: 2px solid var(--background-opposite);
   }

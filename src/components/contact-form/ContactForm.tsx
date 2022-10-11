@@ -1,5 +1,6 @@
 import { EmailContact } from "@trampo/lib/shared";
 import { useCallback, useEffect, useState } from "react";
+import { Button } from "../button";
 
 import { Form, TextAreaInput, TextInput } from "../form";
 import { sendContactMail } from "./service";
@@ -82,9 +83,7 @@ export const ContactForm = () => {
           </p>
         )}
 
-        <button type="submit" className="contactForm__button">
-          Envoyer
-        </button>
+        <Button type="submit">Envoyer</Button>
       </Form>
     </>
   );

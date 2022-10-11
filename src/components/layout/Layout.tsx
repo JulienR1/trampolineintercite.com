@@ -16,7 +16,8 @@ export function Layout({ children }: IProps) {
   const nextRouter = useRouter();
 
   const pageTitle = useMemo(() => {
-    const label = routeLabels[nextRouter.asPath] ?? "";
+    const path = nextRouter.asPath.split("?").shift();
+    const label = routeLabels[path] ?? "";
     const formattedLabel = label ? `| ${label}` : "";
     return `Trampoline Intercité ${formattedLabel}`;
   }, [nextRouter.asPath]);
