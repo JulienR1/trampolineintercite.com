@@ -10,10 +10,9 @@ export const getPartners = async (): Promise<IPartner[]> => {
     label: partner.label,
     img: {
       src: partner.url,
-      size: {
-        width: partner.width,
-        height: partner.height,
-      },
+      alt: partner.alt,
+      width: partner.width,
+      height: partner.height,
     },
   }));
 
