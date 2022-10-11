@@ -8,7 +8,10 @@
 
 @mixin focus-border {
   position: relative;
+  @include focus-border-outline;
+}
 
+@mixin focus-border-outline {
   &::after {
     content: "";
     top: 0;

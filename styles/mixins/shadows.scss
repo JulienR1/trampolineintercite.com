@@ -13,3 +13,7 @@
 @mixin shadow--offsetDownLight {
   box-shadow: 0px 4px 4px var(--background-shadowLight);
 }
+
+@mixin shadow--card {
+  box-shadow: 0px 2px 8px var(--background-shadow);
+}

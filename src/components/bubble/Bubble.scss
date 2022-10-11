@@ -1,0 +1,21 @@
+@import "../../../styles/mixins/focusBorder.scss";
+
+.bubble__container {
+  position: absolute;
+  display: block;
+  height: 100%;
+  right: 0;
+  z-index: calc(var(--navigation) - 1);
+  transform: translateX(calc(100% - var(--padding-4)));
+}
+
+.bubble {
+  top: max(calc($desktopHeight * 1.5), 15%);
+  position: sticky;
+  transform: translateY(-40%);
+
+  &:focus,
+  &:focus-within {
+    @include focus-border-outline;
+  }
+}

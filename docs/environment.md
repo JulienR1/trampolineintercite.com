@@ -22,4 +22,6 @@ SENDGRID_DAILY_QUOTA=           # ex: 95
 REFERENCE_EMAIL=                # Email receiving mails from /contact
 CONTACT_URL=                    # ex: https://trampolineintercite.com/contact
 LOGO_IMAGE_URL=                 # ex: https://trampolineintercite.com/assets/logo.png
+
+REGISTRATION_URL=
 ```

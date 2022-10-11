@@ -1,7 +1,7 @@
 import { EmailContact } from "@trampo/lib/shared";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "../button";
 
+import { Button } from "../button";
 import { Form, TextAreaInput, TextInput } from "../form";
 import { sendContactMail } from "./service";
 

@@ -1,0 +1,65 @@
+@import "../../../styles/mixins/shadows.scss";
+
+.course {
+  width: 80vw;
+  max-width: 300px;
+  margin: 0 auto;
+  position: relative;
+  font-size: var(--text-size-8);
+}
+
+.course__bubble {
+  background-color: var(--contrast);
+  padding: var(--padding-3);
+  border-radius: 50%;
+  font-size: 0.8em;
+  @include shadow--partial;
+}
+
+.course__figure {
+  height: 100%;
+  display: block;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: var(--aspect-ratio);
+}
+
+.course__container {
+  padding: var(--padding-6);
+  padding-bottom: 0;
+
+  &:last-of-type {
+    padding-bottom: var(--padding-6);
+  }
+}
+
+.course__title {
+  font-weight: var(--black);
+  font-size: 1.2em;
+}
+
+.course__subtitle {
+  font-weight: var(--bold);
+}
+
+.course__description {
+  padding-top: var(--padding-3);
+  font-size: 0.9em;
+  text-align: justify;
+}
+
+.course__attribute {
+  display: flex;
+  font-size: 0.9em;
+}
+
+.course__attribute .icon {
+  font-size: 1.4em;
+  padding-right: 0.2em;
+}
+
+.course__link {
+  font-size: 0.8em;
+  margin-top: 0;
+  margin-bottom: 0;
+}

@@ -17,4 +17,6 @@ export * from "./contact-address";
 export * from "./contact-form";
 export * from "./form";
 export * from "./card";
+export * from "./course";
+export * from "./bubble";
 export * from "./button";
