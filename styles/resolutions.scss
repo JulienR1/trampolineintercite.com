@@ -4,25 +4,25 @@ $desktop: 1024px;
 $large: 1200px;
 
 @mixin tablet {
-	@media (min-width: #{$tablet}) {
-		@content;
-	}
+  @media (min-width: #{$tablet}) {
+    @content;
+  }
 }
 
 @mixin laptop {
-	@media (min-width: #{$laptop}) {
-		@content;
-	}
+  @media (min-width: #{$laptop}) {
+    @content;
+  }
 }
 
 @mixin desktop {
-	@media (min-width: #{$laptop}) {
-		@content;
-	}
+  @media (min-width: #{$desktop}) {
+    @content;
+  }
 }
 
 @mixin large {
-	@media (min-width: #{$large}) {
-		@content;
-	}
+  @media (min-width: #{$large}) {
+    @content;
+  }
 }
