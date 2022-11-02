@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS `weekday`;
+DROP TABLE IF EXISTS offdays;
+DROP TABLE IF EXISTS course_type;

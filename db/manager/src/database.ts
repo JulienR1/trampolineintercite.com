@@ -10,6 +10,7 @@ function getDatabaseConfig(): ConnectionConfig {
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     port: parseInt(process.env.DATABASE_PORT as string),
+    multipleStatements: true,
   };
 
   if (
