@@ -1,4 +1,4 @@
-import { ISessionCourse } from "@trampo/models";
+import { ICourse } from "@trampo/models";
 import Image from "next/image";
 import { CSSProperties, forwardRef } from "react";
 
@@ -8,17 +8,9 @@ import { Icon, IconFontset, IconName } from "../icon";
 import { SmartLink } from "../smart-link";
 import { CourseAttribute } from "./CourseAttribute";
 
-export const Course = forwardRef<HTMLDivElement, ISessionCourse>(
+export const Course = forwardRef<HTMLDivElement, ICourse>(
   (
-    {
-      title,
-      subtitle,
-      description,
-      img,
-      schedule,
-      registration,
-      sessionDetails,
-    },
+    { title, subtitle, description, img, schedule, registration, details },
     ref,
   ) => {
     const aspectRatio = img.width / img.height;
@@ -42,51 +34,66 @@ export const Course = forwardRef<HTMLDivElement, ISessionCourse>(
           </figure>
 
           <div className="course__container course__container--rounded">
-            <div className="course__schedule">
-              <SmartLink href={schedule.href} ariaLabel="Consulter l'horaire">
-                <Icon icon={IconName.Calendar} fontset={IconFontset.Outlined} />
-              </SmartLink>
-            </div>
+            {schedule && (
+              <div className="course__schedule">
+                <SmartLink href={schedule.href} ariaLabel="Consulter l'horaire">
+                  <Icon
+                    icon={IconName.Calendar}
+                    fontset={IconFontset.Outlined}
+                  />
+                </SmartLink>
+              </div>
+            )}
 
             <h3 className="course__title">{title}</h3>
             {subtitle && <h4 className="course__subtitle">{subtitle}</h4>}
             <p className="course__description">{description}</p>
           </div>
 
-          <div className="course__container">
-            <CourseAttribute
-              icon={{ name: IconName.Money, fontset: IconFontset.Outlined }}
-              attribute={sessionDetails.cost}
-              formatAttribute={attr => `${attr.toString()}$`}
-            />
-            <CourseAttribute
-              icon={{ name: IconName.Timespan, fontset: IconFontset.Outlined }}
-              attribute={sessionDetails.duration}
-              formatAttribute={attr => `${attr}h`}
-              suffix="par semaine"
-            />
-            <CourseAttribute
-              icon={{ name: IconName.DateRange, fontset: IconFontset.Outlined }}
-              attribute={sessionDetails.timespan}
-              formatAttribute={attr => dateFormatter.format(attr)}
-              linkWord="au"
-            />
-          </div>
+          {details && (
+            <div className="course__container">
+              <CourseAttribute
+                icon={{ name: IconName.Money, fontset: IconFontset.Outlined }}
+                attribute={details.cost}
+                formatAttribute={attr => `${attr.toString()}$`}
+              />
+              <CourseAttribute
+                icon={{
+                  name: IconName.Timespan,
+                  fontset: IconFontset.Outlined,
+                }}
+                attribute={details.duration}
+                formatAttribute={attr => `${attr}h`}
+                suffix="par semaine"
+              />
+              <CourseAttribute
+                icon={{
+                  name: IconName.DateRange,
+                  fontset: IconFontset.Outlined,
+                }}
+                attribute={details.timespan}
+                formatAttribute={attr => dateFormatter.format(attr)}
+                linkWord="au"
+              />
+            </div>
+          )}
 
-          <div className="course__container">
-            <Button
-              className="course__link"
-              disabled={!registration.isEnabled}
-              tabIndex={registration.isEnabled ? 0 : -1}>
-              {registration.isEnabled ? (
-                <SmartLink href={registration.href}>
-                  S&apos;inscrire en ligne
-                </SmartLink>
-              ) : (
-                <>La période d&apos;inscription est terminée</>
-              )}
-            </Button>
-          </div>
+          {registration && (
+            <div className="course__container">
+              <Button
+                className="course__link"
+                disabled={!registration.isEnabled}
+                tabIndex={registration.isEnabled ? 0 : -1}>
+                {registration.isEnabled ? (
+                  <SmartLink href={registration.href}>
+                    {registration.cta ?? "S'inscrire en ligne"}
+                  </SmartLink>
+                ) : (
+                  <>La période d&apos;inscription est terminée</>
+                )}
+              </Button>
+            </div>
+          )}
         </Card>
       </div>
     );

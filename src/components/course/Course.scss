@@ -149,6 +149,10 @@
   text-align: justify;
 }
 
+.course__title + .course__description {
+  padding-top: var(--padding-6);
+}
+
 .course__attribute {
   display: flex;
   font-size: 0.9em;

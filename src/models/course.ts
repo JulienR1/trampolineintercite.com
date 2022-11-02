@@ -8,27 +8,15 @@ export interface ICourse {
   subtitle?: string;
   description: string;
   img: IImage;
-  schedule: {
+  schedule?: {
     href: string;
   };
-  registration: {
+  registration?: {
+    cta?: string;
     href: string;
     isEnabled: boolean;
   };
-}
-
-export interface ICourseInstance extends ICourse {
-  details: {
-    cost: number;
-    duration: number;
-    courseCount: number;
-    timespan: Range<Date>;
-    offdays: IOffday[];
-  };
-}
-
-export interface ISessionCourse extends ICourse {
-  sessionDetails: {
+  details?: {
     cost: number | Range<number>;
     duration: number | Range<number>;
     courseCount: number | Range<number>;

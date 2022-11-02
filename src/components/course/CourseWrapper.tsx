@@ -1,10 +1,10 @@
-import { ISessionCourse } from "@trampo/models";
+import { ICourse } from "@trampo/models";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Course } from "./Course";
 
 interface IProps {
-  courses: ISessionCourse[];
+  courses: ICourse[];
 }
 
 export const CourseWrapper = ({ courses }: IProps) => {
@@ -63,11 +63,17 @@ export const CourseWrapper = ({ courses }: IProps) => {
 
   return (
     <div ref={wrapperRef} className="course__wrapper">
+      {courses.length === 0 && (
+        <div className="page__note page__note--transparent">
+          Aucune activité enregistrée pour la session en cours
+        </div>
+      )}
+
       {courses.map((course, index) => (
         <Course
+          ref={ref => (courseRefs.current[index] = ref)}
           key={index}
           {...course}
-          ref={ref => (courseRefs.current[index] = ref)}
         />
       ))}
     </div>
