@@ -20,6 +20,18 @@
   text-align: center;
 }
 
+.page__note {
+  font-size: 1em;
+  text-align: center;
+  padding: var(--padding-2) 0;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.page__note--transparent {
+  opacity: 0.5;
+}
+
 .page__wrapper {
   width: 100%;
   display: block;

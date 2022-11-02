@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import { ReactNode } from "react";
 
-import { PageSeparator } from "./PageSeparator";
+import { PageTitle } from "./PageTitle";
 
 interface IProps {
-  title: string;
+  title?: string;
   className?: string;
   children: ReactNode | ReactNode[];
 }
@@ -12,8 +12,7 @@ interface IProps {
 export const Page = ({ title, className, children }: IProps) => {
   return (
     <main className="page">
-      <h1 className="page__title">{title}</h1>
-      <PageSeparator />
+      {title && <PageTitle title={title} />}
       <div className={classNames("page__wrapper", className)}>{children}</div>
     </main>
   );
