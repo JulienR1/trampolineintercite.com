@@ -1,0 +1,1 @@
+DROP PROCEDURE IF EXISTS set_course_instance_order;

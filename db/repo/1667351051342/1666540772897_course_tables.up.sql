@@ -1,12 +1,3 @@
-CREATE TABLE course_availability
-(
-  availability_id INT NOT NULL AUTO_INCREMENT,
-  always_available BOOLEAN NOT NULL DEFAULT FALSE,
-  `session_id` INT,
-  PRIMARY KEY (availability_id),
-  FOREIGN KEY (session_id) REFERENCES `session`(id)
-);
-
 CREATE TABLE course
 (
   id INT NOT NULL AUTO_INCREMENT,

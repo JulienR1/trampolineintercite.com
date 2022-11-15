@@ -1,0 +1,1 @@
+DROP TRIGGER IF EXISTS remove_course_order_instance;
