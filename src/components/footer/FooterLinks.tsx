@@ -13,20 +13,27 @@ export function FooterLinks({ routerFilter }: IProps) {
     routerFilter,
   );
 
+  if (secondaryFooterRouter.length === 0) {
+    return null;
+  }
+
   return (
-    <section className="foooter__section">
-      <ul className="footer__contentlist">
-        {secondaryFooterRouter.map(routeDetails => (
-          <li key={routeDetails.route}>
-            <SmartLink
-              href={routeDetails.route}
-              ariaLabel={routeDetails.label}
-              className="footer__linkItem">
-              {routeDetails.label}
-            </SmartLink>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <>
+      <section className="foooter__section">
+        <ul className="footer__contentlist">
+          {secondaryFooterRouter.map(routeDetails => (
+            <li key={routeDetails.route}>
+              <SmartLink
+                href={routeDetails.route}
+                ariaLabel={routeDetails.label}
+                className="footer__linkItem">
+                {routeDetails.label}
+              </SmartLink>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <hr className="footer__separator" />
+    </>
   );
 }

@@ -10,7 +10,7 @@ enum ActivityRoutes {
   ACTIVITY_DETAILS = "/activites/details",
   ACTIVITY_RECREATIVE = "/activites/details#recreatif",
   ACTIVITY_COMPETITIVE = "/activites/details#competitif",
-  ACTIVITY_PARTIES = "/activites/details#fetes",
+  ACTIVITY_PARTIES = "/activites/details#locations",
 }
 
 enum TeamRoutes {
