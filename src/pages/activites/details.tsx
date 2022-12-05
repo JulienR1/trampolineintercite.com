@@ -1,7 +1,16 @@
+import { getCourses } from "@api/courses/courses.service";
 import { CourseWrapper, Page, PageSection } from "@trampo/components";
-import { ICourse } from "@trampo/models";
+import { CourseType } from "@trampo/models";
+import { InferGetServerSidePropsType } from "next";
 
-export default function ActiviteDetails() {
+export const getServerSideProps = async () => {
+  const courses = await getCourses();
+  return { props: { courses } };
+};
+
+export default function ActiviteDetails({
+  courses,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const affiliationCost = 20;
   const moneyFormatter = new Intl.NumberFormat("fr-CA", {
     style: "currency",
@@ -15,15 +24,15 @@ export default function ActiviteDetails() {
           Noter qu&apos;une affiliation de{" "}
           {moneyFormatter.format(affiliationCost)} est obligatoire pour tous.
         </div>
-        <CourseWrapper courses={[]} />
+        <CourseWrapper courses={courses[CourseType.Recreative]} />
       </PageSection>
 
       <PageSection id="locations" title="Locations">
-        <CourseWrapper courses={[]} />
+        <CourseWrapper courses={courses[CourseType.Locations]} />
       </PageSection>
 
       <PageSection id="competitif" title="Secteur compétitif">
-        <CourseWrapper courses={[]} />
+        <CourseWrapper courses={courses[CourseType.Recreative]} />
       </PageSection>
     </Page>
   );
