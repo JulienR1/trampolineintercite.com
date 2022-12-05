@@ -3,8 +3,8 @@ CREATE TABLE image
   id INT NOT NULL AUTO_INCREMENT,
   width INT NOT NULL,
   height INT NOT NULL,
-  url VARCHAR(512) NOT NULL,
+  `key` VARCHAR(512) NOT NULL,
   alt VARCHAR(64) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE (url)
+  UNIQUE (`key`)
 );

@@ -15,7 +15,7 @@ SELECT
     MAX(TIMEDIFF(end_time, start_time)) AS max_duration,
     i.width AS img_width,
     i.height AS img_height,
-    i.url AS img_url,
+    i.key AS img_key,
     i.alt AS img_alt
 FROM course_instance AS ci
 LEFT JOIN course AS c ON ci.course_id = c.id
