@@ -1,4 +1,6 @@
-module.exports = {
+const { withSuperjson } = require("next-superjson");
+
+module.exports = withSuperjson()({
   reactStrictMode: true,
-  pageExtensions: ["js", "tsx"],
-};
+  pageExtensions: ["in.ts", "tsx"],
+});
