@@ -4,7 +4,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { getPartners } from "./partners.service";
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   if (req.method !== Method.GET) {
     return RequestReponse.Invalid(res);
   }

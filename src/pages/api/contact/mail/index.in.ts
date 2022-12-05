@@ -5,7 +5,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 import { forwardEmailToReference } from "./contact-mail.service";
 
-export async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   if (req.method !== Method.POST) {
     return RequestReponse.Invalid(res);
   }
