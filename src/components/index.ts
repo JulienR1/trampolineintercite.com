@@ -19,3 +19,4 @@ export * from "./form";
 export * from "./card";
 export * from "./course";
 export * from "./button";
+export * from "./image-picker";
