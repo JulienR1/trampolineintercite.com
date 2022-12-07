@@ -1,15 +1,15 @@
 # [trampolineintercite.com](https://www.trampolineintercite.com)
 
-Projet pour mettre à jour le site internet du club Trampoline Intercité. Conçu avec [NextJS](https://nextjs.org/) et [ReactJS](https://reactjs.org/) dans le but d'offrir un service adéquat autant au niveau de la performance, de la facilité d'utilisation et de l'optimisation de recherche.
+Projet pour mettre à jour le site internet du club Trampoline Intercité. Conçu avec [Astro](https://astro.build/) et [ReactJS](https://reactjs.org/) dans le but d'offrir un service adéquat autant au niveau de la performance, de la facilité d'utilisation et de l'optimisation de recherche.
 
 ## Scripts
 
-| Script               | Command         |
-| -------------------- | --------------- |
-| Setup                | `npm i`         |
-| Development          | `npm run dev`   |
-| Build                | `npm run build` |
-| Run production build | `npm start`     |
+| Script               | Command           |
+| -------------------- | ----------------- |
+| Setup                | `npm i`           |
+| Development          | `npm start`       |
+| Build                | `npm run build`   |
+| Run production build | `npm run preview` |
 
 ### Objectifs:
 
