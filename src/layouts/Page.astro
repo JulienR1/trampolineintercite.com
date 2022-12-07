@@ -1,0 +1,50 @@
+---
+import "@styles/globals.scss";
+import { getPageName, Route } from "@trampo/routes";
+import seo from "@trampo/seo.json";
+
+import SkipNavigation from "./components/SkipNavigation.astro";
+import TopArrow from "./components/TopArrow.astro";
+
+const pageName = getPageName(Astro.url.pathname as Route);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+
+    {
+      Object.entries(seo).map(([key, value]) => (
+        <meta
+          name={key}
+          content={Array.isArray(value) ? value.join(", ") : value}
+        />
+      ))
+    }
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <title>{pageName}</title>
+  </head>
+  <body>
+    <SkipNavigation skipTarget="#content" />
+    <main id="content">
+      <slot />
+    </main>
+    <TopArrow />
+  </body>
+</html>
+
+<style lang="scss">
+  @import "./../styles/constants";
+
+  #content {
+    display: block;
+    position: relative;
+    min-height: calc(
+      100vh - min($desktopHeight, $defaultHeight, $scrollHeight)
+    );
+  }
+</style>
