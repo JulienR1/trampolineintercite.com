@@ -1,0 +1,20 @@
+name: Production actions
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  integrity:
+    uses: ./.github/workflows/build.template.yml
+  production:
+    needs: integrity
+    uses: ./.github/workflows/deploy.template.yml
+    with:
+      env: production
+      arg: --prod
+    secrets:
+      token: ${{ secrets.VERCEL_TOKEN }}
