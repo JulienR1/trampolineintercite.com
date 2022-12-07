@@ -5,9 +5,6 @@
 @import "resolutions.scss";
 @import "z-index.scss";
 
-@import "../src/components/styles.scss";
-@import "../src/pages/pageStyles.scss";
-
 html {
   scroll-behavior: smooth;
   scroll-padding-top: max($defaultHeight, $scrollHeight);
