@@ -1,0 +1,22 @@
+---
+import type { IImage } from "@trampo/models/IImage";
+import "./Partner.scss";
+
+export interface Props {
+  label: string;
+  websiteUrl: string;
+  img: IImage;
+}
+
+const { label, websiteUrl, img } = Astro.props;
+
+const aspectRatio = img.width / img.height;
+---
+
+<div class="partner" title={label}>
+  <a href={websiteUrl} class="partner__link" aria-label={label} tabindex={0}>
+    <figure class="partner__figure" style={`--aspect-ratio: ${aspectRatio}`}>
+      <img class="partner__img" src={img.src} alt={label ?? img.alt} />
+    </figure>
+  </a>
+</div>

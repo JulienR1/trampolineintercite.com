@@ -1,0 +1,105 @@
+---
+import "./Header.scss";
+
+import { getFilteredRouter, router, Routes } from "@trampo/routes";
+import Logo from "@trampo/ui/Logo.astro";
+import classNames from "classnames";
+import Dropdown from "./components/dropdown/Dropdown.astro";
+import HeaderToggle from "./components/header-toggle/HeaderToggle.astro";
+
+const headerRouter = getFilteredRouter(router, { isHeader: true });
+---
+
+<header class="header">
+  <div class="header__mobile">
+    <a href={Routes.HOME} class="header__link header__link--home">
+      <Logo />
+    </a>
+
+    <HeaderToggle />
+  </div>
+
+  <nav class="header__navigation">
+    <div class="header__navigationTray">
+      {
+        headerRouter.map(routeDetails =>
+          routeDetails.subroutes ? (
+            <Dropdown
+              title={{
+                label: routeDetails.label,
+                href: routeDetails.route,
+                className: "header__link--title",
+              }}
+              options={routeDetails.subroutes.map(subroute => ({
+                label: subroute.label,
+                href: subroute.route,
+              }))}
+            />
+          ) : (
+            <a
+              href={routeDetails.route}
+              aria-label={routeDetails.label}
+              class={classNames("header__link", "header__link--title", {
+                "header__link--home": routeDetails.route === Routes.HOME,
+              })}>
+              {routeDetails.route === Routes.HOME ? (
+                <Logo />
+              ) : (
+                routeDetails.label
+              )}
+            </a>
+          ),
+        )
+      }
+    </div>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector("header.header");
+  const headerToggle = document.querySelector(".headerToggle");
+  const navigation = document.querySelector(".header__navigation");
+  const dropdowns = document.querySelectorAll("header .dropdown");
+
+  const blurHeader = () => {
+    const blurEvent = new CustomEvent("blur");
+    dropdowns.forEach(dropdown => dropdown.dispatchEvent(blurEvent));
+
+    const headerToggleInput = headerToggle?.querySelector("input");
+    if (headerToggleInput && headerToggleInput.checked) {
+      headerToggleInput.click();
+    }
+  };
+
+  dropdowns.forEach(dropdown =>
+    dropdown.addEventListener("toggle", (e: any) => {
+      if (e.detail.toggled) {
+        dropdowns.forEach(d => {
+          if (d !== dropdown) {
+            const blurEvent = new CustomEvent("blur");
+            d.dispatchEvent(blurEvent);
+          }
+        });
+      }
+    }),
+  );
+
+  const headerLinks = document.querySelectorAll("header a");
+  headerLinks.forEach(link => link.addEventListener("click", blurHeader));
+
+  document.addEventListener("scroll", () => {
+    const hasScrolled = window.scrollY > 0;
+    header?.classList.toggle("header--scroll", hasScrolled);
+  });
+
+  headerToggle?.addEventListener(
+    "headertoggle" as any,
+    (e: CustomEvent<boolean>) => {
+      const isOpened = e.detail;
+      navigation?.classList.toggle("header__navigation--expanded", isOpened);
+    },
+  );
+
+  header?.addEventListener("click", e => e.stopPropagation());
+  window.addEventListener("click", blurHeader);
+</script>

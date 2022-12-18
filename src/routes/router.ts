@@ -5,6 +5,7 @@ export type RouteDetails = {
   route: Route;
   subroutes?: RouteDetails[];
   modifiers?: Modifier[];
+  className?: string;
 };
 
 export enum Modifier {
@@ -35,6 +36,11 @@ export const router: Router = [
     label: "Activités",
     route: Routes.ACTIVITIES,
     subroutes: [
+      {
+        label: "Activités",
+        route: Routes.ACTIVITY_DETAILS,
+        modifiers: [Modifier.DISABLED],
+      },
       { label: "Récréatif", route: Routes.ACTIVITY_RECREATIVE },
       { label: "Fête d'enfants", route: Routes.ACTIVITY_PARTIES },
       { label: "Compétitif", route: Routes.ACTIVITY_COMPETITIVE },
@@ -44,7 +50,7 @@ export const router: Router = [
   {
     label: "Accueil",
     route: Routes.HOME,
-    modifiers: [Modifier.HEADER_ONLY, Modifier.DESKTOP_ONLY],
+    modifiers: [Modifier.HEADER_ONLY],
   },
   {
     label: "Horaire",

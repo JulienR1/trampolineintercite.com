@@ -1,0 +1,57 @@
+@import "@styles/mixins/focusBorder.scss";
+
+.headerToggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+
+  font-size: calc(var(--size) * 1px);
+  width: 1em;
+  height: 1em;
+}
+
+#headerToggle__input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+}
+
+.headerToggle__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+}
+
+#headerToggle__input:focus-visible + .headerToggle__container {
+  & {
+    @include focus-border;
+  }
+}
+
+.headerToggle__line {
+  width: 100%;
+  border-radius: 0.1em;
+  background-color: var(--background-opposite);
+  height: 0.2em;
+  transition: var(--delay-6);
+}
+
+#headerToggle__input:checked + .headerToggle__container {
+  .headerToggle__line {
+    &:first-of-type {
+      transform: translateY(150%) rotate(-45deg);
+    }
+
+    &:nth-of-type(2) {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    &:last-of-type {
+      transform: translateY(-150%) rotate(45deg);
+    }
+  }
+}

@@ -1,17 +1,12 @@
 {
-  "extends": ["next", "next/core-web-vitals"],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "simple-import-sort", "unused-imports"],
+  "extends": ["plugin:astro/recommended"],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {
-        "@typescript-eslint/no-shadow": ["error"],
-        "no-shadow": "off",
-        "no-undef": "off",
-        "simple-import-sort/imports": "error",
-        "unused-imports/no-unused-imports": "error",
-        "react/display-name": "off"
+      "files": ["*.astro"],
+      "parser": "astro-eslint-parser",
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "extraFileExtensions": [".astro"]
       }
     }
   ]

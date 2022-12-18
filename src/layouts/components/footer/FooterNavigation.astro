@@ -1,0 +1,44 @@
+---
+import classNames from "classnames";
+
+import { getFilteredRouter, router, RouterFilter } from "@trampo/routes";
+
+export interface Props {
+  filter: RouterFilter;
+}
+
+const footerRouter = getFilteredRouter(router, Astro.props.filter);
+---
+
+<nav class="footer__section footer__section--nav">
+  {
+    footerRouter.map(routeDetails => (
+      <li class={classNames("footer__content", routeDetails.className)}>
+        <h4 class="footer__content footer__navigationHeader">
+          <a
+            href={routeDetails.route}
+            aria-label={routeDetails.label}
+            class="footer__link">
+            {routeDetails.label}
+          </a>
+        </h4>
+        {routeDetails.subroutes && (
+          <ul class="footer__contentlist footer__contentlist--vertical">
+            {routeDetails.subroutes.map(subroute => (
+              <li class={subroute.className}>
+                <h5 class="footer__navigationItem">
+                  <a
+                    href={subroute.route}
+                    aria-label={subroute.label}
+                    class="footer__link">
+                    {subroute.label}
+                  </a>
+                </h5>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</nav>

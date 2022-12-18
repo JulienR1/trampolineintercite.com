@@ -1,0 +1,18 @@
+---
+import classNames from "classnames";
+import type { IDropdownOption } from "./IDropdownOption";
+
+export interface Props extends IDropdownOption {}
+
+const { href, label, className } = Astro.props;
+---
+
+<a
+  class={classNames([
+    "dropdown__option",
+    "dropdown__option--interactable",
+    className,
+  ])}
+  href={href}>
+  {label}
+</a>

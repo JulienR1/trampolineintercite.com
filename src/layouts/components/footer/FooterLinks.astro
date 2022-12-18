@@ -1,0 +1,38 @@
+---
+import {
+  getFilteredRouter,
+  RouterFilter,
+  secondaryRouter,
+} from "@trampo/routes";
+
+export interface Props {
+  filter: RouterFilter;
+}
+
+const secondaryFooterRouter = getFilteredRouter(
+  secondaryRouter,
+  Astro.props.filter,
+);
+---
+
+{
+  secondaryFooterRouter.length > 0 && (
+    <>
+      <section class="foooter__section">
+        <ul class="footer__contentlist">
+          {secondaryFooterRouter.map(routeDetails => (
+            <li class={routeDetails.className}>
+              <a
+                class="footer__linkItem"
+                href={routeDetails.route}
+                aria-label={routeDetails.label}>
+                {routeDetails.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <hr class="footer__separator" />
+    </>
+  )
+}

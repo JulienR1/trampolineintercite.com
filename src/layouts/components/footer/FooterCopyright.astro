@@ -1,0 +1,28 @@
+---
+import { Routes } from "@trampo/routes";
+
+const startYear = Number(import.meta.env.PUBLIC_COPYRIGHT_START) || 2020;
+const currentYear = new Date().getFullYear();
+
+const yearlyRange = `${startYear} ${
+  currentYear > startYear ? `- ${currentYear}` : ""
+}`;
+---
+
+<section class="footer__section footer__section--copyright">
+  <p class="footer__content">
+    &copy; Trampoline Intercité {yearlyRange}
+  </p>
+  <span class="footer__content footer__content--desktop">|</span>
+  <p class="footer__content">
+    <span class="footer__content">Conception</span>
+    <span class="footer__content">
+      <a
+        href={Routes.JROUSSEAU}
+        class="footer__link footer__link--underline"
+        aria-label="Conception Julien Rousseau">
+        Julien Rousseau
+      </a>
+    </span>
+  </p>
+</section>

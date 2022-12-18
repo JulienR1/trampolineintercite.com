@@ -1,0 +1,65 @@
+---
+import "./Dropdown.scss";
+
+import Icon from "@trampo/ui/icon/Icon.astro";
+import { IconFontset } from "@trampo/ui/icon/IconFontSet";
+import { IconName } from "@trampo/ui/icon/IconName";
+import DropdownOption from "./DropdownOption.astro";
+import type { IDropdownOption } from "./IDropdownOption";
+
+export interface Props {
+  title: IDropdownOption;
+  options: IDropdownOption[];
+}
+
+const { title, options } = Astro.props;
+---
+
+<div class="dropdown dropdown--hoverable header__link">
+  <div class="dropdown__title">
+    <DropdownOption {...title} />
+    <div class="dropdown__toggle">
+      <Icon icon={IconName.Expand} fontset={IconFontset.Outlined} />
+    </div>
+  </div>
+
+  <div class="dropdown__options" style={`--optionCount: ${options.length};`}>
+    <ul class="dropdown__options__slider">
+      {
+        options.map(option => (
+          <li class="dropdown__listoption">
+            <DropdownOption {...option} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<script>
+  import { isTouchDevice } from "@trampo/ui/utils/touch";
+
+  const blur = (dropdown: Element) =>
+    dropdown.classList.toggle("dropdown--toggled", false);
+
+  const initDropdown = (dropdown: Element) => {
+    if (isTouchDevice()) {
+      dropdown
+        .querySelector(".dropdown__toggle")
+        ?.addEventListener("click", () => {
+          const isToggled = dropdown.classList.toggle("dropdown--toggled");
+
+          const toggleEvent = new CustomEvent("toggle", {
+            detail: { toggled: isToggled },
+          });
+          dropdown.dispatchEvent(toggleEvent);
+        });
+      dropdown.classList.remove("dropdown--hoverable");
+    }
+
+    dropdown.addEventListener("blur", () => blur(dropdown));
+  };
+
+  const dropdowns = document.querySelectorAll(".dropdown");
+  dropdowns.forEach(initDropdown);
+</script>

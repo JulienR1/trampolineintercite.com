@@ -1,0 +1,140 @@
+@import "@styles/mixins/focusBorder.scss";
+
+.footer,
+.footer__section {
+  background-color: var(--contrast);
+  font-weight: var(--bold);
+  text-align: center;
+  display: block;
+  width: 100%;
+}
+
+.footer {
+  font-size: 15px;
+  z-index: var(--navigation);
+}
+
+.footer__section {
+  color: var(--text-contrast);
+  padding: var(--padding-3) 0;
+}
+
+.footer__section:not(.footer__section--copyright) a {
+  display: block;
+}
+
+.footer__section--nav {
+  display: flex;
+  flex-direction: column;
+  font-weight: inherit;
+  row-gap: 1em;
+}
+
+.footer__separator {
+  display: block;
+  width: 40%;
+  height: 2px;
+  max-width: 200px;
+  background-color: var(--background-primary);
+  margin: var(--padding-3) auto;
+}
+
+.footer__content {
+  list-style-type: none;
+  font-weight: inherit;
+  color: inherit;
+}
+
+.footer__content--desktop {
+  display: none;
+}
+
+.footer__link {
+  cursor: pointer;
+  @include focus;
+}
+
+.footer__link--underline {
+  text-decoration: underline;
+}
+
+.footer__contentlist {
+  width: 85%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: var(--padding-6) 0;
+  gap: 1em;
+}
+
+.footer__contentlist--vertical {
+  width: fit-content;
+  padding: var(--padding-3) 0;
+  flex-direction: column;
+  row-gap: 0.3em;
+}
+
+.footer__partnerItem {
+  height: 6em;
+}
+
+.footer__linkItem {
+  color: var(--text-contrast);
+  font-weight: var(--bold);
+}
+
+.footer__link--desktop {
+  display: none;
+}
+
+.footer__navigationHeader {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.footer__navigationItem {
+  color: var(--text-contrast);
+  font-weight: var(--light);
+}
+
+.footer__section--copyright {
+  font-size: 0.9em;
+  opacity: 0.5;
+  padding: var(--padding-2) 0;
+  background-color: var(--contrast-dark);
+
+  .footer__content {
+    padding: 0 var(--padding-0);
+  }
+}
+
+@include laptop {
+  .footer__section--copyright {
+    display: flex;
+    justify-content: center;
+    column-gap: var(--padding-0);
+  }
+
+  .footer__section--nav {
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 2em;
+  }
+
+  .footer__content {
+    text-align: center;
+  }
+
+  .footer__content--desktop {
+    display: inline;
+  }
+
+  .footer__partnerItem {
+    height: 10em;
+  }
+
+  .footer__link--desktop {
+    display: block;
+  }
+}

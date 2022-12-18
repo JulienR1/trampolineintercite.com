@@ -1,0 +1,18 @@
+---
+import type { RouterFilter } from "@trampo/routes";
+import "./Footer.scss";
+
+import FooterCopyright from "./FooterCopyright.astro";
+import FooterLinks from "./FooterLinks.astro";
+import FooterNavigation from "./FooterNavigation.astro";
+import FooterPartners from "./FooterPartners.astro";
+
+const filter: RouterFilter = { isFooter: true };
+---
+
+<footer class="footer">
+  <FooterLinks filter={filter} />
+  <FooterNavigation filter={filter} />
+  <FooterPartners />
+  <FooterCopyright />
+</footer>

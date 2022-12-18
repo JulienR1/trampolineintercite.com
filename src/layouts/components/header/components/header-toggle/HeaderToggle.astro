@@ -1,0 +1,37 @@
+---
+import "./HeaderToggle.scss";
+
+export interface Props {
+  size?: number;
+}
+
+const { size = 30 } = Astro.props;
+---
+
+<div class="headerToggle" style={{ "--size": size }}>
+  <input type="checkbox" id="headerToggle__input" tab-index={0} />
+  <label
+    for="headerToggle__input"
+    class="headerToggle__container"
+    tab-index={-1}>
+    <div class="headerToggle__line"></div>
+    <div class="headerToggle__line"></div>
+    <div class="headerToggle__line"></div>
+  </label>
+</div>
+
+<script>
+  const emitter = document.querySelector(".headerToggle");
+
+  const toggle = () => {
+    const headerToggleEvent = new CustomEvent("headertoggle", {
+      detail: headerToggle.checked,
+    });
+    emitter?.dispatchEvent(headerToggleEvent);
+  };
+
+  const headerToggle = document.getElementById(
+    "headerToggle__input",
+  ) as HTMLInputElement;
+  headerToggle?.addEventListener("change", toggle);
+</script>

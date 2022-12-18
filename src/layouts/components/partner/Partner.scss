@@ -1,0 +1,29 @@
+@import "@styles/mixins/focusBorder.scss";
+
+.partner,
+.partner__link,
+.partner__figure {
+  height: 100%;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.partner__img {
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  display: block;
+  position: absolute;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+}
+
+.partner__link {
+  cursor: pointer;
+  @include focus;
+}
+
+.partner__figure {
+  aspect-ratio: var(--aspect-ratio);
+}

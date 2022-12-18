@@ -1,0 +1,23 @@
+---
+import "./TopArrow.scss";
+---
+
+<button id="topArrow" class="topArrow" aria-label="Scroll to top" tabindex={0}>
+  <div aria-hidden="true" class="topArrow__container"></div>
+</button>
+
+<script>
+  const topArrow = document.getElementById("topArrow");
+
+  if (topArrow) {
+    topArrow.addEventListener("click", () =>
+      "scrollBehavior" in document.documentElement
+        ? window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
+        : window.scrollTo(0, 0),
+    );
+
+    window.addEventListener("scroll", () =>
+      topArrow.toggleAttribute("visible", window.scrollY > 50),
+    );
+  }
+</script>

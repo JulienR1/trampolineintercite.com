@@ -1,45 +1,22 @@
 ---
-import "@styles/globals.scss";
-import { getPageName, Route } from "@trampo/routes";
-import seo from "@trampo/seo.json";
-
-import SkipNavigation from "./components/SkipNavigation.astro";
-import TopArrow from "./components/TopArrow.astro";
-
-const pageName = getPageName(Astro.url.pathname as Route);
+import Footer from "./components/footer/Footer.astro";
+import Header from "./components/header/Header.astro";
+import SkipNavigation from "./components/skip-navigation/SkipNavigation.astro";
+import TopArrow from "./components/top-arrow/TopArrow.astro";
+import Shell from "./Shell.astro";
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-
-    {
-      Object.entries(seo).map(([key, value]) => (
-        <meta
-          name={key}
-          content={Array.isArray(value) ? value.join(", ") : value}
-        />
-      ))
-    }
-
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-
-    <title>{pageName}</title>
-  </head>
-  <body>
-    <SkipNavigation skipTarget="#content" />
-    <main id="content">
-      <slot />
-    </main>
-    <TopArrow />
-  </body>
-</html>
+<Shell>
+  <SkipNavigation skipTarget="#content" />
+  <Header />
+  <main id="content">
+    <slot />
+  </main>
+  <Footer />
+  <TopArrow />
+</Shell>
 
 <style lang="scss">
-  @import "./../styles/constants";
-
   #content {
     display: block;
     position: relative;

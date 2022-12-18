@@ -1,0 +1,18 @@
+---
+import classNames from "classnames";
+import { IconFontset } from "./IconFontSet";
+import type { IconName } from "./IconName";
+
+export interface Props {
+  icon: IconName;
+  fontset?: IconFontset;
+  className?: string;
+}
+
+const { icon, fontset = IconFontset.Outlined, className } = Astro.props;
+
+const iconClass = ["material-icons", fontset?.toString()].join("-");
+const allClasses = classNames(iconClass, "icon", className);
+---
+
+<span class={allClasses}>{icon ?? "Help"}</span>

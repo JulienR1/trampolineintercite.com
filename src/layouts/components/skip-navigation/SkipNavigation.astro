@@ -1,0 +1,13 @@
+---
+import "./SkipNavigation.scss";
+
+export interface Props {
+  skipTarget: string;
+}
+
+const { skipTarget } = Astro.props;
+---
+
+<div class="skipNav">
+  <a href={skipTarget} class="skipNav__link">Omettre la navigation</a>
+</div>
