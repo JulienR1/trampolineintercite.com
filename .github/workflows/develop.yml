@@ -9,9 +9,11 @@ on:
 jobs:
   integrity:
     uses: ./.github/workflows/build.template.yml
+    with:
+      dir: ./web
   preview:
     needs: integrity
-    uses: ./.github/workflows/deploy.template.yml
+    uses: ./.github/workflows/deploy.web.template.yml
     with:
       env: preview
     secrets:
