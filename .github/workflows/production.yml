@@ -18,7 +18,7 @@ jobs:
     with:
       dir: ./web
   production:
-    needs: integrity
+    needs: astro-integrity
     uses: ./.github/workflows/deploy.web.template.yml
     with:
       env: production
