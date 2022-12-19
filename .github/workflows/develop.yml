@@ -7,7 +7,12 @@ on:
     branches-ignore:
       - master
 jobs:
-  integrity:
+  server-integrity:
+    uses: ./.github/workflows/build.template.yml
+    with:
+      dir: ./server
+  astro-integrity:
+    needs: server-integrity
     uses: ./.github/workflows/build.template.yml
     with:
       dir: ./web
