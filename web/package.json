@@ -29,7 +29,6 @@
     "eslint": "^8.30.0",
     "eslint-plugin-astro": "^0.21.1",
     "eslint-plugin-react": "^7.31.11",
-    "eslint-plugin-unused-imports": "^2.0.0",
     "sass": "^1.56.1"
   }
 }
