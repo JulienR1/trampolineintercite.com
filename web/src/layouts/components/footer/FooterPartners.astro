@@ -1,21 +1,8 @@
 ---
-import type { IPartner } from "@trampo/models/IPartner";
+import { client } from "@trampo/api/client";
 import Partner from "../partner/Partner.astro";
 
-const partners: IPartner[] = [
-  {
-    img: {
-      src: "https://www.v3r.net/wp-content/themes/v3r/Images/icons/logo-v3r-v2.svg",
-      alt: "Ville de Trois-Rivières",
-      width: 75,
-      height: 83.77,
-    },
-    label: "Ville de Trois-Rivières",
-    websiteUrl: "https://www.v3r.net/",
-  },
-];
-
-// TODO: reste à obtenir les partenaires
+const partners = await client.partners.getAll.query();
 ---
 
 {
