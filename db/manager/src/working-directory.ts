@@ -42,10 +42,12 @@ export const getBackupDirectory = (workingDir: string) => {
 };
 
 export const selectEnvironment = async (workingDir: string) => {
-  const filesInRoot = readdirSync(join(workingDir, ".."));
-  const envFiles = filesInRoot.filter(filename => /^\.env.*$/g.test(filename));
-  const configNames = envFiles.map(configuration =>
-    (configuration.replace(/.env\.?/g, "") ?? "default").toUpperCase(),
+  const filesInRoot = readdirSync(workingDir);
+  const envFiles = filesInRoot.filter((filename) =>
+    /^\.env.*$/g.test(filename)
+  );
+  const configNames = envFiles.map((configuration) =>
+    (configuration.replace(/.env\.?/g, "") ?? "default").toUpperCase()
   );
 
   if (configNames?.length === 0) {
@@ -68,10 +70,10 @@ export const selectEnvironment = async (workingDir: string) => {
 
   const configurationFile =
     envFiles[
-      configNames.findIndex(configName => configName === selectedConfig)
+      configNames.findIndex((configName) => configName === selectedConfig)
     ];
 
-  config({ path: join(workingDir, "..", configurationFile) });
+  config({ path: join(workingDir, configurationFile) });
 
   return selectedConfig;
 };

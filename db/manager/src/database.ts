@@ -19,7 +19,7 @@ function getDatabaseConfig(): ConnectionConfig {
     !dbConfig.host ||
     !dbConfig.user ||
     !dbConfig.port ||
-    dbConfig.port === NaN
+    Number.isNaN(dbConfig.port)
   ) {
     throw new Error("Missing environment configuration for database.");
   }
@@ -36,24 +36,24 @@ export async function executeSQL(sql: string | string[]) {
   let success = false;
 
   try {
-    await new Promise<void>(resolve =>
-      connection.beginTransaction(async error => {
+    await new Promise<void>((resolve) =>
+      connection.beginTransaction(async (error) => {
         if (error) {
           throw error;
         }
 
-        await sqlToExecute.forEach(async query => {
-          await new Promise<void>(queryResolve =>
-            connection.query(query, err => {
+        await sqlToExecute.forEach(async (query) => {
+          await new Promise<void>((queryResolve) =>
+            connection.query(query, (err) => {
               if (err) {
                 throw err;
               }
               return queryResolve();
-            }),
+            })
           );
         });
 
-        connection.commit(err => {
+        connection.commit((err) => {
           if (err) {
             throw err;
           }
@@ -62,7 +62,7 @@ export async function executeSQL(sql: string | string[]) {
           console.log(`Successfully applied ${sqlToExecute.length} changes.`);
           return resolve();
         });
-      }),
+      })
     );
   } catch {
     console.log("Could not apply the required changes.");
@@ -97,7 +97,7 @@ export async function backup(backupDir: string) {
           console.log("Backup complete");
           resolve();
         })
-        .on("error", err => reject(err));
+        .on("error", (err) => reject(err));
     });
   } catch (err) {
     throw err;

@@ -8,6 +8,7 @@ Documentation can be found here:
 - [Sendgrid setup](./sendgrid.md)
 - [Deployment process](./deploy.md)
 - [Architecture](./architecture.md)
+- [DB tool](./db_tool.md)
 
 ## How to ...
 
@@ -15,7 +16,7 @@ Documentation can be found here:
     <summary id="add-image">Add an image</summary>
 
 ```sql
-INSERT INTO `image` (`width`, `height`, `url`, `alt`)
+INSERT INTO `image` (`width`, `height`, `key`, `alt`)
 VALUES (width, height, 'url', 'alt');
 
 SELECT * FROM image ORDER BY ID DESC LIMIT 1;
