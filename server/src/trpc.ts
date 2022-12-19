@@ -1,7 +1,7 @@
 import { inferAsyncReturnType, initTRPC } from "@trpc/server";
-import { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 
-export const createContext = ({}: FetchCreateContextFnOptions) => ({});
+export const createContext = ({}: CreateExpressContextOptions) => ({});
 type Context = inferAsyncReturnType<typeof createContext>;
 
 const trpc = initTRPC.context<Context>().create();
