@@ -26,20 +26,34 @@ function getDatabaseConfig() {
   return dbConfig;
 }
 
-export const executeQuery = async <T>(
-  query: QueryOptions
-): Promise<Result<T>> => {
-  let response: Result<T>;
-  let db: Connection | undefined = undefined;
+export const query = <T>(query: QueryOptions) => {
+  const execute = async () => {
+    let response: Result<T[]>;
 
-  try {
-    db = await createConnection(getDatabaseConfig());
-    const results = await db.query(query);
-    response = ok(results[0] as T);
-  } catch (error) {
-    response = err(error as Error);
-  } finally {
-    await db?.end();
-  }
-  return response;
+    let db: Connection | undefined = undefined;
+
+    try {
+      db = await createConnection(getDatabaseConfig());
+      const results = await db.query(query);
+      response = ok(results[0] as T[]);
+    } catch (error) {
+      response = err(error as Error);
+    } finally {
+      await db?.end();
+    }
+
+    return response;
+  };
+
+  return {
+    execute,
+    single: async (): Promise<Result<T>> => {
+      const result = await execute();
+      return result.isOk()
+        ? result.value.length > 0
+          ? ok(result.value[0])
+          : err(new Error("No single value available"))
+        : err(result.error);
+    },
+  };
 };

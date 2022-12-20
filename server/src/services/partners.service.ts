@@ -1,10 +1,10 @@
-import { executeQuery, s3 } from "../lib";
+import { query, s3 } from "../lib";
 import { IPartner, IPartnerData } from "../models";
 
 export const getAllPartners = async (): Promise<IPartner[]> => {
-  const partners = await executeQuery<IPartnerData[]>({
+  const partners = await query<IPartnerData>({
     sql: "SELECT * FROM partner_data",
-  });
+  }).execute();
 
   if (!partners.isOk()) {
     return [];
