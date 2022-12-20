@@ -1,4 +1,4 @@
-import { executeQuery } from "../lib";
+import { executeQuery, s3 } from "../lib";
 import { IPartner, IPartnerData } from "../models";
 
 export const getAllPartners = async (): Promise<IPartner[]> => {
@@ -14,7 +14,7 @@ export const getAllPartners = async (): Promise<IPartner[]> => {
     websiteUrl: partner.website_link,
     label: partner.label,
     img: {
-      src: partner.key, // TODO: link to aws
+      src: s3.formatUrl(partner.key),
       alt: partner.alt,
       width: partner.width,
       height: partner.height,
