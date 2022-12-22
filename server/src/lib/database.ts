@@ -51,7 +51,11 @@ export const query = <T>(query: QueryOptions) => {
       const result = await execute();
       return result.isOk()
         ? result.value.length > 0
-          ? ok(result.value[0])
+          ? ok(
+              Array.isArray(result.value[0])
+                ? result.value[0][0]
+                : result.value[0]
+            )
           : err(new Error("No single value available"))
         : err(result.error);
     },

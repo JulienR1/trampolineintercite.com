@@ -16,21 +16,32 @@ export interface IPermissionData {
   label: string;
 }
 
-export const User = z.object({
+export const NewUser = z.object({
   firstname: z.string(),
   lastname: z.string(),
-  email: z.string().optional().nullable(),
-  password: z.string().optional().nullable(),
+  email: z.string().email(),
+  password: z
+    .string()
+    .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
+});
+
+export const User = z.object({
+  id: z.number(),
+  firstname: z.string(),
+  lastname: z.string(),
+  email: z.string().email().nullable(),
+  password: z.string().nullable(),
   roles: z.array(Role),
   permissions: z.array(Permission),
 });
 
+export type INewUser = z.infer<typeof NewUser>;
 export type IUser = z.infer<typeof User>;
 
 export interface IUserData {
   id: number;
   firstname: string;
   lastname: string;
-  email: string | undefined;
-  password: string | undefined;
+  email: string | null;
+  password: string | null;
 }

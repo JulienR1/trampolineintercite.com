@@ -4,9 +4,11 @@ import Header from "./components/header/Header.astro";
 import SkipNavigation from "./components/skip-navigation/SkipNavigation.astro";
 import TopArrow from "./components/top-arrow/TopArrow.astro";
 import Shell from "./Shell.astro";
+
+import seo from "../seo.json";
 ---
 
-<Shell>
+<Shell seo={seo}>
   <SkipNavigation skipTarget="#content" />
   <Header />
   <main id="content">

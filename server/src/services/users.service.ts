@@ -1,6 +1,14 @@
+import { randomBytes } from "crypto";
 import { query } from "../lib";
-import { IPermissionData, IRoleData, IUser, IUserData } from "../models";
+import {
+  INewUser,
+  IPermissionData,
+  IRoleData,
+  IUser,
+  IUserData,
+} from "../models";
 import { err, ok, Result } from "../types";
+import { hashPassword } from "./auth.service";
 
 export const getUser = () => {
   const withRolesAndPermissions = async (
@@ -29,6 +37,7 @@ export const getUser = () => {
     }
 
     return ok({
+      id: user.value.id,
       firstname: user.value.firstname,
       lastname: user.value.lastname,
       email: user.value.email,
@@ -59,4 +68,25 @@ export const getUser = () => {
   };
 
   return { fromId, fromEmail };
+};
+
+export const registerUser = async (newUser: INewUser) => {
+  const { firstname, lastname, email, password } = newUser;
+
+  const salt = randomBytes(16).toString("hex");
+  const hashedPassword = await hashPassword(password, salt);
+
+  if (!hashedPassword.isOk()) {
+    return err(hashedPassword.error);
+  }
+
+  const saltAndPassword = salt + "." + hashedPassword.value.toString("hex");
+  const response = await query<{ new_user_id: number }>({
+    sql: "CALL register_user(?, ?, ?, ?)",
+    values: [firstname, lastname, email, saltAndPassword],
+  }).single();
+
+  return response.isOk()
+    ? ok({ id: response.value.new_user_id })
+    : err(response.error);
 };

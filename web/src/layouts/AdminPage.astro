@@ -1,0 +1,34 @@
+---
+import TopArrow from "./components/top-arrow/TopArrow.astro";
+import Shell from "./Shell.astro";
+---
+
+<Shell>
+  <main id="content">
+    <slot />
+  </main>
+  <TopArrow />
+</Shell>
+
+<script>
+  import { client } from "@trampo/api/client";
+  import { getJwtToken, goToLogin, logout } from "@trampo/api/utils";
+
+  if (!getJwtToken()) {
+    goToLogin();
+    return;
+  }
+
+  if ((await client.auth.validate.query().catch(() => false)) === false) {
+    logout();
+    return;
+  }
+</script>
+
+<style lang="scss">
+  #content {
+    display: block;
+    position: relative;
+    min-height: 100vh;
+  }
+</style>

@@ -1,8 +1,13 @@
 ---
 import "material-icons/iconfont/material-icons.css";
 
-import { Route, getPageName } from "@trampo/routes";
-import seo from "@trampo/seo.json";
+import { getPageName,Route } from "@trampo/routes";
+
+export interface Props {
+  seo?: Record<string, string | string[]>;
+}
+
+const { seo } = Astro.props;
 
 const pageName = getPageName(Astro.url.pathname as Route);
 ---
@@ -14,7 +19,7 @@ const pageName = getPageName(Astro.url.pathname as Route);
     <meta name="generator" content={Astro.generator} />
 
     {
-      Object.entries(seo).map(([key, value]) => (
+      Object.entries(seo ?? {}).map(([key, value]) => (
         <meta
           name={key}
           content={Array.isArray(value) ? value.join(", ") : value}
@@ -32,7 +37,7 @@ const pageName = getPageName(Astro.url.pathname as Route);
 </html>
 
 <script>
-  import { getPageName, Route } from "@trampo/routes";
+  import { getPageName,Route } from "@trampo/routes";
 
   const updatePageName = () => {
     const path = window.location.pathname + window.location.hash;
