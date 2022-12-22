@@ -16,12 +16,8 @@ import Shell from "./Shell.astro";
 
   if (!getJwtToken()) {
     goToLogin();
-    return;
-  }
-
-  if ((await client.auth.validate.query().catch(() => false)) === false) {
+  } else if (!(await client.auth.validate.query().catch(() => false))) {
     logout();
-    return;
   }
 </script>
 
