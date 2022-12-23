@@ -1,5 +1,5 @@
 ---
-import { client } from "@trampo/api/client";
+import { client } from "@trampo/resources/client";
 import Partner from "../partner/Partner.astro";
 
 const partners = await client.partners.getAll.query();

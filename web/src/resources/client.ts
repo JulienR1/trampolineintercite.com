@@ -1,6 +1,6 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "trampolineintercite-server";
-import { getJwtToken } from "./utils";
+import { getJwtToken } from "./localstorage";
 
 export const client = createTRPCProxyClient<AppRouter>({
   links: [

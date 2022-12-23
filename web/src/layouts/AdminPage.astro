@@ -10,18 +10,7 @@ import Shell from "./Shell.astro";
   <TopArrow />
 </Shell>
 
-<script>
-  import { client } from "@trampo/api/client";
-  import { getJwtToken, goToLogin, logout } from "@trampo/api/utils";
-
-  if (!getJwtToken()) {
-    goToLogin();
-  } else if (!(await client.auth.validate.query().catch(() => false))) {
-    logout();
-  }
-</script>
-
-<style lang="scss">
+<style>
   #content {
     display: block;
     position: relative;
