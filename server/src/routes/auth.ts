@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
+import { AuthCredentials, NewUser } from "common";
 import z from "zod";
-import { AuthCredentials, NewUser } from "../models";
 import { authenticateUser, registerUser } from "../services";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 

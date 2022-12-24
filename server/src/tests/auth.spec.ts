@@ -1,4 +1,4 @@
-import { IUser } from "../models";
+import { IUser } from "common";
 import { appRouter } from "../routes";
 import {
   mergeRouters,

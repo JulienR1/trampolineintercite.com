@@ -1,12 +1,6 @@
+import { INewUser, IPermissionData, IRoleData, IUser, IUserData } from "common";
 import { randomBytes } from "crypto";
 import { query } from "../lib";
-import {
-  INewUser,
-  IPermissionData,
-  IRoleData,
-  IUser,
-  IUserData,
-} from "../models";
 import { err, ok, Result } from "../types";
 import { hashPassword } from "./auth.service";
 

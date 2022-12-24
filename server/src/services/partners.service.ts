@@ -1,5 +1,5 @@
+import { IPartner, IPartnerData } from "common";
 import { query, s3 } from "../lib";
-import { IPartner, IPartnerData } from "../models";
 
 export const getAllPartners = async (): Promise<IPartner[]> => {
   const partners = await query<IPartnerData>({

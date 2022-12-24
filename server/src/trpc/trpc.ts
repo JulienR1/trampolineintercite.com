@@ -1,5 +1,5 @@
 import { initTRPC, TRPCError } from "@trpc/server";
-import { IPermission } from "../models";
+import { IPermission } from "common";
 import { Context } from "./context";
 
 const trpc = initTRPC.context<Context>().create();

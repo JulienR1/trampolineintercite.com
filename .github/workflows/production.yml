@@ -8,7 +8,12 @@ on:
       - master
   workflow_dispatch:
 jobs:
+  common-integrity:
+    uses: ./.github/workflows/build.template.yml
+    with:
+      dir: ./common
   server-integrity:
+    needs: common-integrity
     uses: ./.github/workflows/build.template.yml
     with:
       dir: ./server

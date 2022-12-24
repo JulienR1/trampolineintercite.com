@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
+import { IAuthCredentials, IUser } from "common";
 import { pbkdf2, timingSafeEqual } from "crypto";
 import jwt from "jsonwebtoken";
-import { IAuthCredentials, IUser } from "../models";
 import { err, ok, Result } from "../types";
 import { getUser } from "./users.service";
 
