@@ -12,9 +12,7 @@
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && npm run fixup",
     "fixup": "echo {\"type\": \"commonjs\"} > dist/cjs/package.json && echo {\"type\": \"module\"} > dist/mjs/package.json",
-    "dev": "npm run build && concurrently \"tsc -p tsconfig.json --watch\" \"tsc -p tsconfig-cjs.json --watch\"",
-    "lint": "",
-    "test": ""
+    "dev": "npm run build && concurrently \"tsc -p tsconfig.json --watch\" \"tsc -p tsconfig-cjs.json --watch\""
   },
   "dependencies": {
     "zod": "^3.20.2"

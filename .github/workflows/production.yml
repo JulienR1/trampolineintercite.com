@@ -9,9 +9,7 @@ on:
   workflow_dispatch:
 jobs:
   common-integrity:
-    uses: ./.github/workflows/build.template.yml
-    with:
-      dir: ./common
+    uses: ./.github/workflows/build.common.template.yml
   server-integrity:
     needs: common-integrity
     uses: ./.github/workflows/build.template.yml
