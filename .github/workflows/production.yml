@@ -9,7 +9,6 @@ on:
   workflow_dispatch:
 jobs:
   common-integrity:
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/build.template.yml
     with:
       dir: ./common
@@ -24,7 +23,7 @@ jobs:
     with:
       dir: ./web
   production:
-    needs: astro-integrity
+    needs: [server-integrity, astro-integrity]
     uses: ./.github/workflows/deploy.web.template.yml
     with:
       env: production
