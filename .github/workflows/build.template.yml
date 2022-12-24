@@ -19,6 +19,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: common
+          path: ./../common/dist/
       - name: Install
         run: npm ci
       - name: Lint
