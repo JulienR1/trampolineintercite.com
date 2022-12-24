@@ -16,6 +16,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16.x"
+      - uses: actions/download-artifact@v3
+        with:
+          name: common
       - name: Install
         run: npm ci
       - name: Lint
