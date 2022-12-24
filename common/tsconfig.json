@@ -3,6 +3,7 @@
   "compilerOptions": {
     "module": "ES2022",
     "outDir": "dist/mjs",
-    "target": "ES2022"
+    "target": "ES2022",
+    "noImplicitAny": false
   }
 }
