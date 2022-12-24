@@ -1,3 +1,4 @@
+import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthProvider, useAuth } from "./auth";
 import { Login } from "./components";
@@ -11,11 +12,16 @@ const Logout = () => {
 
 export const Dashboard = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider fallback={<Login />}>
-        <p>LOGGED IN</p>
-        <Logout />
-      </AuthProvider>
-    </QueryClientProvider>
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{ fontFamily: "inherit" }}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider fallback={<Login />}>
+          <p>LOGGED IN</p>
+          <Logout />
+        </AuthProvider>
+      </QueryClientProvider>
+    </MantineProvider>
   );
 };
