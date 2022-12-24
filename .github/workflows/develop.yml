@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        working-directory: ./common
       - uses: ./.github/workflows/build.template.yml
         with:
           dir: ./common
@@ -19,7 +20,6 @@ jobs:
         with:
           name: common
           path: dist
-
   server-integrity:
     needs: common-integrity
     uses: ./.github/workflows/build.template.yml
