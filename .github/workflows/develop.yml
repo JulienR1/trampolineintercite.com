@@ -10,7 +10,7 @@ jobs:
   common-integrity:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/workflows/build.template.yml
+      - uses: .github/workflows/build.template.yml
         with:
           dir: ./common
       - name: Upload common build artifact
