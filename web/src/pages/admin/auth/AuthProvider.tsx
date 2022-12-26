@@ -4,6 +4,7 @@ import {
   removeJwtToken,
   setJwtToken,
 } from "@trampo/resources/localstorage";
+import { Spinner } from "@trampo/ui/spinner";
 import { FC, ReactNode, useCallback } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { AuthContext } from "./auth-context";
@@ -30,6 +31,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ fallback, children }) => {
       setJwtToken(token);
       queryClient.invalidateQueries("auth");
     }
+    return token !== undefined;
   }, []);
 
   const logout = useCallback(() => {
@@ -39,7 +41,13 @@ export const AuthProvider: FC<AuthProviderProps> = ({ fallback, children }) => {
 
   return (
     <AuthContext.Provider value={{ login, logout }}>
-      {hasToken && isTokenValid.data ? children : fallback}
+      {isTokenValid.isLoading ? (
+        <Spinner />
+      ) : hasToken && isTokenValid.data ? (
+        children
+      ) : (
+        fallback
+      )}
     </AuthContext.Provider>
   );
 };

@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 type IAuthContext = {
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
 };
 
