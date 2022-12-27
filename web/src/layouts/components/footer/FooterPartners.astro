@@ -11,7 +11,7 @@ const partners = await client.partners.getAll.query();
       <section class="footer__section">
         <h3 class="footer__content">Nos partenaires</h3>
         <ul class="footer__contentlist">
-          {partners.map(partner => (
+          {partners.map((partner: typeof partners[number]) => (
             <li class="footer__partnerItem">
               <Partner
                 img={partner.img}

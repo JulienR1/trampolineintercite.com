@@ -1,3 +1,5 @@
+import fetch from "node-fetch";
+
 const renderApiKey = process.argv
   .find((value) => /--key=/.test(value))
   .replace(/--key=/, "");
