@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node dist/src/server.js",
     "dev": "concurrently \"ts-node-dev --respawn --transpile-only src/server.ts\" \"npm run build:watch\" \"npm run host:images\"",
-    "build": "tsc",
+    "build": "cd ../common; npm ci; npm run build; cd ../server; tsc",
     "build:watch": "tsc --watch",
     "host:images": "http-server s3-mock -p 10000",
     "lint": "eslint --ext .ts --fix src",
