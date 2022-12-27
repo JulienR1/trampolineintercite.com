@@ -15,17 +15,17 @@ jobs:
     uses: ./.github/workflows/integrity.template.yml
     with:
       dir: ./server
+  astro-integrity:
+    needs: common-integrity
+    uses: ./.github/workflows/integrity.template.yml
+    with:
+      dir: ./web
   server-deploy:
     needs: server-integrity
     uses: ./.github/workflows/deploy.server.template.yml
     secrets:
       render_api_key: ${{ secrets.RENDER_API_KEY_PROD }}
       service_id: ${{ secrets.SERVICE_ID_PROD }}
-  astro-integrity:
-    needs: [common-integrity, server-deploy]
-    uses: ./.github/workflows/integrity.template.yml
-    with:
-      dir: ./web
   production:
     needs: [server-deploy, astro-integrity]
     uses: ./.github/workflows/deploy.web.template.yml
