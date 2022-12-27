@@ -14,24 +14,19 @@ jobs:
     uses: ./.github/workflows/integrity.template.yml
     with:
       dir: ./server
+  astro-integrity:
+    needs: common-integrity
+    uses: ./.github/workflows/integrity.template.yml
+    with:
+      dir: ./web
   server-preview:
     needs: server-integrity
     uses: ./.github/workflows/deploy.server.template.yml
     secrets:
       render_api_key: ${{ secrets.RENDER_API_KEY_DEV }}
       service_id: ${{ secrets.SERVICE_ID_DEV }}
-  astro-integrity:
-    needs: common-integrity
-    uses: ./.github/workflows/integrity.template.yml
-    with:
-      dir: ./web
   preview:
     needs: [server-preview, astro-integrity]
-    if: |
-      always() && 
-      (needs.server-preview.result == 'success' || needs.server-preview.result == 'skipped') && 
-      (needs.astro-integrity.result == 'success' || needs.astro-integrity.result == 'skipped') && 
-      !(needs.server-preview.result == 'skipped' && needs.astro-integrity.result == 'skipped')
     uses: ./.github/workflows/deploy.web.template.yml
     with:
       env: preview

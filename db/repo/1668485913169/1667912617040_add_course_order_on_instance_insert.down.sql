@@ -1,1 +1,0 @@
-DROP TRIGGER IF EXISTS set_order_to_last_on_insert;

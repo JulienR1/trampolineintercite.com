@@ -3,6 +3,11 @@ import { Connection, createConnection } from "mysql2/promise";
 import { ConnectionOptions } from "mysql2/typings/mysql";
 import { err, ok, Result } from "../types";
 
+type TransactionConnection = {
+  query: <T>(query: QueryOptions) => Promise<T[]>;
+  single: <T>(query: QueryOptions) => Promise<T>;
+};
+
 function getDatabaseConfig() {
   const dbConfig: ConnectionOptions = {
     password: process.env.DATABASE_PASSWORD,
@@ -60,4 +65,46 @@ export const query = <T>(query: QueryOptions) => {
         : err(result.error);
     },
   };
+};
+
+export const transaction = async <T>(
+  run: (client: TransactionConnection) => Promise<T>
+): Promise<Result<T>> => {
+  let response: Result<T>;
+  let db: Connection | undefined = undefined;
+
+  try {
+    db = await createConnection(getDatabaseConfig());
+    await db.beginTransaction();
+
+    const query = async <T>(options: QueryOptions) => {
+      const res = await db?.query(options);
+      if (!res) {
+        throw new Error("No result found for query");
+      }
+      return res[0] as T[];
+    };
+
+    const single = async <Q>(options: QueryOptions): Promise<Q> => {
+      const res = await query(options);
+      if (res.length > 0) {
+        if (Array.isArray(res[0])) {
+          return res[0][0] as Q;
+        }
+        return res[0] as Q;
+      }
+      throw new Error("No single value available");
+    };
+
+    const results = await run({ query, single });
+    await db.commit();
+    response = ok(results);
+  } catch (error) {
+    await db?.rollback();
+    response = err(error as Error);
+  } finally {
+    await db?.end();
+  }
+
+  return response;
 };

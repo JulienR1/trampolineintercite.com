@@ -1,1 +1,0 @@
-DROP TRIGGER IF EXISTS init_type_id;

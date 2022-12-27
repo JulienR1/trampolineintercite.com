@@ -1,6 +1,6 @@
 import { INewUser, IPermissionData, IRoleData, IUser, IUserData } from "common";
 import { randomBytes } from "crypto";
-import { query } from "../lib";
+import { query, transaction } from "../lib";
 import { err, ok, Result } from "../types";
 import { hashPassword } from "./auth.service";
 
@@ -55,7 +55,7 @@ export const getUser = () => {
   const fromEmail = async (email: string) => {
     const user = await query<IUserData>({
       sql: "SELECT * FROM users WHERE email = ?",
-      values: [email],
+      values: [email.toLowerCase()],
     }).single();
 
     return withRolesAndPermissions(user);
@@ -75,10 +75,21 @@ export const registerUser = async (newUser: INewUser) => {
   }
 
   const saltAndPassword = salt + "." + hashedPassword.value.toString("hex");
-  const response = await query<{ new_user_id: number }>({
-    sql: "CALL register_user(?, ?, ?, ?)",
-    values: [firstname, lastname, email, saltAndPassword],
-  }).single();
+  const response = await transaction(async ({ query, single }) => {
+    await query({
+      sql: "INSERT INTO person (firstname, lastname) VALUES (?, ?)",
+      values: [firstname, lastname],
+    });
+    const { new_user_id } = await single<{ new_user_id: number }>({
+      sql: "SELECT id AS new_user_id FROM person WHERE firstname=? AND lastname=? ORDER BY id DESC LIMIT 1",
+      values: [firstname, lastname],
+    });
+    await query({
+      sql: "INSERT INTO credentials (person_id, email, `password`) VALUES (?, ?, ?)",
+      values: [new_user_id, email.toLowerCase(), saltAndPassword],
+    });
+    return { new_user_id };
+  });
 
   return response.isOk()
     ? ok({ id: response.value.new_user_id })

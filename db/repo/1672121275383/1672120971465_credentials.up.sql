@@ -4,6 +4,5 @@ CREATE TABLE credentials
   `password` VARCHAR(1024) NOT NULL,
   person_id INT NOT NULL,
   PRIMARY KEY (person_id),
-  FOREIGN KEY (person_id) REFERENCES person(id),
   UNIQUE (email)
 );

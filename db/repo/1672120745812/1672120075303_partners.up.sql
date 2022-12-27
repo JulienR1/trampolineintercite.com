@@ -6,6 +6,5 @@ CREATE TABLE partner
   end_date DATE,
   label VARCHAR(128) NOT NULL,
   image_id INT NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (image_id) REFERENCES image(id)
+  PRIMARY KEY (id)
 );
