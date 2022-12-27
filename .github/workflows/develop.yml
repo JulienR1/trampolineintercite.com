@@ -27,6 +27,11 @@ jobs:
       dir: ./web
   preview:
     needs: [server-preview, astro-integrity]
+    if: |
+      always() && 
+      (needs.server-preview.result == 'success' || needs.server-preview.result == 'skipped') && 
+      (needs.astro-integrity.result == 'success' || needs.astro-integrity.result == 'skipped') && 
+      !(needs.server-preview.result == 'skipped' && needs.astro-integrity.result == 'skipped')
     uses: ./.github/workflows/deploy.web.template.yml
     with:
       env: preview

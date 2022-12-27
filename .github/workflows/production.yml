@@ -28,6 +28,11 @@ jobs:
       dir: ./web
   production:
     needs: [server-deploy, astro-integrity]
+    if: |
+      always() && 
+      (needs.server-deploy.result == 'success' || needs.server-deploy.result == 'skipped') && 
+      (needs.astro-integrity.result == 'success' || needs.astro-integrity.result == 'skipped') && 
+      !(needs.server-deploy.result == 'skipped' && needs.astro-integrity.result == 'skipped')
     uses: ./.github/workflows/deploy.web.template.yml
     with:
       env: production
