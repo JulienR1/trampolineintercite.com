@@ -16,15 +16,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16.x"
-      - uses: actions/download-artifact@v3
-        with:
-          name: common
-          path: ./../common/dist/
       - name: Install
         run: npm ci
       - name: Lint
         run: npm run lint
-      - name: Build
-        run: npm run build
       - name: Test
         run: npm run test

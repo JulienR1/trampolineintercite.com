@@ -1,0 +1,20 @@
+name: Deploy
+on:
+  workflow_call:
+    secrets:
+      render_api_key:
+        required: true
+      service_id:
+        required: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server/deploy
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install deploy tool
+        run: npm ci
+      - name: Deploy
+        run: npm start -- --key=${{ secrets.render_api_key }} --serviceId=${{ secret.service_id }}

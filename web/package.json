@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "astro dev",
-    "build": "astro build",
+    "build": "cd ../common; npm ci; npm run build; cd ../web; astro build",
     "preview": "astro preview",
     "lint": "astro check && eslint --ext .ts,.astro --fix src",
     "test": "echo \"TODO: tests\""

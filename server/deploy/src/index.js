@@ -1,15 +1,16 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-const renderApiKey = process.env.RENDER_API_KEY;
-const serviceId = process.env.SERVICE_ID;
+const renderApiKey = process.argv
+  .find((value) => /--key=/.test(value))
+  .replace(/--key=/, "");
+const serviceId = process.argv
+  .find((value) => /--serviceId=/.test(value))
+  .replace(/--serviceId=/, "");
 
 if (!renderApiKey) {
-  throw new Error("No api key has been provided.");
+  throw new Error("No api key has been provided. Use flag '--key='");
 }
 
 if (!serviceId) {
-  throw new Error("No service id has been provided.");
+  throw new Error("No service id has been provided. Use flag '--serviceId='");
 }
 
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));

@@ -15,7 +15,3 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      - uses: actions/upload-artifact@v3
-        with:
-          name: common
-          path: ./common/dist/
