@@ -6,3 +6,10 @@ export const AuthCredentials = z.object({
 });
 
 export type IAuthCredentials = z.infer<typeof AuthCredentials>;
+
+export type IAuthUser = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  iat: number;
+};

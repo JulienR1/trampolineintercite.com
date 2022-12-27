@@ -1,14 +1,9 @@
 import { MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { AuthProvider, useAuth } from "./auth";
-import { Login } from "./components";
+import { AuthProvider } from "./auth";
+import { AdminLayout, Login } from "./components";
 
 const queryClient = new QueryClient();
-
-const Logout = () => {
-  const { logout } = useAuth();
-  return <button onClick={logout}>logout</button>;
-};
 
 export const Dashboard = () => {
   return (
@@ -18,8 +13,7 @@ export const Dashboard = () => {
       theme={{ fontFamily: "inherit" }}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider fallback={<Login />}>
-          <p>LOGGED IN</p>
-          <Logout />
+          <AdminLayout>LOGGED IN</AdminLayout>
         </AuthProvider>
       </QueryClientProvider>
     </MantineProvider>

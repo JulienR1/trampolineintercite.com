@@ -1,10 +1,10 @@
-export enum IconName {
-  Close = "close",
-  Expand = "expand_more",
-  Phone = "call",
-  Email = "mail",
-  Calendar = "calendar_today",
-  Money = "attach_money",
-  Timespan = "timelapse",
-  DateRange = "date_range",
-}
+export type IconName =
+  | "close"
+  | "expand_more"
+  | "call"
+  | "mail"
+  | "calendar_today"
+  | "attach_money"
+  | "timelapse"
+  | "date_range"
+  | "logout";

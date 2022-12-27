@@ -1,6 +1,1 @@
-export enum IconFontset {
-  Outlined = "outlined",
-  Round = "round",
-  Sharp = "sharp",
-  TwoTones = "two-tone",
-}
+export type IconFontset = "outlined" | "round" | "sharp" | "two-tone";

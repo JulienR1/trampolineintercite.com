@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { IAuthCredentials, IUser } from "common";
+import { IAuthCredentials, IAuthUser, IUser } from "common";
 import { pbkdf2, timingSafeEqual } from "crypto";
 import jwt from "jsonwebtoken";
 import { err, ok, Result } from "../types";
@@ -27,15 +27,13 @@ export const authenticateUser = () => {
         });
       }
 
-      return jwt.sign(
-        {
-          id: user.value.id,
-          firstname: user.value.firstname,
-          lastname: user.value.lastname,
-          iat: Date.now(),
-        },
-        getJwtSecret()
-      );
+      const payload: IAuthUser = {
+        id: user.value.id,
+        firstname: user.value.firstname,
+        lastname: user.value.lastname,
+        iat: Date.now(),
+      };
+      return jwt.sign(payload, getJwtSecret());
     },
 
     fromToken: (token: string) =>

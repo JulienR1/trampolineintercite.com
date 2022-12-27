@@ -8,6 +8,7 @@ import { Spinner } from "@trampo/ui/spinner";
 import { FC, ReactNode, useCallback } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { AuthContext } from "./auth-context";
+import { readJwtToken } from "./service";
 
 type AuthProviderProps = {
   fallback: ReactNode;
@@ -21,7 +22,9 @@ export const AuthProvider: FC<AuthProviderProps> = ({ fallback, children }) => {
     async () => await client.auth.validate.query().catch(() => false),
   );
 
-  const hasToken = !!getJwtToken();
+  const token = getJwtToken();
+  const hasToken = !!token;
+  const user = hasToken ? readJwtToken(token) : undefined;
 
   const login = useCallback(async (email: string, password: string) => {
     const token = await client.auth.login
@@ -40,7 +43,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ fallback, children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ login, logout }}>
+    <AuthContext.Provider value={{ login, logout, user }}>
       {isTokenValid.isLoading ? (
         <Spinner />
       ) : hasToken && isTokenValid.data ? (

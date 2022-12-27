@@ -2,8 +2,6 @@
 import "./Dropdown.scss";
 
 import Icon from "@trampo/ui/icon/Icon.astro";
-import { IconFontset } from "@trampo/ui/icon/IconFontSet";
-import { IconName } from "@trampo/ui/icon/IconName";
 import DropdownOption from "./DropdownOption.astro";
 import type { IDropdownOption } from "./IDropdownOption";
 
@@ -19,7 +17,7 @@ const { title, options } = Astro.props;
   <div class="dropdown__title">
     <DropdownOption {...title} />
     <div class="dropdown__toggle">
-      <Icon icon={IconName.Expand} fontset={IconFontset.Outlined} />
+      <Icon icon="expand_more" fontset='outlined' />
     </div>
   </div>
 
