@@ -1,12 +1,12 @@
 import { MigrationHistory } from "../types";
 
 export type CommandFunc = (
-  payload: CommandFuncPayload,
+  payload: CommandFuncPayload
 ) => Promise<MigrationHistory>;
 
 export type CommandFuncPayload = {
   migrationHistory: MigrationHistory;
-  args: string[];
+  args: { useSsl: boolean; others: string[] };
   repository: string;
   backupDir: string;
   environment: string;

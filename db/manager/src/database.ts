@@ -1,9 +1,9 @@
 import { spawn } from "child_process";
 import { createWriteStream } from "fs";
-import { ConnectionConfig, createConnection } from "mysql";
+import { Connection, ConnectionConfig, createConnection } from "mysql";
 import { join } from "path";
 
-function getDatabaseConfig(): ConnectionConfig {
+function getDatabaseConfig(useSsl: boolean): ConnectionConfig {
   const dbConfig: ConnectionConfig = {
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
@@ -12,6 +12,10 @@ function getDatabaseConfig(): ConnectionConfig {
     port: parseInt(process.env.DATABASE_PORT as string),
     multipleStatements: true,
   };
+
+  if (useSsl) {
+    dbConfig.ssl = { rejectUnauthorized: true };
+  }
 
   if (
     !dbConfig.password ||
@@ -27,11 +31,20 @@ function getDatabaseConfig(): ConnectionConfig {
   return dbConfig;
 }
 
-export async function executeSQL(sql: string | string[]) {
+export async function executeSQL(sql: string | string[], useSsl?: boolean) {
   const sqlToExecute = Array.isArray(sql) ? sql : [sql];
 
-  const config = getDatabaseConfig();
-  const connection = createConnection(config);
+  let connection: Connection;
+  const config = getDatabaseConfig(useSsl ?? false);
+
+  try {
+    connection = createConnection(config);
+  } catch (error) {
+    console.error(
+      "Could not establish connection. Maybe use the '--use-ssl' flag"
+    );
+    throw error;
+  }
 
   let success = false;
 

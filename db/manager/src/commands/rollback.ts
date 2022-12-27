@@ -9,27 +9,28 @@ export const rollback: CommandFunc = async ({
   migrationHistory,
   repository,
   environment,
+  args,
 }) => {
   const lastMigrationDir =
     migrationHistory.migrations[migrationHistory.migrations.length - 1] ?? [];
   const migrationFiles = getFilesInDirectory(
-    join(repository, lastMigrationDir),
+    join(repository, lastMigrationDir)
   );
   const filenames = migrationFiles
-    .filter(migrationFile => /.*\.down\.sql/g.test(migrationFile))
+    .filter((migrationFile) => /.*\.down\.sql/g.test(migrationFile))
     .map((migrationFile: string) => migrationFile.replace(".down.sql", ""));
 
   if (migrationFiles.length > 0) {
     const sql = await Promise.all(
       filenames
         .map((filename: string) =>
-          join(repository, lastMigrationDir, getFiles(filename).down),
+          join(repository, lastMigrationDir, getFiles(filename).down)
         )
         .reverse()
-        .map((filepath: string) => readFileSync(filepath, "utf-8")),
+        .map((filepath: string) => readFileSync(filepath, "utf-8"))
     );
 
-    const success = await executeSQL(sql);
+    const success = await executeSQL(sql, args.useSsl);
 
     if (success) {
       restoreMigration(lastMigrationDir, repository);

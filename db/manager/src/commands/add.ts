@@ -9,7 +9,7 @@ export const add: CommandFunc = async ({
   repository,
   args,
 }) => {
-  const requestedName = args[0];
+  const requestedName = args.others[0];
   if (!requestedName) {
     throw new Error("Missing filename in command.");
   }

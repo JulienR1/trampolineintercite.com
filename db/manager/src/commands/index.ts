@@ -20,7 +20,10 @@ export enum Command {
 
 type CommandPayload = {
   command: Command;
-  args: string[];
+  args: {
+    useSsl: boolean;
+    others: string[];
+  };
 };
 
 const commands = {
@@ -42,7 +45,12 @@ export function getCommand(): CommandPayload {
     throw new Error(`Unknown command: '${commandStr}'`);
   }
 
-  return { command, args };
+  const useSsl = args.includes("--use-ssl");
+
+  return {
+    command,
+    args: { useSsl, others: args.filter((arg) => !["use-ssl"].includes(arg)) },
+  };
 }
 
 export async function executeCommand(

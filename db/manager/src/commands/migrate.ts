@@ -18,30 +18,31 @@ export const migrate: CommandFunc = async ({
   repository,
   environment,
   backupDir,
+  args,
 }) => {
   const currentMigrationNumber = migrationHistory.databases[environment];
   const missingMigrationDirectories = migrationHistory.migrations.slice(
-    currentMigrationNumber + 1,
+    currentMigrationNumber + 1
   );
 
   const missingMigrations = missingMigrationDirectories
     .reduce(
       (
         allFiles: { dir: string; filename: string }[],
-        migrationDirectory: string,
+        migrationDirectory: string
       ) => [
         ...allFiles,
         ...getFilesInDirectory(join(repository, migrationDirectory)).map(
           (filename: string) => ({
             dir: join(repository, migrationDirectory),
             filename,
-          }),
+          })
         ),
       ],
-      [],
+      []
     )
     .filter((migration: { dir: string; filename: string }) =>
-      /.*\.up\.sql/g.test(migration.filename),
+      /.*\.up\.sql/g.test(migration.filename)
     )
     .map((migration: { dir: string; filename: string }) => ({
       ...migration,
@@ -50,10 +51,10 @@ export const migrate: CommandFunc = async ({
 
   const migrationsToExecute = [
     ...missingMigrations.map((migration: { dir: string; filename: string }) =>
-      join(migration.dir, getFiles(migration.filename).up),
+      join(migration.dir, getFiles(migration.filename).up)
     ),
     ...migrationHistory.currentMigration.map((filename: string) =>
-      join(repository, getFiles(filename).up),
+      join(repository, getFiles(filename).up)
     ),
   ];
 
@@ -71,17 +72,17 @@ export const migrate: CommandFunc = async ({
 
     const sql = await Promise.all(
       migrationsToExecute.map((filepath: string) =>
-        readFileSync(filepath, "utf-8"),
-      ),
+        readFileSync(filepath, "utf-8")
+      )
     );
 
-    const success = await executeSQL(sql);
+    const success = await executeSQL(sql, args.useSsl);
 
     if (success) {
       if (migrationHistory.currentMigration.length > 0) {
         const migrationName = saveMigration(
           migrationHistory.currentMigration,
-          repository,
+          repository
         );
         migrationHistory.migrations.push(migrationName);
       }
@@ -102,14 +103,14 @@ function saveMigration(migrationFiles: Filename[], repository: string) {
   }
 
   const files = migrationFiles
-    .map(migrationFile => getFiles(migrationFile))
+    .map((migrationFile) => getFiles(migrationFile))
     .reduce(
       (allFiles, currentFile) => [
         ...allFiles,
         currentFile.up,
         currentFile.down,
       ],
-      [] as string[],
+      [] as string[]
     );
 
   files.forEach((migrationFile: string) => {
