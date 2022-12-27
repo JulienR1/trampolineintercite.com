@@ -21,3 +21,5 @@ pnpm-debug.log*
 # Database
 *.dump.sql
 .vercel
+
+s3-mock/
