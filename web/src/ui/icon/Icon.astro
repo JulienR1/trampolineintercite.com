@@ -1,6 +1,6 @@
 ---
 import classNames from "classnames";
-import { IconFontset } from "./IconFontSet";
+import type { IconFontset } from "./IconFontSet";
 import type { IconName } from "./IconName";
 
 export interface Props {
@@ -9,7 +9,7 @@ export interface Props {
   className?: string;
 }
 
-const { icon, fontset = IconFontset.Outlined, className } = Astro.props;
+const { icon, fontset = "outlined", className } = Astro.props;
 
 const iconClass = ["material-icons", fontset?.toString()].join("-");
 const allClasses = classNames(iconClass, "icon", className);

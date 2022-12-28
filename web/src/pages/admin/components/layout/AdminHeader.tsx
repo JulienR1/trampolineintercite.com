@@ -1,5 +1,5 @@
 import { Box, Grid, Paper, Stack } from "@mantine/core";
-import { AdminRouter } from "./AdminRouter";
+import { AdminNav } from "./AdminNav";
 import { UserMenu } from "./UserMenu";
 
 export const AdminHeader = () => {
@@ -14,7 +14,7 @@ export const AdminHeader = () => {
                 align={"center"}
                 justify={"center"}
                 style={{ height: "100%" }}>
-                <AdminRouter />
+                <AdminNav />
               </Stack>
             </Grid.Col>
             <Grid.Col span={1}>
