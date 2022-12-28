@@ -18,7 +18,7 @@
     "@emotion/react": "^11.10.5",
     "@mantine/core": "^5.9.5",
     "@mantine/hooks": "^5.9.5",
-    "@tanstack/react-router": "^0.0.1-beta.36",
+    "@tanstack/react-router": "^0.0.1-beta.38",
     "@trpc/client": "^10.5.0",
     "astro": "^1.6.12",
     "classnames": "^2.3.2",

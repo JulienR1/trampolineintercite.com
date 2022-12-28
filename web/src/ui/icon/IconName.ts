@@ -7,4 +7,6 @@ export type IconName =
   | "attach_money"
   | "timelapse"
   | "date_range"
-  | "logout";
+  | "logout"
+  | "handshake"
+  | "settings";

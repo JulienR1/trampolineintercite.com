@@ -1,15 +1,20 @@
 import classNames from "classnames";
 import type { FC } from "react";
+import "./Icon.scss";
 import type { IconFontset } from "./IconFontSet";
 import type { IconName } from "./IconName";
 
-export interface Props {
+export interface IconProps {
   icon: IconName;
   fontset?: IconFontset;
   className?: string;
 }
 
-export const Icon: FC<Props> = ({ icon, fontset, className }) => {
+export const Icon: FC<IconProps> = ({
+  icon,
+  fontset = "outlined",
+  className,
+}) => {
   const iconClass = ["material-icons", fontset?.toString()].join("-");
   const allClasses = classNames(iconClass, "icon", className);
 

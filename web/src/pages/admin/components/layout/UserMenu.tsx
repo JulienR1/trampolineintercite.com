@@ -17,9 +17,7 @@ export const UserMenu = () => {
         {user && (
           <Menu.Label>{user.firstname + " " + user.lastname}</Menu.Label>
         )}
-        <Menu.Item
-          onClick={logout}
-          icon={<Icon icon="logout" fontset="outlined" />}>
+        <Menu.Item onClick={logout} icon={<Icon icon="logout" />}>
           Déconnexion
         </Menu.Item>
       </Menu.Dropdown>
