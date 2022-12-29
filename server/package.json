@@ -7,12 +7,12 @@
   "scripts": {
     "start": "node dist/src/server.js",
     "dev": "concurrently \"ts-node-dev --respawn --transpile-only src/server.ts\" \"npm run build:watch\" \"npm run host:images\"",
-    "build": "npm run build:common; tsc",
+    "build": "npm run build:common && tsc",
     "build:watch": "tsc --watch",
-    "build:common": "cd ../common; npm ci; npm run build; cd ../server",
+    "build:common": "cd ../common && npm ci && npm run build && cd ../server",
     "host:images": "http-server s3-mock -p 10000",
     "lint": "eslint --ext .ts --fix src",
-    "test": "npm run build:common; jest"
+    "test": "npm run build:common && jest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.234.0",
