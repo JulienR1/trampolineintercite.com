@@ -9,4 +9,7 @@ export type IconName =
   | "date_range"
   | "logout"
   | "handshake"
-  | "settings";
+  | "settings"
+  | "upload_file"
+  | "image"
+  | "error";
