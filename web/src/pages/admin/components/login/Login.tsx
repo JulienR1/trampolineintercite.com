@@ -10,9 +10,10 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { validateForm } from "@trampo/ui/utils/form-validation";
+import { AuthCredentials } from "common";
 import { FormEvent, useCallback, useReducer, useRef } from "react";
 import { useAuth } from "../../auth";
-import { validateForm } from "./service";
 import {
   LoginState,
   onBeginSubmit,
@@ -36,7 +37,7 @@ export const Login = () => {
   const { errors, isDirty, isLoading, hasFailedConnection } = state;
 
   const handleChange = useCallback(() => {
-    const validation = validateForm(formRef);
+    const validation = validateForm(AuthCredentials, formRef);
     dispatch(onValidate(validation));
   }, []);
 
@@ -44,7 +45,7 @@ export const Login = () => {
     async (e: FormEvent) => {
       e.preventDefault();
 
-      const validation = validateForm(formRef);
+      const validation = validateForm(AuthCredentials, formRef);
       dispatch(onBeginSubmit(validation));
 
       if (validation.success) {
