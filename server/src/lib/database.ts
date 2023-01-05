@@ -17,6 +17,10 @@ function getDatabaseConfig() {
     port: parseInt(process.env.DATABASE_PORT as string),
   };
 
+  if (!process.env.TS_NODE_DEV) {
+    dbConfig.ssl = { rejectUnauthorized: true };
+  }
+
   if (
     !dbConfig.password ||
     !dbConfig.database ||
