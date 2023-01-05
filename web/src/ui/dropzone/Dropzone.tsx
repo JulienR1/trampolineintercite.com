@@ -5,9 +5,11 @@ import {
   FileWithPath,
 } from "@mantine/dropzone";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
-import { ErrorCode, FileRejection } from "react-dropzone";
+import * as reactDropzone from "react-dropzone";
 import { DropzoneStatus } from "./DropzoneStatus";
 import { ImagePreview } from "./ImagePreview";
+
+const { ErrorCode } = reactDropzone;
 
 type DropzoneProps = {
   onFiles: (files: FileWithPath[]) => void;
@@ -21,9 +23,9 @@ export type DropzoneRef = {
 export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>(
   ({ style, onFiles, dropzoneProps, ...inputProps }, ref) => {
     const [files, setFiles] = useState<FileWithPath[]>([]);
-    const [errors, setErrors] = useState<ErrorCode[]>([]);
+    const [errors, setErrors] = useState<reactDropzone.ErrorCode[]>([]);
 
-    const getErrorMessage = (code: ErrorCode) => {
+    const getErrorMessage = (code: reactDropzone.ErrorCode) => {
       switch (code) {
         case ErrorCode.TooManyFiles:
           return `Trop de fichiers ont été téléversés. (Maximum ${dropzoneProps.maxFiles})`;
@@ -44,15 +46,17 @@ export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>(
       setFiles(previousFiles => previousFiles.filter(f => f !== file));
     };
 
-    const handleErrors = (rejectedFiles: FileRejection[]) => {
+    const handleErrors = (rejectedFiles: reactDropzone.FileRejection[]) => {
       setErrors([
         ...new Set(
           rejectedFiles.reduce(
             (allErrorCodes, rejectedFile) => [
               ...allErrorCodes,
-              ...rejectedFile.errors.map(error => error.code as ErrorCode),
+              ...rejectedFile.errors.map(
+                error => error.code as reactDropzone.ErrorCode,
+              ),
             ],
-            [] as ErrorCode[],
+            [] as reactDropzone.ErrorCode[],
           ),
         ),
       ]);
