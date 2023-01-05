@@ -8,7 +8,7 @@
     "build": "npm run build:common && astro build",
     "build:common": "cd ../common && npm ci && npm run build && cd ../web",
     "preview": "astro preview",
-    "lint": "astro check && eslint --ext .ts,.astro --fix src",
+    "lint": "npm run build:common && astro check && eslint --ext .ts,.astro --fix src",
     "test": "npm run build:common && echo \"TODO: tests\""
   },
   "dependencies": {
