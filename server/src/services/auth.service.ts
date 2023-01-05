@@ -50,9 +50,15 @@ export const authenticateUser = () => {
 
 export const hashPassword = (password: string, salt: string) =>
   new Promise<Result<Buffer>>((resolve) => {
-    const saltBuffer = Buffer.from(salt, "hex");
-    pbkdf2(password, saltBuffer, 31000, 64, "sha512", (error, hashedPassword) =>
-      resolve(error ? err(error) : ok(hashedPassword))
+    const saltBuffer = Buffer.from(salt, "base64");
+    pbkdf2(
+      password,
+      saltBuffer,
+      100000,
+      512,
+      "sha512",
+      (error, hashedPassword) =>
+        resolve(error ? err(error) : ok(hashedPassword))
     );
   });
 
@@ -70,7 +76,9 @@ const validatePassword = async (
     return err(hashedPassword.error);
   }
 
-  if (timingSafeEqual(Buffer.from(storedHash, "hex"), hashedPassword.value)) {
+  if (
+    timingSafeEqual(Buffer.from(storedHash, "base64"), hashedPassword.value)
+  ) {
     return ok({ valid: true });
   }
   return ok({ valid: false, message: "Invalid credentials" });

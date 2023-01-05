@@ -67,14 +67,14 @@ export const getUser = () => {
 export const registerUser = async (newUser: INewUser) => {
   const { firstname, lastname, email, password } = newUser;
 
-  const salt = randomBytes(16).toString("hex");
+  const salt = randomBytes(16).toString("base64");
   const hashedPassword = await hashPassword(password, salt);
 
   if (!hashedPassword.isOk()) {
     return err(hashedPassword.error);
   }
 
-  const saltAndPassword = salt + "." + hashedPassword.value.toString("hex");
+  const saltAndPassword = salt + "." + hashedPassword.value.toString("base64");
   const response = await transaction(async ({ query, single }) => {
     await query({
       sql: "INSERT INTO person (firstname, lastname) VALUES (?, ?)",
