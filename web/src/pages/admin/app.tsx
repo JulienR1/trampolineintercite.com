@@ -1,5 +1,6 @@
 import { MantineProvider } from "@mantine/core";
 import { RouterProvider } from "@tanstack/react-router";
+import { NotificationProvider } from "@trampo/ui/notifications";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthProvider } from "./auth";
 import { Login } from "./components";
@@ -15,9 +16,11 @@ export const App = () => {
       withNormalizeCSS
       theme={{ fontFamily: "inherit" }}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider fallback={<Login />}>
-          <RouterProvider router={router} />
-        </AuthProvider>
+        <NotificationProvider>
+          <AuthProvider fallback={<Login />}>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </NotificationProvider>
       </QueryClientProvider>
     </MantineProvider>
   );
