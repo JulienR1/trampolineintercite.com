@@ -80,18 +80,18 @@ export const registerUser = async (newUser: INewUser) => {
       sql: "INSERT INTO person (firstname, lastname) VALUES (?, ?)",
       values: [firstname, lastname],
     });
-    const { new_user_id } = await single<{ new_user_id: number }>({
+    const { new_user_id: newUserId } = await single<{ new_user_id: number }>({
       sql: "SELECT id AS new_user_id FROM person WHERE firstname=? AND lastname=? ORDER BY id DESC LIMIT 1",
       values: [firstname, lastname],
     });
     await query({
       sql: "INSERT INTO credentials (person_id, email, `password`) VALUES (?, ?, ?)",
-      values: [new_user_id, email.toLowerCase(), saltAndPassword],
+      values: [newUserId, email.toLowerCase(), saltAndPassword],
     });
-    return { new_user_id };
+    return { newUserId };
   });
 
   return response.isOk()
-    ? ok({ id: response.value.new_user_id })
+    ? ok({ id: response.value.newUserId })
     : err(response.error);
 };
