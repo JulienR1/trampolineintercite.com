@@ -5,6 +5,7 @@ import {
   forwardRef,
   ForwardRefExoticComponent,
   RefAttributes,
+  useCallback,
   useImperativeHandle,
   useRef,
   useState,
@@ -18,24 +19,23 @@ type FormWrapperProps<T> = FormProps<T> & {
 
 const FormWrapper = <T extends Record<string, unknown>>(
   { onSubmit, onReset, form: Form }: FormWrapperProps<T>,
-
   ref: ForwardedRef<FormRef>,
 ) => {
   const formRef = useRef<FormRef>(null);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
 
-  const beginReset = () => {
+  const confirmReset = useCallback(() => {
+    setConfirmationOpen(false);
+    formRef.current?.reset();
+  }, []);
+
+  const beginReset = useCallback(() => {
     if (formRef.current?.isDirty()) {
       setConfirmationOpen(true);
     } else {
       confirmReset();
     }
-  };
-
-  const confirmReset = () => {
-    setConfirmationOpen(false);
-    formRef.current?.reset();
-  };
+  }, [confirmReset]);
 
   useImperativeHandle(ref, () => ({
     isDirty: () => formRef.current?.isDirty() ?? false,
