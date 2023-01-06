@@ -1,6 +1,7 @@
 import { Button, Flex, Group, Input, Text, TextInput } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import { compressImage, ImageType } from "@trampo/resources/image";
 import { Dropzone, DropzoneRef } from "@trampo/ui/dropzone";
 import type { FormRef, InnerFormProps } from "@trampo/ui/form";
 import { validateForm } from "@trampo/ui/utils/form-validation";
@@ -47,6 +48,25 @@ export const PartnerForm = forwardRef<FormRef, InnerFormProps<INewPartner>>(
 
     const withValidation = (data: Record<string, unknown>) =>
       validateForm(NewPartner, formRef, { ...data, logo });
+
+    const handleNewLogo = async (files: FileWithPath[]) => {
+      const newLogo = files.length > 0 ? files[0] : null;
+      const isRasterGraphic =
+        newLogo?.type.startsWith("image/") && !newLogo.type.includes("svg");
+
+      const compressedLogo =
+        newLogo && isRasterGraphic
+          ? await compressImage(newLogo, {
+              maxWidth: 150,
+              maxHeight: 150,
+              type: newLogo.type as ImageType,
+            })
+          : newLogo;
+
+      dispatch(
+        updateLogo(compressedLogo, withValidation({ logo: compressedLogo })),
+      );
+    };
 
     const handleReset = () => {
       dispatch(reset());
@@ -132,10 +152,7 @@ export const PartnerForm = forwardRef<FormRef, InnerFormProps<INewPartner>>(
           withAsterisk
           error={showErrors && errors?.logo?._errors}
           style={{ maxWidth: "390px" }}
-          onFiles={files => {
-            const newLogo = files.length > 0 ? files[0] : null;
-            dispatch(updateLogo(newLogo, withValidation({ logo: newLogo })));
-          }}
+          onFiles={handleNewLogo}
         />
 
         <Flex gap="md" justify="center" pt="xl">

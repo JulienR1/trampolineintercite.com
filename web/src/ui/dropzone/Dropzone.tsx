@@ -62,7 +62,9 @@ export const Dropzone = forwardRef<DropzoneRef, DropzoneProps>(
       ]);
     };
 
-    useEffect(() => onFiles(files), [files]);
+    useEffect(() => {
+      onFiles(files);
+    }, [files]);
 
     useImperativeHandle(ref, () => ({
       reset: () => setFiles([]),
