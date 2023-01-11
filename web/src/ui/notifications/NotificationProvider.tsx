@@ -28,8 +28,8 @@ export const NotificationProvider: FC<NotificationProviderProps> = ({
   const [{ notifications }, dispatch] = useReducer(reducer, initialState);
 
   const addNotification = (
-    title: string,
-    message: string,
+    title: string | ReactNode,
+    message: string | ReactNode,
     options?: NotificationOptions,
   ) => {
     const sendNotification = (props?: NotificationProps) => {

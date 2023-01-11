@@ -1,4 +1,11 @@
-import { Button, Group, Modal, Text, Title } from "@mantine/core";
+import {
+  Button,
+  Group,
+  LoadingOverlay,
+  Modal,
+  Text,
+  Title,
+} from "@mantine/core";
 import type { ReactElement, Ref } from "react";
 import {
   ForwardedRef,
@@ -15,10 +22,11 @@ import type { FormProps, FormRef, InnerFormProps } from "./types";
 
 type FormWrapperProps<T> = FormProps<T> & {
   form: ForwardRefExoticComponent<InnerFormProps<T> & RefAttributes<FormRef>>;
+  loading?: boolean;
 };
 
 const FormWrapper = <T extends Record<string, unknown>>(
-  { onSubmit, onReset, form: Form }: FormWrapperProps<T>,
+  { onSubmit, onReset, form: Form, loading = false }: FormWrapperProps<T>,
   ref: ForwardedRef<FormRef>,
 ) => {
   const formRef = useRef<FormRef>(null);
@@ -44,6 +52,8 @@ const FormWrapper = <T extends Record<string, unknown>>(
 
   return (
     <>
+      <LoadingOverlay visible={loading} overlayBlur={2} />
+
       <Modal
         centered
         size={"fit-content"}

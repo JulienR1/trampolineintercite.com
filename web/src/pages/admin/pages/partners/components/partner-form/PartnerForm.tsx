@@ -93,11 +93,7 @@ export const PartnerForm = forwardRef<FormRef, InnerFormProps<INewPartner>>(
           withAsterisk
           error={showErrors && errors?.label?._errors}
         />
-        <TextInput
-          label="Description"
-          name="description"
-          error={showErrors && errors?.description?._errors}
-        />
+
         <Input.Wrapper error={showErrors && errors?._errors}>
           <Group
             align="flex-start"

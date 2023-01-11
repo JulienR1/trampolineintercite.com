@@ -3,7 +3,6 @@ import { z } from "zod";
 export const NewPartner = z
   .object({
     label: z.string().min(1, { message: "Veuillez entrer un nom" }),
-    description: z.string().optional(),
     websiteUrl: z.string().url({ message: "Url invalide" }),
     from: z
       .string()

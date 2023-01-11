@@ -12,4 +12,5 @@ export type IconName =
   | "settings"
   | "upload_file"
   | "image"
-  | "error";
+  | "error"
+  | "delete";

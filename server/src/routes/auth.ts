@@ -18,7 +18,6 @@ export const auth = router({
     .mutation(async ({ input }) => {
       const generatedId = await registerUser(input);
       if (!generatedId.isOk()) {
-        console.log(generatedId.error);
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
       return generatedId.value.id;

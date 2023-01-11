@@ -1,4 +1,5 @@
 import type { IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import type { IRawImage } from "common";
 
 export type ImageType = typeof IMAGE_MIME_TYPE[number];
 
@@ -32,3 +33,32 @@ export const compressImage = async (
 
   return blob ? new File([blob], file.name, { type: blob.type }) : null;
 };
+
+const getImageSize = async (
+  file: File,
+): Promise<{ width: number; height: number }> => {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    };
+  });
+};
+
+export const encodeImage = async (file: File) =>
+  new Promise<IRawImage>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onerror = err => reject(err);
+
+    reader.onload = async () => {
+      const size = await getImageSize(file);
+      return resolve({
+        file: reader.result?.toString() ?? "",
+        name: file.name,
+        type: file.type as IRawImage["type"],
+        ...size,
+      });
+    };
+  });

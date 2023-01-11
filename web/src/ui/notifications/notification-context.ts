@@ -1,11 +1,11 @@
-import { createContext, useContext } from "react";
+import { createContext, ReactNode, useContext } from "react";
 
 export type NotificationOptions = { duration?: number };
 
 type INotificationContext = {
   addNotification: (
-    title: string,
-    message: string,
+    title: string | ReactNode,
+    message: string | ReactNode,
     options?: NotificationOptions,
   ) => {
     info: () => void;

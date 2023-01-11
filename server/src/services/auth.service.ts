@@ -31,6 +31,7 @@ export const authenticateUser = () => {
         id: user.value.id,
         firstname: user.value.firstname,
         lastname: user.value.lastname,
+        permissions: user.value.permissions,
         iat: Date.now(),
       };
       return jwt.sign(payload, getJwtSecret());
