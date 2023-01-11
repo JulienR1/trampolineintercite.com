@@ -21,7 +21,7 @@ export class S3Mock {
     }
   }
 
-  public async send(
+  public send(
     command: GetObjectCommand | PutObjectCommand | DeleteObjectCommand
   ) {
     if (!command.input.Key) {

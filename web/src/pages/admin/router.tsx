@@ -1,9 +1,10 @@
 import { createReactRouter } from "@tanstack/react-router";
 import { AdminRoutes, adminRoutes } from "./pages";
-import { adminRoute, BaseRoute, rootRoute } from "./__root";
+import { admin } from "./pages/admin";
+import { rootRoute } from "./__root";
 
 const routeConfig = rootRoute.addChildren([
-  adminRoute.addChildren(adminRoutes),
+  admin.route.addChildren(adminRoutes.filter(route => route !== admin.route)),
 ]);
 
 export const createRouter = () => createReactRouter({ routeConfig });
@@ -11,6 +12,6 @@ export const createRouter = () => createReactRouter({ routeConfig });
 declare module "@tanstack/react-router" {
   interface RegisterRouter {
     router: ReturnType<typeof createRouter>;
-    routes: BaseRoute | AdminRoutes;
+    routes: AdminRoutes;
   }
 }

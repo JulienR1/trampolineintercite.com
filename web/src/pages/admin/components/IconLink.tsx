@@ -2,13 +2,14 @@ import { Button, Flex, Text } from "@mantine/core";
 import { Link, RegisterRouter, useRouter } from "@tanstack/react-router";
 import { Icon, IconProps } from "@trampo/ui/icon";
 import type { FC } from "react";
+import { adminLabels } from "../pages";
 
-type IconLinkProps = { to: RegisterRouter["routes"]; label: string } & Omit<
+type IconLinkProps = { to: RegisterRouter["routes"] } & Omit<
   IconProps,
   "className"
 >;
 
-export const IconLink: FC<IconLinkProps> = ({ to, label, icon, fontset }) => {
+export const IconLink: FC<IconLinkProps> = ({ to, icon, fontset }) => {
   const pathname = useRouter().state.currentLocation.pathname;
   const isActive = to === pathname;
 
@@ -25,7 +26,7 @@ export const IconLink: FC<IconLinkProps> = ({ to, label, icon, fontset }) => {
           <Text
             weight={isActive ? "bold" : "normal"}
             color={isActive ? "white" : "black"}>
-            {label}
+            {adminLabels[to]}
           </Text>
         </Flex>
       </Button>

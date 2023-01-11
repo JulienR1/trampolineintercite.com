@@ -37,7 +37,7 @@ export const compressImage = async (
 const getImageSize = async (
   file: File,
 ): Promise<{ width: number; height: number }> => {
-  return new Promise(resolve => {
+  return await new Promise(resolve => {
     const img = new Image();
     img.src = URL.createObjectURL(file);
     img.onload = () => {
@@ -47,7 +47,7 @@ const getImageSize = async (
 };
 
 export const encodeImage = async (file: File) =>
-  new Promise<IRawImage>((resolve, reject) => {
+  await new Promise<IRawImage>((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onerror = err => reject(err);

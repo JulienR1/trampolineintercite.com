@@ -6,11 +6,11 @@ import { FormConfirmation, FormRef } from "@trampo/ui/form";
 import { useNotifications } from "@trampo/ui/notifications";
 import { useCallback, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { adminRoute } from "../../__root";
+import { admin } from "../admin";
 import { Partner, PartnerForm } from "./components";
 import type { INewPartner } from "./partners.schema";
 
-export const Partners = () => {
+const Partners = () => {
   const formRef = useRef<FormRef>(null);
   const [showForm, setShowForm] = useState(false);
   const [isSubmittingNewPartner, setIsSubmittingNewPartner] = useState(false);
@@ -111,7 +111,10 @@ export const Partners = () => {
   );
 };
 
-export const partnersRoute = adminRoute.createRoute({
-  path: "partners",
-  component: Partners,
-});
+export const partners = {
+  label: "Partenaires",
+  route: admin.route.createRoute({
+    path: "partners",
+    component: Partners,
+  }),
+};

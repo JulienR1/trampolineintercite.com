@@ -4,8 +4,8 @@ import { IconLink } from "../IconLink";
 export const AdminNav = () => {
   return (
     <Flex gap="xs">
-      <IconLink to="/admin" label="Admin" icon="settings" />
-      <IconLink to="/admin/partners" label="Partenaires" icon="handshake" />
+      <IconLink to="/admin" icon="settings" />
+      <IconLink to="/admin/partners" icon="handshake" />
     </Flex>
   );
 };

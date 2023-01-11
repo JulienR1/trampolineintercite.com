@@ -1,7 +1,5 @@
-import { createRouteConfig, Outlet, useRouter } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { createRouteConfig, Outlet } from "@tanstack/react-router";
 import { AdminLayout } from "./components";
-import { useQueryParams } from "./hooks/use-query-params";
 
 export const rootRoute = createRouteConfig({
   component: () => (
@@ -10,21 +8,3 @@ export const rootRoute = createRouteConfig({
     </AdminLayout>
   ),
 });
-
-export const adminRoute = rootRoute.createRoute({
-  path: "/admin",
-  component: () => {
-    const router = useRouter();
-    const { redirect } = useQueryParams(["redirect"]);
-
-    useEffect(() => {
-      if (redirect) {
-        router.navigate({ to: "/admin" + redirect } as any);
-      }
-    }, [redirect]);
-
-    return <Outlet />;
-  },
-});
-
-export type BaseRoute = typeof adminRoute["fullPath"];
