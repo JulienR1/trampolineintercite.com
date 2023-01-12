@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Modal, Text, Title } from "@mantine/core";
+import { Button, Card, Flex, Modal, Stack, Text, Title } from "@mantine/core";
 import { client } from "@trampo/resources/client";
 import { useTrpcErrorHandler } from "@trampo/resources/client/trpc-error-handler";
 import { encodeImage } from "@trampo/resources/image";
@@ -98,15 +98,30 @@ const Partners = () => {
         />
       </Modal>
 
-      <Button onClick={() => setShowForm(true)}>create partner</Button>
+      <Stack align="center" spacing="sm">
+        <Title size="h4">Gestion des partenaires</Title>
+        <Button
+          color="indigo"
+          variant="filled"
+          onClick={() => setShowForm(true)}>
+          <Text weight="bold" color="white">
+            Ajouter un nouveau partenaire
+          </Text>
+        </Button>
 
-      <Container size={"min(80vw,1000px)" as any}>
-        <Flex gap={"lg"} wrap="wrap" justify="center">
-          {partners.data?.map((partner, i) => (
-            <Partner key={i} {...partner} onDelete={removePartner} />
-          ))}
-        </Flex>
-      </Container>
+        <Card my="sm" withBorder style={{ width: "100%" }}>
+          <Flex my="sm" gap="lg" wrap="wrap" justify="center">
+            {partners.data?.length === 0 && (
+              <Text italic color="dimmed">
+                Aucun partenaire n'est enregistré.
+              </Text>
+            )}
+            {partners.data?.map((partner, i) => (
+              <Partner key={i} {...partner} onDelete={removePartner} />
+            ))}
+          </Flex>
+        </Card>
+      </Stack>
     </>
   );
 };
