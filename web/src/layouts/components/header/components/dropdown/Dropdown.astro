@@ -1,9 +1,9 @@
 ---
-import "./Dropdown.scss";
-
 import Icon from "@trampo/ui/icon/Icon.astro";
 import DropdownOption from "./DropdownOption.astro";
 import type { IDropdownOption } from "./IDropdownOption";
+
+import "./Dropdown.scss";
 
 export interface Props {
   title: IDropdownOption;
@@ -17,7 +17,7 @@ const { title, options } = Astro.props;
   <div class="dropdown__title">
     <DropdownOption {...title} />
     <div class="dropdown__toggle">
-      <Icon icon="expand_more"  />
+      <Icon icon="expand_more" />
     </div>
   </div>
 

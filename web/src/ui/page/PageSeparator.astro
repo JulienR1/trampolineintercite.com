@@ -1,0 +1,11 @@
+---
+import classNames from "classnames";
+
+export type Props = {
+  className?: string;
+};
+
+const { className } = Astro.props;
+---
+
+<hr class={classNames("page__separator", className)} />

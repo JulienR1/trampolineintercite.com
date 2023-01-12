@@ -1,0 +1,62 @@
+@import "../styles/resolutions.scss";
+
+.page {
+  width: 100%;
+  display: block;
+  position: relative;
+  font-size: var(--text-size-6);
+  padding: var(--padding-6) 0;
+}
+
+.page__title {
+  font-weight: var(--bold);
+  font-size: 1.4em;
+  text-align: center;
+}
+
+.page__subtitle {
+  font-weight: var(--bold);
+  font-size: 1.3em;
+  text-align: center;
+}
+
+.page__note {
+  font-size: 1em;
+  text-align: center;
+  padding: var(--padding-2) 0;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.page__note--transparent {
+  opacity: 0.5;
+}
+
+.page__wrapper {
+  width: 100%;
+  display: block;
+  position: relative;
+}
+
+.page__separator {
+  --width: min(40%, 200px);
+  height: 0.15em;
+  display: block;
+  width: var(--width);
+  margin: var(--padding-6) calc((100% - var(--width)) / 2);
+  background-color: var(--background-opposite);
+}
+
+.page__section {
+  width: 100%;
+  display: block;
+  position: relative;
+  padding: var(--padding-6) 0;
+}
+
+@include laptop {
+  .page {
+    font-size: var(--text-size-7);
+    padding: var(--padding-8) 0;
+  }
+}

@@ -1,8 +1,9 @@
 ---
 import classNames from "classnames";
-import "./Icon.scss";
 import type { IconFontset } from "./IconFontSet";
 import type { IconName } from "./IconName";
+
+import "./Icon.scss";
 
 export interface Props {
   icon: IconName;
@@ -16,4 +17,4 @@ const iconClass = ["material-icons", fontset?.toString()].join("-");
 const allClasses = classNames(iconClass, "icon", className);
 ---
 
-<span class={allClasses} >{icon ?? "Help"}</span>
+<span class={allClasses}>{icon ?? "Help"}</span>

@@ -1,11 +1,11 @@
 ---
-import "./Header.scss";
-
-import { Routes, getFilteredRouter, router } from "@trampo/routes";
+import { getFilteredRouter, router, Routes } from "@trampo/routes";
 import Logo from "@trampo/ui/Logo.astro";
 import classNames from "classnames";
 import Dropdown from "./components/dropdown/Dropdown.astro";
 import HeaderToggle from "./components/header-toggle/HeaderToggle.astro";
+
+import "./Header.scss";
 
 const headerRouter = getFilteredRouter(router, { isHeader: true });
 ---

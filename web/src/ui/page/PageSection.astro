@@ -1,0 +1,17 @@
+---
+import classNames from "classnames";
+import PageTitle from "./PageTitle.astro";
+
+export interface Props {
+  id?: string;
+  title?: string;
+  className?: string;
+}
+
+const { className, title, ...props } = Astro.props;
+---
+
+<section {...props} class={classNames("page__section", className)}>
+  {title && <PageTitle title={title} />}
+  <slot />
+</section>
