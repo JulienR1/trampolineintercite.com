@@ -1,5 +1,104 @@
 ---
 import Page from "@trampo/layouts/Page.astro";
+import { Routes } from "@trampo/routes";
+import Logo from "@trampo/ui/Logo.astro";
 ---
 
-<Page>404</Page>
+<Page>
+  <div class="errorPage">
+    <div class="errorPage__column">
+      <a href={Routes.HOME} class="errorPage__link">
+        <Logo />
+      </a>
+    </div>
+
+    <div class="errorPage__separator"></div>
+
+    <div class="errorPage__column">
+      <h2 class="errorPage__title">404</h2>
+      <p class="errorPage__content">Impossible de trouver la page spécifiée.</p>
+    </div>
+  </div>
+</Page>
+
+<style lang="scss">
+  @import "@styles/mixins/focusBorder.scss";
+
+  .errorPage {
+    width: 60%;
+    display: grid;
+    margin: 0 auto;
+    min-height: 80vh;
+    grid-template-rows: 1fr 0.1em 1fr;
+    font-size: var(--text-size-12);
+    text-align: center;
+  }
+
+  .errorPage__column {
+    position: relative;
+    display: block;
+    height: 4em;
+    flex: 1;
+
+    &:first-of-type {
+      width: 4em;
+      justify-self: center;
+      align-self: flex-end;
+      margin-bottom: 1em;
+      transform: translateX(0.4em);
+    }
+
+    &:last-of-type {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  .errorPage__separator {
+    display: none;
+  }
+
+  .errorPage__title {
+    font-weight: var(--black);
+    font-size: 1.2em;
+  }
+
+  .errorPage__content {
+    font-size: 0.75em;
+  }
+
+  .errorPage__link {
+    cursor: pointer;
+    @include focus;
+  }
+
+  @include laptop {
+    .errorPage {
+      text-align: left;
+      align-items: center;
+      grid-template-rows: none;
+      grid-template-columns: 1fr 0.1em 1fr;
+    }
+
+    .errorPage__column {
+      &:first-of-type {
+        margin-right: 1em;
+        justify-self: flex-end;
+        align-self: center;
+      }
+
+      &:last-of-type {
+        margin-left: 1em;
+      }
+    }
+
+    .errorPage__separator {
+      display: block;
+      width: 0.1em;
+      height: 3em;
+      margin: 0 auto;
+      background-color: var(--background-opposite);
+    }
+  }
+</style>
