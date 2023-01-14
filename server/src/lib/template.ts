@@ -3,7 +3,7 @@ import Mustache from "mustache";
 import { join } from "path";
 import { TemplateRegistry } from "../templates/template-registry";
 
-const loadTemplate = async (templateName: string) => {
+const loadTemplate = (templateName: string) => {
   const path = join(process.cwd(), "src", "templates", templateName);
   return readFileSync(path, "utf8");
 };

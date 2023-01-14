@@ -28,7 +28,7 @@ const canSendMail = async () => {
 };
 
 const registerSendgridCall = async () =>
-  query({
+  await query({
     sql: `
     REPLACE INTO api_stats (sendgrid_calls)
     SELECT MIN(sendgrid_calls)+1 AS sendgrid_calls FROM (SELECT sendgrid_calls FROM api_stats WHERE \`date\` = current_date() UNION ALL SELECT 0 AS sendgrid_calls LIMIT 1) AS A;`,
