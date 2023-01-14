@@ -13,4 +13,5 @@ export type IconName =
   | "upload_file"
   | "image"
   | "error"
-  | "delete";
+  | "delete"
+  | "call";

@@ -1,0 +1,37 @@
+.form__field > * {
+  width: 100%;
+}
+
+.form__errorField {
+  border-bottom: 3px solid var(--contrast);
+}
+
+.form__errorField--notify {
+  animation: form__errorShake var(--delay-3);
+}
+
+.form__errorContainer {
+  padding-bottom: 0.8em;
+}
+
+.form__errorContainer[hidden] {
+  display: none;
+}
+
+.form__error {
+  font-weight: var(--bold);
+  color: var(--contrast);
+}
+
+@keyframes form__errorShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}

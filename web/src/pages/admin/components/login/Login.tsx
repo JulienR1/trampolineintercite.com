@@ -37,7 +37,7 @@ export const Login = () => {
   const { errors, isDirty, isLoading, hasFailedConnection } = state;
 
   const handleChange = useCallback(() => {
-    const validation = validateForm(AuthCredentials, formRef);
+    const validation = validateForm(AuthCredentials, formRef.current);
     dispatch(onValidate(validation));
   }, []);
 
@@ -45,7 +45,7 @@ export const Login = () => {
     async (e: FormEvent) => {
       e.preventDefault();
 
-      const validation = validateForm(AuthCredentials, formRef);
+      const validation = validateForm(AuthCredentials, formRef.current);
       dispatch(onBeginSubmit(validation));
 
       if (validation.success) {

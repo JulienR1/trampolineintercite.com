@@ -32,13 +32,13 @@ export const PartnerForm = forwardRef<FormRef, InnerFormProps<INewPartner>>(
     const { errors, showErrors, isDirty, logo } = state;
 
     const handleChange = () => {
-      const validation = validateForm(NewPartner, formRef, { logo });
+      const validation = validateForm(NewPartner, formRef.current, { logo });
       dispatch(onValidate(validation));
     };
 
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
-      const validation = validateForm(NewPartner, formRef, { logo });
+      const validation = validateForm(NewPartner, formRef.current, { logo });
       dispatch(beginSubmit(validation));
 
       if (validation.success) {
@@ -47,7 +47,7 @@ export const PartnerForm = forwardRef<FormRef, InnerFormProps<INewPartner>>(
     };
 
     const withValidation = (data: Record<string, unknown>) =>
-      validateForm(NewPartner, formRef, { ...data, logo });
+      validateForm(NewPartner, formRef.current, { ...data, logo });
 
     const handleNewLogo = async (files: FileWithPath[]) => {
       const newLogo = files.length > 0 ? files[0] : null;

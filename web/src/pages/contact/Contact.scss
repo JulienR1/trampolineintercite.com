@@ -1,0 +1,38 @@
+@import "@styles/resolutions.scss";
+@import "@styles/mixins/focusBorder.scss";
+
+.contact__map {
+  height: 35vh;
+  max-height: 500px;
+}
+
+@include tablet {
+  .contact__map {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+@include laptop {
+  .contact__map {
+    height: 50vh;
+  }
+}
+
+@include large {
+  .contact__wrapper {
+    width: 85%;
+    display: grid;
+    margin: 0 auto;
+    align-items: center;
+    grid-template-columns: 3fr 2fr;
+  }
+
+  .contact__address {
+    padding-left: var(--padding-10);
+  }
+
+  .contact__form {
+    grid-column: 1 / span 2;
+  }
+}

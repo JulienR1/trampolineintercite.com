@@ -1,0 +1,27 @@
+@import "@styles/mixins/shadows";
+@import "@styles/mixins/focusBorder";
+
+.button {
+  margin: var(--padding-6) auto;
+  display: block;
+  width: fit-content;
+  border-radius: 8px;
+  font-weight: var(--black);
+  color: var(--text-contrast);
+  padding: var(--padding-3) var(--padding-9);
+  transition: all ease var(--delay-4);
+  background-color: var(--contrast);
+  text-align: center;
+  cursor: pointer;
+  @include shadow--offsetDownLight;
+  @include focus;
+
+  &:hover {
+    @include shadow--offsetDown;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}

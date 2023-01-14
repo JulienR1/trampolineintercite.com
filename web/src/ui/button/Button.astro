@@ -1,0 +1,13 @@
+---
+import classNames from "classnames";
+import "./Button.scss";
+
+type ButtonProps = astroHTML.JSX.IntrinsicElements["button"];
+export type Props = ButtonProps & { className?: string };
+
+const props = Astro.props;
+---
+
+<button {...props} class={classNames("button", props.class)}>
+  <slot />
+</button>

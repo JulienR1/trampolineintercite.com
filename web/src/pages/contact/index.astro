@@ -1,5 +1,26 @@
 ---
 import Page from "@trampo/layouts/Page.astro";
+import ContactAddress from "@trampo/ui/contact/ContactAddress.astro";
+import ContactForm from "@trampo/ui/contact/ContactForm.astro";
+import Map from "@trampo/ui/contact/Map.astro";
+import PageSection from "@trampo/ui/page/PageSection.astro";
+
+import "./Contact.scss";
 ---
 
-<Page>Contact</Page>
+<Page title="Nous joindre" className="contact__wrapper">
+  <PageSection className="contact__map">
+    <Map latitude={46.348917} longitude={-72.538476} zoom={15} />
+  </PageSection>
+
+  <PageSection className="contact__address">
+    <ContactAddress
+      email="coordo.trampoline.intercite@gmail.com"
+      phone="8198402950"
+    />
+  </PageSection>
+
+  <PageSection className="contact__form">
+    <ContactForm />
+  </PageSection>
+</Page>

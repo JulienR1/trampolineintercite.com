@@ -1,0 +1,125 @@
+---
+import "./ContactForm.scss";
+
+import Button from "../button/Button.astro";
+import Field from "./Field.astro";
+---
+
+<h3 class="page__subtitle">Questions ou commentaires..</h3>
+
+<form class="contactForm">
+  <Field>
+    <input
+      type="text"
+      name="name"
+      placeholder="Nom"
+      aria-label="Votre nom"
+      class="contactForm__input"
+    />
+  </Field>
+  <Field>
+    <input
+      type="text"
+      name="email"
+      placeholder="Adresse courriel"
+      aria-label="Votre adresse courriel"
+      class="contactForm__input"
+    />
+  </Field>
+  <input
+    type="text"
+    name="subject"
+    placeholder="Sujet"
+    aria-label="Sujet du message"
+    class="contactForm__input"
+  />
+  <Field>
+    <textarea
+      name="message"
+      placeholder="Message"
+      aria-label="Contenu du message"
+      class="contactForm__input contactForm__input--area"></textarea>
+  </Field>
+
+  <p hidden class="contactForm__feedback contactForm__feedback--success">
+    Votre message a été envoyé. Merci de nous avoir contacté!
+  </p>
+
+  <p hidden class="contactForm__feedback contactForm__feedback--failed">
+    Le message n&apos;a pas pu être envoyé. Veuillez réessayer ou nous contacter
+    par téléphone.
+  </p>
+
+  <Button type="submit">Envoyer</Button>
+</form>
+
+<script>
+  import { client } from "@trampo/resources/client";
+  import { EmailContact, IEmailContact } from "common";
+  import { formatErrors, validateForm } from "../utils/form-validation";
+
+  let isDirty = false;
+  const fields = document.querySelectorAll(".contactForm__input");
+
+  const handleChange = () => {
+    if (isDirty) {
+      showErrors(validateForm(EmailContact, form));
+    }
+  };
+
+  const handleSubmit = async (e: Event) => {
+    e.preventDefault();
+
+    isDirty = true;
+    const validation = validateForm(EmailContact, form);
+    showErrors(validation, { animate: true });
+
+    if (validation.success) {
+      const requestState = await client.contact.sendMail
+        .query(validation.data)
+        .catch(() => false);
+
+      successMessage?.toggleAttribute("hidden", !requestState);
+      failedMessage?.toggleAttribute("hidden", requestState);
+      setTimeout(() => {
+        successMessage?.toggleAttribute("hidden", true);
+        failedMessage?.toggleAttribute("hidden", true);
+      }, 5000);
+    }
+  };
+
+  const showErrors = (
+    rawErrors: ReturnType<typeof validateForm<typeof EmailContact>>,
+    { animate } = { animate: false },
+  ) => {
+    const errors = formatErrors(rawErrors);
+    fields.forEach(field => {
+      const fieldName = field?.getAttribute("name");
+      if (fieldName) {
+        const event = new CustomEvent("errors", {
+          detail: {
+            errors: errors?.[fieldName as keyof IEmailContact] ?? [],
+            animate,
+          },
+        });
+
+        field.parentElement?.dispatchEvent(event);
+      }
+    });
+  };
+
+  const form = document.querySelector<HTMLFormElement>(".contactForm");
+  form?.addEventListener("submit", handleSubmit);
+
+  document.querySelectorAll(".contactForm__input").forEach(field => {
+    field.addEventListener("keydown", handleChange);
+    field.addEventListener("change", handleChange);
+  });
+
+  const successMessage = document.querySelector(
+    ".contactForm__feedback--success",
+  );
+  const failedMessage = document.querySelector(
+    ".contactForm__feedback--failed",
+  );
+</script>

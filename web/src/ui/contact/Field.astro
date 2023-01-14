@@ -1,0 +1,48 @@
+---
+import classNames from "classnames";
+import "./Field.scss";
+
+export type Props = astroHTML.JSX.IntrinsicElements["div"];
+const props = Astro.props;
+---
+
+<div class="form__field">
+  <slot />
+</div>
+
+<div {...props} hidden class={classNames("form__errorContainer", props.class)}>
+</div>
+
+<script>
+  const formFields = document.querySelectorAll(".form__field");
+  formFields.forEach(formField => {
+    formField.addEventListener("errors", (event: any) => {
+      const errorContainer = formField.nextElementSibling;
+      const hasErrors = event.detail.errors._errors?.length > 0;
+      errorContainer?.toggleAttribute("hidden", !hasErrors);
+
+      const errorField = formField.firstElementChild;
+      errorField?.classList.toggle("form__errorField", hasErrors);
+      errorField?.classList.toggle(
+        "form__errorField--notify",
+        hasErrors && event.detail.animate,
+      );
+
+      setTimeout(
+        () => errorField?.classList.remove("form__errorField--notify"),
+        200,
+      );
+
+      if (errorContainer) {
+        const elements =
+          event.detail.errors._errors?.map((error: string) => {
+            const errorNode = document.createElement("p");
+            errorNode.classList.add("form__error");
+            errorNode.textContent = error;
+            return errorNode;
+          }) ?? [];
+        errorContainer?.replaceChildren(...elements);
+      }
+    });
+  });
+</script>
