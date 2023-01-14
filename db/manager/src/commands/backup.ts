@@ -5,6 +5,7 @@ import { CommandFunc } from "./types.js";
 export const doBackup: CommandFunc = async ({
   migrationHistory,
   backupDir,
+  args,
 }) => {
   const { doBackup } = await inquirer.prompt([
     {
@@ -14,7 +15,7 @@ export const doBackup: CommandFunc = async ({
     },
   ]);
   if (doBackup) {
-    await backup(backupDir);
+    await backup(backupDir, args.useSsl);
   }
 
   return migrationHistory;

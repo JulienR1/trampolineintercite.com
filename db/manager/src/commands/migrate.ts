@@ -67,7 +67,7 @@ export const migrate: CommandFunc = async ({
       },
     ]);
     if (doBackup) {
-      await backup(backupDir);
+      await backup(backupDir, args.useSsl);
     }
 
     const sql = await Promise.all(

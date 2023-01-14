@@ -86,14 +86,19 @@ export async function executeSQL(sql: string | string[], useSsl?: boolean) {
   return success;
 }
 
-export async function backup(backupDir: string) {
+export async function backup(backupDir: string, useSsl: boolean) {
+  const sslCertificatePath = join(process.env.SLL_CERTIFICATE_PATH ?? "");
+  if (!process.env.SLL_CERTIFICATE_PATH) {
+    throw new Error("Missing env variable: 'SLL_CERTIFICATE_PATH'");
+  }
+
   const filename = `${Date.now().toString()}.dump.sql`;
   const writeStream = createWriteStream(join(backupDir, filename));
 
   console.log("Creating backup ..");
   try {
     await new Promise<void>((resolve, reject) => {
-      const dump = spawn("mysqldump", [
+      const args = [
         "--user",
         process.env.DATABASE_USER as string,
         `-p${process.env.DATABASE_PASSWORD}`,
@@ -102,7 +107,15 @@ export async function backup(backupDir: string) {
         "--port",
         process.env.DATABASE_PORT as string,
         process.env.DATABASE_NAME as string,
-      ]);
+      ];
+
+      if (useSsl) {
+        args.push(
+          ...["--ssl-mode=VERIFIY_IDENTITY", "--ssl-ca=" + sslCertificatePath]
+        );
+      }
+
+      const dump = spawn("mysqldump", args);
 
       dump.stdout
         .pipe(writeStream)
