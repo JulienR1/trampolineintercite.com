@@ -1,9 +1,0 @@
-@import "../../../styles/mixins/shadows.scss";
-
-.card {
-  display: block;
-  overflow: hidden;
-  border-radius: 8px;
-  position: relative;
-  @include shadow--card;
-}
