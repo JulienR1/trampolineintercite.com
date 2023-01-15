@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "tsc",
     "build": "rimraf dist && tsup src/index.ts --format cjs,esm --dts",
-    "dev": "npm run build -- --watch"
+    "dev": "npm run build -- --watch",
+    "test": "echo \"TODO tests\""
   },
   "dependencies": {
     "zod": "^3.20.2"
