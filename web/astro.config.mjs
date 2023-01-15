@@ -16,17 +16,17 @@ export default defineConfig({
   vite: {
     resolve: {
       alias: {
-        "@styles/": `${path.resolve(__dirname, "src/styles")}/`
-      }
+        "@styles/": `${path.resolve(__dirname, "src/styles")}/`,
+      },
     },
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: `@import "@styles/globals.scss";`
-        }
-      }
-    }
+          additionalData: `@import "@styles/globals.scss";`,
+        },
+      },
+    },
   },
-  output: "server",
-  adapter: vercel()
+  output: "static",
+  adapter: vercel(),
 });
