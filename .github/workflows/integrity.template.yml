@@ -17,16 +17,16 @@ jobs:
         with:
           node-version: "16.x"
       - name: Get changed files
-        id: changed-files-${{ inputs.dir }}
+        id: changed-files
         uses: tj-actions/changed-files@v35
         with:
           files: ${{ inputs.dir }}
       - name: Install
-        if: steps.changed-files-${{ inputs.dir }}.outpus.any_changed == 'true'
+        if: steps.changed-files.outpus.any_changed == 'true'
         run: npm ci
       - name: Lint
-        if: steps.changed-files-${{ inputs.dir }}.outpus.any_changed == 'true'
+        if: steps.changed-files.outpus.any_changed == 'true'
         run: npm run lint
       - name: Test
-        if: steps.changed-files-${{ inputs.dir }}.outpus.any_changed == 'true'
+        if: steps.changed-files.outpus.any_changed == 'true'
         run: npm run test
