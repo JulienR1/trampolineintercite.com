@@ -1,4 +1,4 @@
-[`trampolineintercite.com`](../../README.md)/[`docs`](./docs.md)/[`architecture.md`](./architecture.md)
+[`trampolineintercite.com`](../README.md)/[`docs`](./docs.md)/[`architecture.md`](./architecture.md)
 
 # Architecture
 

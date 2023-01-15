@@ -1,4 +1,4 @@
-[`trampolineintercite.com`](../../README.md)/[`docs`](./docs.md)/[`db_tool.md`](./db_tool.md)
+[`trampolineintercite.com`](../README.md)/[`docs`](./docs.md)/[`db_tool.md`](./db_tool.md)
 
 # DB tool
 

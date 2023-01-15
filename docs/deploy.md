@@ -1,10 +1,10 @@
-[`trampolineintercite.com`](../../README.md)/[`docs`](./docs.md)/[`deploy.md`](./deploy.md)
+[`trampolineintercite.com`](../README.md)/[`docs`](./docs.md)/[`deploy.md`](./deploy.md)
 
 # Deployment
 
 ## Preview
 
-Every branch is automatically deployed on vercel as a preview.
+Every branch is automatically deployed on Vercel as a preview.
 
 ## Production
 

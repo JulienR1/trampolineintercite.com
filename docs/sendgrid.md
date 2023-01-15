@@ -1,4 +1,4 @@
-[`trampolineintercite.com`](../../README.md)/[`docs`](./docs.md)/[`sendgrid.md`](./sendgrid.md)
+[`trampolineintercite.com`](../README.md)/[`docs`](./docs.md)/[`sendgrid.md`](./sendgrid.md)
 
 # Sendgrid setup
 
