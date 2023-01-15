@@ -1,5 +1,8 @@
 name: Build Common project
-on: [workflow_call]
+on:
+  workflow_call:
+    paths:
+      - common/**
 jobs:
   build:
     runs-on: ubuntu-latest

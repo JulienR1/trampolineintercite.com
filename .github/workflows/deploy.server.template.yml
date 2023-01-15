@@ -14,7 +14,14 @@ jobs:
         working-directory: ./server/deploy
     steps:
       - uses: actions/checkout@v3
+      - name: Get changed files
+        id: changed-files-server
+        uses: tj-actions/changed-files@v35
+        with:
+          files: server/**
       - name: Install deploy tool
+        if: steps.changed-files-server.outpus.any_changed == 'true'
         run: npm ci
       - name: Deploy
+        if: steps.changed-files-server.outpus.any_changed == 'true'
         run: npm start -- --key=${{ secrets.render_api_key }} --serviceId=${{ secrets.service_id }}
