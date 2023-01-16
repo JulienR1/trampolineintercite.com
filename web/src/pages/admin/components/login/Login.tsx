@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Box,
   Button,
   Card,
@@ -10,6 +11,7 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { Routes } from "@trampo/routes";
 import { validateForm } from "@trampo/ui/utils/form-validation";
 import { AuthCredentials } from "common";
 import { FormEvent, useCallback, useReducer, useRef } from "react";
@@ -80,7 +82,7 @@ export const Login = () => {
 
             <Space h="lg" />
 
-            <Stack>
+            <Stack spacing="xs">
               <Button
                 type="submit"
                 color="indigo"
@@ -90,6 +92,10 @@ export const Login = () => {
                   Connexion
                 </Text>
               </Button>
+
+              <Anchor size="xs" align="center" color="gray" href={Routes.HOME}>
+                Retour au site principal
+              </Anchor>
             </Stack>
           </form>
 
