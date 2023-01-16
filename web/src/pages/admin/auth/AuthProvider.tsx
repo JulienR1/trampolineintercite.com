@@ -12,10 +12,15 @@ import { readJwtToken } from "./service";
 
 type AuthProviderProps = {
   fallback: ReactNode;
-  children: ReactNode | ReactNode[];
+  blocked: ReactNode;
+  children: ReactNode;
 };
 
-export const AuthProvider: FC<AuthProviderProps> = ({ fallback, children }) => {
+export const AuthProvider: FC<AuthProviderProps> = ({
+  fallback,
+  blocked,
+  children,
+}) => {
   const queryClient = useQueryClient();
   const isTokenValid = useQuery(
     "auth",
@@ -47,7 +52,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ fallback, children }) => {
       {isTokenValid.isLoading ? (
         <Spinner />
       ) : hasToken && isTokenValid.data ? (
-        children
+        user?.permissions.includes("ADMIN_PANEL") ? (
+          children
+        ) : (
+          blocked
+        )
       ) : (
         fallback
       )}

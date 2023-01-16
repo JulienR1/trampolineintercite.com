@@ -3,7 +3,7 @@ import { RouterProvider } from "@tanstack/react-router";
 import { NotificationProvider } from "@trampo/ui/notifications";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthProvider } from "./auth";
-import { Login } from "./components";
+import { Login, NotAllowed } from "./components";
 import { createRouter } from "./router";
 
 const queryClient = new QueryClient();
@@ -17,7 +17,7 @@ export const App = () => {
       theme={{ fontFamily: "inherit" }}>
       <QueryClientProvider client={queryClient}>
         <NotificationProvider>
-          <AuthProvider fallback={<Login />}>
+          <AuthProvider fallback={<Login />} blocked={<NotAllowed />}>
             <RouterProvider router={router} />
           </AuthProvider>
         </NotificationProvider>
