@@ -1,0 +1,52 @@
+---
+import { description, principles, values } from "./club.json";
+
+import Page from "@trampo/layouts/Page.astro";
+import { Routes } from "@trampo/routes";
+import PageSection from "@trampo/ui/page/PageSection.astro";
+
+import Button from "@trampo/ui/button/Button.astro";
+import "./About.scss";
+---
+
+<Page title="Le club" className="about">
+  <PageSection className="about__headshotSection">
+    <div class="about__container">
+      <figure class="about__headshot">
+        <img
+          src="./france_bouffard.png"
+          alt="France Bouffard - Entraîneur chef"
+        />
+        <figcaption>
+          <p>France Bouffard</p>
+          <p>- Entraîneur chef -</p>
+        </figcaption>
+      </figure>
+
+      <div>
+        <h3 class="about__title">Historique</h3>
+        {description.map(paragraph => <p class="about__text">{paragraph}</p>)}
+      </div>
+    </div>
+  </PageSection>
+
+  <PageSection>
+    <div class="about__container about__container--split">
+      <div class="about__content">
+        <h3 class="about__title">Valeurs</h3>
+        <p class="about__text">
+          {values.slice(0, -1).join(", ") + " et " + values.slice(-1)}
+        </p>
+      </div>
+
+      <div class="about__content">
+        <h3 class="about__title">Principes du club</h3>
+        <p class="about__text">{principles}</p>
+      </div>
+    </div>
+  </PageSection>
+
+  <Button>
+    <a href={Routes.RULES}>Consulter les règlements</a>
+  </Button>
+</Page>

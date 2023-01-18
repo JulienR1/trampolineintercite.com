@@ -14,11 +14,11 @@ const { email, phone } = Astro.props;
 
 <h3 class="page__subtitle contactAddress__text">Église Ste-Cécile</h3>
 
-<p class="contactAddress__content contactAddress__content--padding">
+<address class="contactAddress__content contactAddress__content--padding">
   <span class="contactAddress__text">550 rue des Commissaires</span>
   <span class="contactAddress__text">Trois-Rivières, Québec</span>
   <span class="contactAddress__text">G9A 0C3</span>
-</p>
+</address>
 
 <a href={`tel: ${formatPhone(phone, "-")}`} class="contactAddress__link">
   <p class="contactAddress__content contactAddress__content--icon">
