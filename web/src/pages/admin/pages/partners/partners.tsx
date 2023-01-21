@@ -4,6 +4,7 @@ import { useTrpcErrorHandler } from "@trampo/resources/client/trpc-error-handler
 import { encodeImage } from "@trampo/resources/image";
 import { FormConfirmation, FormRef } from "@trampo/ui/form";
 import { useNotifications } from "@trampo/ui/notifications";
+import { Permission } from "@trampo/ui/permission";
 import { useCallback, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { admin } from "../admin";
@@ -100,14 +101,16 @@ const Partners = () => {
 
       <Stack align="center" spacing="sm">
         <Title size="h4">Gestion des partenaires</Title>
-        <Button
-          color="indigo"
-          variant="filled"
-          onClick={() => setShowForm(true)}>
-          <Text weight="bold" color="white">
-            Ajouter un nouveau partenaire
-          </Text>
-        </Button>
+        <Permission permissions={"EDIT"}>
+          <Button
+            color="indigo"
+            variant="filled"
+            onClick={() => setShowForm(true)}>
+            <Text weight="bold" color="white">
+              Ajouter un nouveau partenaire
+            </Text>
+          </Button>
+        </Permission>
 
         <Card my="sm" withBorder style={{ width: "100%" }}>
           <Flex my="sm" gap="lg" wrap="wrap" justify="center">

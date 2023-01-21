@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const Role = z.enum(["ADMIN", "SUPERADMIN"]);
+export const Role = z.enum(["ADMIN", "SUPERADMIN", "READONLY"]);
 export type IRole = z.infer<typeof Role>;
 
 export interface IRoleData {

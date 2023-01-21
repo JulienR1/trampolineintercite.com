@@ -1,0 +1,1 @@
+INSERT INTO `role` (id, label) VALUES (3, "READONLY");
