@@ -1,7 +1,8 @@
 import { admin } from "./admin";
+import { messages } from "./messages";
 import { partners } from "./partners";
 
-const routes = [admin, partners];
+const routes = [admin, partners, messages];
 
 const { adminRoutes, adminLabels } = routes.reduce(
   (routes, currentRoute) => ({

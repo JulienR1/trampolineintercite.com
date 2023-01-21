@@ -1,10 +1,10 @@
 import { Button, Card, Flex, Modal, Stack, Text, Title } from "@mantine/core";
+import { Permission } from "@trampo/pages/admin/components/permission";
 import { client } from "@trampo/resources/client";
 import { useTrpcErrorHandler } from "@trampo/resources/client/trpc-error-handler";
 import { encodeImage } from "@trampo/resources/image";
 import { FormConfirmation, FormRef } from "@trampo/ui/form";
 import { useNotifications } from "@trampo/ui/notifications";
-import { Permission } from "@trampo/ui/permission";
 import { useCallback, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { admin } from "../admin";

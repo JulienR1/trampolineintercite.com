@@ -14,4 +14,6 @@ export type IconName =
   | "image"
   | "error"
   | "delete"
-  | "call";
+  | "call"
+  | "chat"
+  | "info";

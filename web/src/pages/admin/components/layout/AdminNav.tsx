@@ -6,6 +6,7 @@ export const AdminNav = () => {
     <Flex gap="xs">
       <IconLink to="/admin" icon="settings" />
       <IconLink to="/admin/partners" icon="handshake" />
+      <IconLink to="/admin/messages" icon="chat" />
     </Flex>
   );
 };
