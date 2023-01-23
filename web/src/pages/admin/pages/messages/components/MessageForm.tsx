@@ -1,14 +1,12 @@
-import { Button, Flex, Group, Text, TextInput } from "@mantine/core";
+import { Button, Flex, Group, Input, Text, TextInput } from "@mantine/core";
 import { DatePicker } from "@mantine/dates";
-import { RichTextEditor } from "@mantine/tiptap";
-import { useEditor } from "@tiptap/react";
 import type { FormRef, InnerFormProps } from "@trampo/ui/form";
 import { FormEvent, forwardRef, useImperativeHandle, useRef } from "react";
+import { TextEditor } from "./TextEditor";
 
 export const MessageForm = forwardRef<FormRef, InnerFormProps<{}>>(
   ({ onSubmit, onBeginReset, onReset }, ref) => {
     const formRef = useRef<HTMLFormElement>(null);
-    const editor = useEditor({});
 
     const handleSubmit = (event: FormEvent) => {
       event.preventDefault();
@@ -54,9 +52,9 @@ export const MessageForm = forwardRef<FormRef, InnerFormProps<{}>>(
           />
         </Group>
 
-        <RichTextEditor editor={editor}>
-          <RichTextEditor.Content />
-        </RichTextEditor>
+        <Input.Wrapper label="Message">
+          <TextEditor />
+        </Input.Wrapper>
 
         <Flex gap="md" justify="center" pt="xl">
           <Button variant="white" type="button" p="xs" onClick={onBeginReset}>
