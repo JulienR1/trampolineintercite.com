@@ -4,8 +4,13 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import type { FC } from "react";
 
-export const TextEditor = () => {
+interface TextEditorProps {
+  onChange: (content: { text: string; html: string }) => void;
+}
+
+export const TextEditor: FC<TextEditorProps> = ({ onChange }) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -15,6 +20,8 @@ export const TextEditor = () => {
       TextAlign.configure({ types: ["paragraph"] }),
     ],
     content: "",
+    onUpdate: ({ editor: e }) =>
+      onChange({ text: e.getText(), html: e.getHTML() }),
   });
 
   return (

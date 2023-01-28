@@ -1,2 +1,2 @@
 export * from "./DateFilter";
-export * from "./MessageForm";
+export * from "./message-form";

@@ -2,10 +2,11 @@ import { Button, Card, Flex, Modal, Stack, Text, Title } from "@mantine/core";
 import { Permission } from "@trampo/pages/admin/components/permission";
 import { client } from "@trampo/resources/client";
 import { FormConfirmation, FormRef } from "@trampo/ui/form";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { admin } from "../admin";
 import { DateFilter, MessageForm } from "./components";
+import type { INewMessage } from "./message.schema";
 
 const Messages = () => {
   const formRef = useRef<FormRef>(null);
@@ -15,6 +16,10 @@ const Messages = () => {
     "messages",
     async () => await client.messages.getAll.query(),
   );
+
+  const handleSubmit = useCallback((data: INewMessage) => {
+    setShowForm(false);
+  }, []);
 
   return (
     <>
@@ -26,7 +31,7 @@ const Messages = () => {
           ref={formRef}
           form={MessageForm}
           loading={false}
-          onSubmit={() => setShowForm(false)}
+          onSubmit={handleSubmit}
           onReset={() => setShowForm(false)}
         />
       </Modal>
