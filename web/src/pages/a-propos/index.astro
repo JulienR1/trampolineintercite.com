@@ -46,7 +46,15 @@ import "./About.scss";
     </div>
   </PageSection>
 
-  <Button>
+  <Button tabindex={-1} id="rulesButton">
     <a href={Routes.RULES}>Consulter les règlements</a>
   </Button>
 </Page>
+
+<script>
+  import { Routes } from "@trampo/routes";
+
+  document
+    .getElementById("rulesButton")
+    ?.addEventListener("click", () => location.assign(Routes.RULES));
+</script>

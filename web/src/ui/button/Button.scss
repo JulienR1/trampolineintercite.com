@@ -13,6 +13,9 @@
   background-color: var(--contrast);
   text-align: center;
   cursor: pointer;
+  border: none;
+  font-size: 1em;
+
   @include shadow--offsetDownLight;
   @include focus;
 
