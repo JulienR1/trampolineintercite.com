@@ -8,6 +8,7 @@ import { useCallback, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { admin } from "../admin";
 import { DateFilter, MessageForm } from "./components";
+import { Message } from "./components/Message";
 import type { INewMessage } from "./message.schema";
 
 const Messages = () => {
@@ -21,7 +22,14 @@ const Messages = () => {
   const queryClient = useQueryClient();
   const messages = useQuery(
     "messages",
-    async () => await client.messages.getAll.query(),
+    async () =>
+      await client.messages.getAll.query().catch(() => {
+        addNotification(
+          "Impossible d'obtenir les annonces du serveur",
+          null,
+        ).error();
+        return [];
+      }),
   );
 
   const handleSubmit = useCallback(async (messageData: INewMessage) => {
@@ -41,7 +49,7 @@ const Messages = () => {
 
     if (messageId) {
       queryClient.invalidateQueries("messages");
-      addNotification("Succès", "Message crée avec succès.").success();
+      addNotification("Succès", "Message créé avec succès.").success();
       setShowForm(false);
     }
 
@@ -88,8 +96,8 @@ const Messages = () => {
                 Aucune annonce à afficher
               </Text>
             )}
-            {messages.data?.map((message, i) => (
-              <p key={i}>{message.id}</p>
+            {messages.data?.map(message => (
+              <Message key={message.id} {...message} />
             ))}
           </Flex>
         </Card>

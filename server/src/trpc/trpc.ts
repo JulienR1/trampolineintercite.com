@@ -1,8 +1,9 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { IPermission } from "common";
+import SuperJSON from "superjson";
 import { Context } from "./context";
 
-const trpc = initTRPC.context<Context>().create();
+const trpc = initTRPC.context<Context>().create({ transformer: SuperJSON });
 
 export const isAuthenticated = trpc.middleware(({ next, ctx }) => {
   if (!ctx.user) {

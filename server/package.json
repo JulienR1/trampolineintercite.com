@@ -25,6 +25,7 @@
     "mustache": "^4.2.0",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.9.0",
+    "superjson": "^1.12.2",
     "zod": "^3.20.2"
   },
   "devDependencies": {
