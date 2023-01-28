@@ -8,7 +8,9 @@ import { getUser } from "./users.service";
 export const authenticateUser = () => {
   return {
     fromCredentials: async (credentials: IAuthCredentials) => {
-      const user = await getUser().fromEmail(credentials.email);
+      const user = await getUser({ includePassword: true }).fromEmail(
+        credentials.email
+      );
       if (!user.isOk()) {
         throw new TRPCError({ code: "FORBIDDEN" });
       }

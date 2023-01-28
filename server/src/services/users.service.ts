@@ -4,7 +4,7 @@ import { query, transaction } from "../lib";
 import { err, ok, Result } from "../types";
 import { hashPassword } from "./auth.service";
 
-export const getUser = () => {
+export const getUser = (options?: { includePassword: boolean }) => {
   const withRolesAndPermissions = async (
     user: Result<IUserData>
   ): Promise<Result<IUser>> => {
@@ -35,7 +35,7 @@ export const getUser = () => {
       firstname: user.value.firstname,
       lastname: user.value.lastname,
       email: user.value.email,
-      password: user.value.password,
+      password: options?.includePassword ? user.value.password : null,
       roles: roles.value.map(({ label }) => label) as IUser["roles"],
       permissions: [
         ...new Set(permissions.value.map(({ label }) => label)),
