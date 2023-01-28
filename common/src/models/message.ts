@@ -16,6 +16,7 @@ export const MessageDetails = z.object({
 
 export const NewMessagePayload = z
   .object({
+    title: z.string().min(1),
     content: z.string().min(1),
     startDate: z
       .string()
@@ -25,7 +26,6 @@ export const NewMessagePayload = z
       .string()
       .transform((dateStr) => new Date(dateStr))
       .refine((date) => z.date().safeParse(date).success),
-    authorId: z.number().positive(),
   })
   .refine((obj) => obj.startDate < obj.endDate);
 

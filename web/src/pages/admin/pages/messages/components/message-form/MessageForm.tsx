@@ -43,7 +43,7 @@ export const MessageForm = forwardRef<FormRef, InnerFormProps<INewMessage>>(
       dispatch(submit(validation));
 
       if (validation.success) {
-        onSubmit(validation.data);
+        onSubmit({ ...validation.data, content: message.html });
       }
     };
 
@@ -82,7 +82,13 @@ export const MessageForm = forwardRef<FormRef, InnerFormProps<INewMessage>>(
           error={showErrors && errors?.title?._errors}
         />
 
-        <Input.Wrapper error={showErrors && errors?._errors}>
+        <Input.Wrapper
+          error={
+            showErrors &&
+            !errors?.startDate &&
+            !errors?.endDate &&
+            errors?._errors
+          }>
           <Group align="flex-start" noWrap>
             <DatePicker
               key={"from__" + datePickerId.current}

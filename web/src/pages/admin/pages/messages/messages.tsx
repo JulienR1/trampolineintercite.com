@@ -1,9 +1,11 @@
 import { Button, Card, Flex, Modal, Stack, Text, Title } from "@mantine/core";
 import { Permission } from "@trampo/pages/admin/components/permission";
 import { client } from "@trampo/resources/client";
+import { useTrpcErrorHandler } from "@trampo/resources/client/trpc-error-handler";
 import { FormConfirmation, FormRef } from "@trampo/ui/form";
+import { useNotifications } from "@trampo/ui/notifications";
 import { useCallback, useRef, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { admin } from "../admin";
 import { DateFilter, MessageForm } from "./components";
 import type { INewMessage } from "./message.schema";
@@ -11,14 +13,39 @@ import type { INewMessage } from "./message.schema";
 const Messages = () => {
   const formRef = useRef<FormRef>(null);
   const [showForm, setShowForm] = useState(false);
+  const [isSubmittingNewMessage, setIsSubmittingNewMessage] = useState(false);
 
+  const { addNotification } = useNotifications();
+  const trpcErrorHandler = useTrpcErrorHandler();
+
+  const queryClient = useQueryClient();
   const messages = useQuery(
     "messages",
     async () => await client.messages.getAll.query(),
   );
 
-  const handleSubmit = useCallback((data: INewMessage) => {
-    setShowForm(false);
+  const handleSubmit = useCallback(async (messageData: INewMessage) => {
+    setIsSubmittingNewMessage(true);
+
+    const messageId = await client.messages.create
+      .mutate({
+        title: messageData.title,
+        content: messageData.content,
+        startDate: messageData.startDate,
+        endDate: messageData.endDate,
+      })
+      .catch(err => {
+        trpcErrorHandler(err, "Le message n'a pas pu être créé.");
+        return undefined;
+      });
+
+    if (messageId) {
+      queryClient.invalidateQueries("messages");
+      addNotification("Succès", "Message crée avec succès.").success();
+      setShowForm(false);
+    }
+
+    setIsSubmittingNewMessage(false);
   }, []);
 
   return (
@@ -30,7 +57,7 @@ const Messages = () => {
         <FormConfirmation
           ref={formRef}
           form={MessageForm}
-          loading={false}
+          loading={isSubmittingNewMessage}
           onSubmit={handleSubmit}
           onReset={() => setShowForm(false)}
         />
