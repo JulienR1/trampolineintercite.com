@@ -40,13 +40,20 @@ export const getDetailedMessages = async (): Promise<IMessageDetails[]> => {
   ): Promise<IMessageDetails> => {
     const author = await getUser().fromId(message.author_id);
 
+    const startDate = new Date(message.start_date);
+    const endDate = new Date(message.end_date);
+    const visible = new Boolean(message.visible).valueOf();
+    const now = new Date();
+    const isActive = visible && startDate <= now && endDate >= now;
+
     return {
       id: message.id,
       title: message.title,
       content: message.content,
-      startDate: new Date(message.start_date),
-      endDate: new Date(message.end_date),
-      visible: new Boolean(message.visible).valueOf(),
+      startDate,
+      endDate,
+      visible,
+      isActive,
       author: author.isOk() ? author.value : null,
     };
   };

@@ -1,0 +1,31 @@
+.adminLink {
+  display: none;
+}
+
+@include laptop {
+  .adminLink {
+    display: flex;
+    position: absolute;
+    z-index: var(--navigation + 1);
+    top: calc($desktopHeight / 2);
+    right: calc($desktopHeight / 2);
+    transform: translate(50%, -50%);
+    visibility: hidden;
+    opacity: 0;
+    transition: all var(--delay-2);
+    padding: var(--padding-2);
+    border-radius: var(--padding-1);
+
+    &:hover,
+    &:focus,
+    &:focus-within {
+      color: var(--text-contrast);
+      background-color: var(--contrast);
+    }
+  }
+
+  .adminLink--visible {
+    visibility: visible;
+    opacity: 1;
+  }
+}

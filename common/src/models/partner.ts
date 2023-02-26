@@ -11,8 +11,8 @@ export const PartnerDetails = z.object({
   id: z.number(),
   label: z.string(),
   websiteUrl: z.string().url(),
-  startDate: z.string(),
-  endDate: z.string().nullable(),
+  startDate: z.date(),
+  endDate: z.date().nullable(),
   isActive: z.boolean(),
   img: Image,
 });

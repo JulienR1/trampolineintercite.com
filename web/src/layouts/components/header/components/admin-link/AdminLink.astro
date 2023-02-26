@@ -1,0 +1,25 @@
+---
+import { Routes } from "@trampo/routes";
+import Icon from "@trampo/ui/icon/Icon.astro";
+
+import "./AdminLink.scss";
+---
+
+<a href={Routes.ADMIN} class="adminLink">
+  <Icon icon={"settings"} />
+</a>
+
+<script>
+  import { getJwtToken } from "@trampo/resources/localstorage";
+
+  const adminLink = document.querySelector(".adminLink");
+
+  if (getJwtToken()) {
+    document.addEventListener("mousemove", event => {
+      const showLink = event.clientY < 300;
+      adminLink?.classList.toggle("adminLink--visible", showLink);
+    });
+  } else {
+    adminLink?.remove();
+  }
+</script>

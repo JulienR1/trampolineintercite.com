@@ -1,21 +1,16 @@
-import "./Partner.scss";
-
 import {
   Anchor,
-  Badge,
-  Button,
   Card,
   Center,
   Container,
   Divider,
   Image,
-  Table,
-  Text,
   Title,
 } from "@mantine/core";
 import { useAuth } from "@trampo/pages/admin/auth";
 import { DeleteOverlay } from "@trampo/pages/admin/components";
-import { Icon } from "@trampo/ui/icon";
+import { ActivityRange } from "@trampo/pages/admin/components/ActivityRange";
+import { DeleteButton } from "@trampo/pages/admin/components/delete-button/DeleteButton";
 import type { IPartnerDetails } from "common";
 import { FC, useState } from "react";
 
@@ -33,7 +28,7 @@ export const Partner: FC<PartnerProps> = ({ onDelete, ...partner }) => {
       shadow="sm"
       radius="md"
       withBorder
-      className="partner"
+      className="deleteButton__container"
       style={{ maxWidth: "204px" }}
       onClick={e => e.stopPropagation()}>
       <Card.Section>
@@ -57,19 +52,7 @@ export const Partner: FC<PartnerProps> = ({ onDelete, ...partner }) => {
         </Center>
       </Card.Section>
 
-      {user?.permissions?.includes("EDIT") && !isDeleting && (
-        <div className="partner__deleteButton">
-          <Button
-            px="xs"
-            color="red"
-            variant="filled"
-            onClick={() => setIsDeleting(true)}>
-            <Text size="md">
-              <Icon icon="delete" />
-            </Text>
-          </Button>
-        </div>
-      )}
+      <DeleteButton hide={isDeleting} onDelete={() => setIsDeleting(true)} />
 
       <Container py="sm">
         <Divider />
@@ -89,36 +72,7 @@ export const Partner: FC<PartnerProps> = ({ onDelete, ...partner }) => {
         {partner.websiteUrl}
       </Anchor>
 
-      <Badge
-        mt={"xs"}
-        fullWidth
-        variant="filled"
-        color={partner.isActive ? "green" : "red"}>
-        {partner.isActive ? "Actif" : "Inactif"}
-      </Badge>
-
-      <Table>
-        <tbody>
-          <tr>
-            <td>Début</td>
-            <td>
-              <Badge>
-                {new Date(partner.startDate).toLocaleDateString("en-CA")}
-              </Badge>
-            </td>
-          </tr>
-          <tr>
-            <td>Fin</td>
-            <td>
-              <Badge>
-                {partner.endDate
-                  ? new Date(partner.endDate).toLocaleDateString("en-CA")
-                  : "aucune"}
-              </Badge>
-            </td>
-          </tr>
-        </tbody>
-      </Table>
+      <ActivityRange {...partner} />
     </Card>
   );
 };

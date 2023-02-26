@@ -1,2 +1,2 @@
-export * from "./partner";
+export * from "./Partner";
 export * from "./partner-form";

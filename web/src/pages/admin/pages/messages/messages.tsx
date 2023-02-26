@@ -56,6 +56,10 @@ const Messages = () => {
     setIsSubmittingNewMessage(false);
   }, []);
 
+  const handleDelete = async () => {
+    return true;
+  };
+
   return (
     <>
       <Modal
@@ -97,7 +101,7 @@ const Messages = () => {
               </Text>
             )}
             {messages.data?.map(message => (
-              <Message key={message.id} {...message} />
+              <Message key={message.id} {...message} onDelete={handleDelete} />
             ))}
           </Flex>
         </Card>

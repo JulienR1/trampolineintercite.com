@@ -2,6 +2,7 @@
 import { getFilteredRouter, router, Routes } from "@trampo/routes";
 import Logo from "@trampo/ui/logo/Logo.astro";
 import classNames from "classnames";
+import AdminLink from "./components/admin-link/AdminLink.astro";
 import Dropdown from "./components/dropdown/Dropdown.astro";
 import HeaderToggle from "./components/header-toggle/HeaderToggle.astro";
 
@@ -53,6 +54,8 @@ const headerRouter = getFilteredRouter(router, { isHeader: true });
       }
     </div>
   </nav>
+
+  <AdminLink />
 </header>
 
 <script>

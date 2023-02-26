@@ -14,6 +14,7 @@ export const MessageDetails = z.object({
   startDate: z.date(),
   endDate: z.date(),
   visible: z.boolean(),
+  isActive: z.boolean(),
   author: User.nullable(),
 });
 

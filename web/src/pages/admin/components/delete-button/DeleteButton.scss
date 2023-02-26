@@ -1,4 +1,4 @@
-.partner__deleteButton {
+.deleteButton {
   position: absolute;
   top: 0;
   right: 0;
@@ -7,7 +7,7 @@
   transition: all 0.1s ease;
 }
 
-.partner:hover .partner__deleteButton {
+.deleteButton__container:hover .deleteButton {
   visibility: visible;
   opacity: 1;
 }

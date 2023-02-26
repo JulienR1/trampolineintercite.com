@@ -14,6 +14,7 @@ import "./DeleteOverlay.scss";
 type DeleteOverlayProps = {
   elementId: number;
   visible: boolean;
+  small?: boolean;
   onDelete: (id: number) => Promise<boolean>;
   onCancel: () => void;
 };
@@ -21,6 +22,7 @@ type DeleteOverlayProps = {
 export const DeleteOverlay: FC<DeleteOverlayProps> = ({
   elementId,
   visible,
+  small,
   onDelete,
   onCancel,
 }) => {
@@ -47,23 +49,46 @@ export const DeleteOverlay: FC<DeleteOverlayProps> = ({
       <Overlay blur={3} color="black" opacity={0.7} />
 
       <div ref={containerRef} className="deleteOverlay__confirmation">
-        <Stack justify="center" m="sm">
-          <Text size={"60px" as any} color="white" align="center">
+        <Stack justify="center" m="sm" spacing={small ? "xs" : "md"}>
+          <Text
+            size={(small ? "26px" : "60px") as any}
+            color="white"
+            align="center">
             <Icon icon="delete" />
           </Text>
 
-          <Text size="lg" color="white" weight="bold" align="center">
+          <Text
+            size={small ? "md" : "lg"}
+            color="white"
+            weight="bold"
+            align="center">
             Êtes-vous certain de supprimer cet élément?
           </Text>
-          <Text size="sm" underline color="white" align="center" mx="sm">
+          <Text
+            size={"sm"}
+            underline
+            color="white"
+            align="center"
+            mx={small ? "0" : "sm"}>
             Cette action est permanente.
           </Text>
-          <Space py="xs" />
-          <Stack spacing="sm" mx="xl">
-            <Button color="red" variant="filled" onClick={handleDelete}>
-              <Text weight="bolder">Supprimer</Text>
+
+          {!small && <Space py="xs" />}
+
+          <Stack spacing={small ? "xs" : "sm"} mx="xl">
+            <Button
+              color="red"
+              variant="filled"
+              size={small ? "xs" : "sm"}
+              onClick={handleDelete}>
+              <Text size={small ? "sm" : "md"} weight="bolder">
+                Supprimer
+              </Text>
             </Button>
-            <Button variant="white" onClick={onCancel}>
+            <Button
+              variant="white"
+              size={small ? "xs" : "sm"}
+              onClick={onCancel}>
               <Text weight="bolder">Annuler</Text>
             </Button>
           </Stack>

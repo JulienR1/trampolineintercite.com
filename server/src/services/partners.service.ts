@@ -52,8 +52,8 @@ export const getAllPartnersWithDetails = async (): Promise<
       width: partner.width,
       height: partner.height,
     },
-    startDate: partner.start_date.toString(),
-    endDate: partner.end_date?.toString() ?? null,
+    startDate: new Date(partner.start_date),
+    endDate: partner.end_date ? new Date(partner.end_date) : null,
     isActive:
       new Date(partner.start_date) <= new Date() &&
       (partner.end_date === null || new Date(partner.end_date) > new Date()),
