@@ -1,0 +1,53 @@
+---
+export interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+---
+
+<div class="rich-text">
+  <Fragment set:html={content} />
+</div>
+
+<style lang="scss" is:global>
+  .rich-text {
+    strong,
+    em,
+    u,
+    s,
+    a {
+      font-weight: inherit;
+      color: inherit;
+    }
+
+    strong {
+      font-weight: var(--black);
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    u {
+      text-decoration: underline;
+    }
+
+    s {
+      text-decoration: line-through;
+    }
+
+    a {
+      font-weight: var(--bold);
+      text-decoration: underline;
+
+      &:link {
+        color: var(--link-default);
+      }
+
+      &:visited {
+        color: var(--link-visited);
+      }
+    }
+  }
+</style>
