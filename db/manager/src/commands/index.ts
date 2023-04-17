@@ -68,7 +68,7 @@ export async function executeCommand(
 
   const environment = await selectEnvironment(workingDirectory);
   const repository = getRepository(workingDirectory);
-  const backupDir = getBackupDirectory(workingDirectory);
+  const backupDir = getBackupDirectory(workingDirectory, environment);
 
   return (
     (await mapping[command]({

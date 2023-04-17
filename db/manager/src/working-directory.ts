@@ -33,8 +33,8 @@ export const getRepository = (workingDir: string) => {
   return repoPath;
 };
 
-export const getBackupDirectory = (workingDir: string) => {
-  const backupPath = join(workingDir, "backups");
+export const getBackupDirectory = (workingDir: string, environment: string) => {
+  const backupPath = join(workingDir, "backups", environment);
   if (!existsSync(backupPath)) {
     mkdirSync(backupPath);
   }
