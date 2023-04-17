@@ -7,10 +7,10 @@ import {
   NotificationOptions,
 } from "./notification-context";
 import {
+  INotification,
   appendNotification,
   dismountNotification,
   initialState,
-  INotification,
   mountNotification,
   reducer,
   removeNotification,
@@ -80,7 +80,7 @@ export const NotificationProvider: FC<NotificationProviderProps> = ({
   }, []);
 
   const containerStyles: CSSProperties = {
-    position: "absolute",
+    position: "fixed",
     top: "24px",
     right: "24px",
     zIndex: 300,
