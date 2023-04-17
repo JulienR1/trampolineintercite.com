@@ -1,0 +1,22 @@
+---
+export interface Props {}
+
+const {} = Astro.props;
+---
+
+<div>
+  <slot />
+</div>
+
+<style lang="scss">
+  @import "@styles/mixins/shadows.scss";
+
+  div {
+    display: block;
+    padding: var(--padding-4);
+    margin: var(--padding-4);
+    @include shadow--card;
+    border-radius: var(--padding-1);
+    border: 1px solid #30303040;
+  }
+</style>

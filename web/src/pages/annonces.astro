@@ -1,5 +1,20 @@
 ---
 import Page from "@trampo/layouts/Page.astro";
+import { client } from "@trampo/resources/client";
+import Message from "@trampo/ui/Message.astro";
+
+const messages = await client.messages.getAllVisible.query();
 ---
 
-<Page>Annonces</Page>
+<Page title="Annonces">
+  <div class="message-wrapper">
+    {messages.map((message, index) => <Message id={index} {...message} />)}
+  </div>
+</Page>
+
+<style lang="scss">
+  .message-wrapper {
+    max-width: 95%;
+    margin: 0 auto;
+  }
+</style>

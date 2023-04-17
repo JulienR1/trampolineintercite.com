@@ -1,0 +1,66 @@
+---
+import type { IMessage } from "common";
+import Card from "./Card.astro";
+import RichText from "./rich-text/RichText.astro";
+import { formatDate } from "./utils/formatter";
+
+export interface Props extends IMessage {
+  id: string | number;
+}
+
+const { id, title, date, content } = Astro.props;
+const titleId = `message-title-${id}`;
+---
+
+<article aria-describedby={titleId}>
+  <Card>
+    <hgroup>
+      <h3 id={titleId}>{title}</h3>
+      <p>{formatDate(date)}</p>
+    </hgroup>
+    <div class="content">
+      <RichText content={content} />
+    </div>
+  </Card>
+</article>
+
+<style lang="scss">
+  article {
+    max-width: 640px;
+
+    hgroup {
+      display: grid;
+      grid-template-columns: auto max(30%, 110px);
+      padding-bottom: var(--padding-4);
+      align-items: center;
+
+      h3 {
+        font-size: var(--text-size-6);
+        font-weight: var(--bold);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      p {
+        font-size: var(--text-size-6);
+        font-weight: var(--light);
+        text-align: right;
+
+        &::first-letter {
+          text-transform: capitalize;
+        }
+      }
+    }
+
+    .content {
+      font-size: var(--text-size-6);
+    }
+  }
+
+  @include tablet {
+    article hgroup h3 {
+      font-size: var(--text-size-8);
+    }
+  }
+</style>

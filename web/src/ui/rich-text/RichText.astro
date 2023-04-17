@@ -12,12 +12,10 @@ const { content } = Astro.props;
 
 <style lang="scss" is:global>
   .rich-text {
-    strong,
-    em,
-    u,
-    s,
-    a {
+    &,
+    * {
       font-weight: inherit;
+      min-height: 1em;
       color: inherit;
     }
 
