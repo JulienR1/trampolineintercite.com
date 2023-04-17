@@ -5,7 +5,7 @@ import {
   DeleteOverlay,
 } from "@trampo/pages/admin/components";
 import type { IMessageDetails } from "common";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 
 interface MessageProps extends IMessageDetails {
   onDelete: (id: number) => Promise<boolean>;
@@ -13,6 +13,15 @@ interface MessageProps extends IMessageDetails {
 
 export const Message: FC<MessageProps> = ({ onDelete, ...message }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = useCallback(
+    async (id: number) => {
+      const success = await onDelete(id);
+      setIsDeleting(false);
+      return success;
+    },
+    [onDelete],
+  );
 
   return (
     <Card
@@ -29,7 +38,7 @@ export const Message: FC<MessageProps> = ({ onDelete, ...message }) => {
           visible={isDeleting}
           elementId={message.id}
           onCancel={() => setIsDeleting(false)}
-          onDelete={onDelete}
+          onDelete={handleDelete}
         />
       </Card.Section>
 

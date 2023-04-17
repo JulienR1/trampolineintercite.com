@@ -32,7 +32,6 @@ export const TextEditor: FC<TextEditorProps> = ({ onChange }) => {
           <RichTextEditor.Italic />
           <RichTextEditor.Underline />
           <RichTextEditor.Strikethrough />
-          <RichTextEditor.Highlight />
           <RichTextEditor.ClearFormatting />
         </RichTextEditor.ControlsGroup>
 

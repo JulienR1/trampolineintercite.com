@@ -7,7 +7,7 @@ import {
   IUser,
 } from "common";
 import { query, transaction } from "../lib";
-import { err, ok, Result } from "../types";
+import { Result, err, ok } from "../types";
 import { getUser } from "./users.service";
 
 export const getMessages = async (): Promise<IMessage[]> => {
@@ -65,6 +65,10 @@ export const createMessage = async (
   message: INewMessagePayload,
   author: IUser
 ): Promise<Result<number>> => {
+  const now = new Date();
+  message.startDate.setHours(now.getHours());
+  message.startDate.setMinutes(now.getMinutes());
+
   const result = await transaction(async (client) => {
     await client.query({
       sql: "INSERT INTO messages (title, content, start_date, end_date, author_id) VALUES (?, ?, ?, ?, ?);",
@@ -89,4 +93,12 @@ export const createMessage = async (
     return err(result.error);
   }
   return ok(result.value.messageId);
+};
+
+export const removeMessage = async (id: number): Promise<Result<boolean>> => {
+  const result = await query({
+    sql: "DELETE FROM messages WHERE id = ?",
+    values: [id],
+  }).execute();
+  return result.isOk() ? ok(true) : err(result.error);
 };

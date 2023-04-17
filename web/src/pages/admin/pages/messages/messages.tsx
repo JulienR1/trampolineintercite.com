@@ -56,9 +56,29 @@ const Messages = () => {
     setIsSubmittingNewMessage(false);
   }, []);
 
-  const handleDelete = async () => {
-    return true;
-  };
+  const handleDelete = useCallback(async (id: number) => {
+    const success = await client.messages.remove.mutate(id).catch(err => {
+      trpcErrorHandler(err, "Impossible de supprimer l'annonce");
+      return false;
+    });
+
+    if (success) {
+      const message = messages.data?.find(m => m.id === id);
+      addNotification(
+        "Succès",
+        <>
+          Annonce '
+          <Text span weight="bold">
+            {message?.title}
+          </Text>
+          ' retirée avec succès.
+        </>,
+      ).success();
+    }
+
+    await queryClient.invalidateQueries("messages");
+    return success;
+  }, []);
 
   return (
     <>

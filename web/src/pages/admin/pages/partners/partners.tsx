@@ -62,7 +62,10 @@ const Partners = () => {
 
   const removePartner = useCallback(
     async (id: number) => {
-      const success = await client.partners.remove.mutate(id);
+      const success = await client.partners.remove.mutate(id).catch(err => {
+        trpcErrorHandler(err, "Impossible de supprimer le partneraire");
+        return false;
+      });
 
       if (success) {
         const partner = partners.data?.find(p => p.id === id);

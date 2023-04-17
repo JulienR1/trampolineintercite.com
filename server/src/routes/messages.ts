@@ -5,7 +5,8 @@ import {
   createMessage,
   getDetailedMessages,
   getMessages,
-} from "../services/messages.service";
+  removeMessage,
+} from "../services";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const messages = router({
@@ -23,5 +24,15 @@ export const messages = router({
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
       return messageId.value;
+    }),
+
+  remove: protectedProcedure(["ADMIN_PANEL", "EDIT"])
+    .input(z.number())
+    .mutation(async ({ input }) => {
+      const success = await removeMessage(input);
+      if (!success.isOk()) {
+        throw new TRPCError({ code: "BAD_REQUEST" });
+      }
+      return true;
     }),
 });
