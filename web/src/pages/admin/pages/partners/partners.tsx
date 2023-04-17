@@ -11,6 +11,8 @@ import { admin } from "../admin";
 import { Partner, PartnerForm } from "./components";
 import type { INewPartner } from "./partners.schema";
 
+import "@trampo/ui/form/mantine-override.scss";
+
 const Partners = () => {
   const formRef = useRef<FormRef>(null);
   const [showForm, setShowForm] = useState(false);
@@ -92,6 +94,7 @@ const Partners = () => {
       <Modal
         opened={showForm}
         onClose={() => formRef.current?.reset()}
+        classNames={{ content: "modal--noScroll" }}
         title={<Title size="h3">Ajouter un partenaire</Title>}>
         <FormConfirmation
           ref={formRef}

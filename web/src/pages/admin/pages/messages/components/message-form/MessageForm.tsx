@@ -1,5 +1,5 @@
 import { Button, Flex, Group, Input, Text, TextInput } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DateTimePicker } from "@mantine/dates";
 import type { FormRef, InnerFormProps } from "@trampo/ui/form";
 import { validateForm } from "@trampo/ui/utils/form-validation";
 import {
@@ -90,7 +90,7 @@ export const MessageForm = forwardRef<FormRef, InnerFormProps<INewMessage>>(
             errors?._errors
           }>
           <Group align="flex-start" noWrap>
-            <DatePicker
+            <DateTimePicker
               key={"from__" + datePickerId.current}
               label="Début"
               name="startDate"
@@ -103,11 +103,12 @@ export const MessageForm = forwardRef<FormRef, InnerFormProps<INewMessage>>(
                 })
               }
             />
-            <DatePicker
+            <DateTimePicker
               key={"to__" + datePickerId.current}
               label="Fin"
               name="endDate"
               withAsterisk
+              styles={{ input: { minWidth: "120px" } }}
               error={showErrors && errors?.endDate?._errors}
               onChange={endDate =>
                 makeValidation({ endDate: endDate?.toString() ?? undefined })

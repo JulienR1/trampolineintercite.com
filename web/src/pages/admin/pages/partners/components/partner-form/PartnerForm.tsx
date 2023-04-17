@@ -1,7 +1,7 @@
 import { Button, Flex, Group, Input, Text, TextInput } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 import { FileWithPath, IMAGE_MIME_TYPE } from "@mantine/dropzone";
-import { compressImage, ImageType } from "@trampo/resources/image";
+import { ImageType, compressImage } from "@trampo/resources/image";
 import { Dropzone, DropzoneRef } from "@trampo/ui/dropzone";
 import type { FormRef, InnerFormProps } from "@trampo/ui/form";
 import { validateForm } from "@trampo/ui/utils/form-validation";
@@ -98,7 +98,7 @@ export const PartnerForm = forwardRef<FormRef, InnerFormProps<INewPartner>>(
           <Group
             align="flex-start"
             mb={showErrors && errors?._errors ? "5px" : undefined}>
-            <DatePicker
+            <DateInput
               key={"from__" + datePickerId.current}
               label="Date de début"
               name="from"
@@ -114,7 +114,7 @@ export const PartnerForm = forwardRef<FormRef, InnerFormProps<INewPartner>>(
                 )
               }
             />
-            <DatePicker
+            <DateInput
               key={"to__" + datePickerId.current}
               label="Date de fin"
               name="to"

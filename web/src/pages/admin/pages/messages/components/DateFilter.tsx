@@ -1,5 +1,5 @@
 import { Flex, Group, Text, Tooltip } from "@mantine/core";
-import { DatePicker } from "@mantine/dates";
+import { DatePickerInput } from "@mantine/dates";
 import { Icon } from "@trampo/ui/icon";
 
 export const DateFilter = () => {
@@ -13,8 +13,12 @@ export const DateFilter = () => {
           </Text>
         </Tooltip>
       </Flex>
-      <DatePicker defaultValue={new Date()} />
-      <DatePicker />
+      <DatePickerInput
+        type="range"
+        allowSingleDateInRange
+        defaultValue={[new Date(), null]}
+        styles={{ input: { minWidth: "200px" } }}
+      />
     </Group>
   );
 };

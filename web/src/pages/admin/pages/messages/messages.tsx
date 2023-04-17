@@ -85,6 +85,7 @@ const Messages = () => {
       <Modal
         opened={showForm}
         onClose={() => formRef.current?.reset()}
+        classNames={{ content: "modal--noScroll" }}
         title={<Title size="h3">Ajouter une annonce</Title>}>
         <FormConfirmation
           ref={formRef}

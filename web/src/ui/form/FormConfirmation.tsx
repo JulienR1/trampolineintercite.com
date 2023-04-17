@@ -8,10 +8,10 @@ import {
 } from "@mantine/core";
 import type { ReactElement, Ref } from "react";
 import {
-  ForwardedRef,
-  forwardRef,
   ForwardRefExoticComponent,
+  ForwardedRef,
   RefAttributes,
+  forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
