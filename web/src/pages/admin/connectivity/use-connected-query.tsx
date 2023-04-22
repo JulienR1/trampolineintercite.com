@@ -25,7 +25,7 @@ export const useConnectedQuery = <
     "queryKey" | "queryFn"
   >,
 ): UseQueryResult<TData, TError> => {
-  const { lastRequestTimeRef, setIsWaitingForServer } =
+  const { lastRequestTimeRef, isWaitingForServer, setIsWaitingForServer } =
     useContext(ConnectivityContext);
 
   const lastRequestTime = lastRequestTimeRef.current;
@@ -43,5 +43,8 @@ export const useConnectedQuery = <
     }
   }, [queryKey, queryFn, options]);
 
-  return useQuery(queryKey, queryFn, options);
+  return useQuery(queryKey, queryFn, {
+    ...options,
+    enabled: !hasGoneIdle && !isWaitingForServer,
+  });
 };

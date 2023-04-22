@@ -51,7 +51,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({
   return (
     <AuthContext.Provider value={{ login, logout, user }}>
       {isTokenValid.isLoading ? (
-        <Spinner />
+        <Spinner message="Connexion..." />
       ) : hasToken && isTokenValid.data ? (
         user?.permissions.includes("ADMIN_PANEL") ? (
           children

@@ -7,6 +7,7 @@ import {
 
 type IConnectivityContext = {
   lastRequestTimeRef: MutableRefObject<Date | null>;
+  isWaitingForServer: boolean;
   setIsWaitingForServer: Dispatch<SetStateAction<boolean>>;
 };
 

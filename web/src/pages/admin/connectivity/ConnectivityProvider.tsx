@@ -1,4 +1,4 @@
-import { Portal } from "@mantine/core";
+import { Overlay, Portal } from "@mantine/core";
 import { Spinner } from "@trampo/ui/spinner";
 import { FC, ReactNode, useRef, useState } from "react";
 import { ConnectivityContext } from "./connectivity-context";
@@ -15,10 +15,12 @@ export const ConnectivityProvider: FC<ConnectivityProviderProps> = ({
 
   return (
     <ConnectivityContext.Provider
-      value={{ lastRequestTimeRef, setIsWaitingForServer }}>
+      value={{ lastRequestTimeRef, isWaitingForServer, setIsWaitingForServer }}>
       {isWaitingForServer && (
         <Portal>
-          <Spinner message="Démarrage du serveur..." />
+          <Overlay fixed color="#fff" opacity={0.8} blur={0.5}>
+            <Spinner message="Démarrage du serveur..." />
+          </Overlay>
         </Portal>
       )}
       {children}
