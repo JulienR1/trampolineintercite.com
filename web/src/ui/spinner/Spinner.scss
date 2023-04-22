@@ -4,9 +4,14 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: var(--navigation);
+}
+
+.spinner__wrapper {
+  margin: 0 auto;
+  position: relative;
   width: calc(var(--size) * 1px);
   height: calc(var(--size) * 1px);
-  z-index: var(--navigation);
 }
 
 .spinner__element {

@@ -6,7 +6,8 @@ import {
 } from "@trampo/resources/localstorage";
 import { Spinner } from "@trampo/ui/spinner";
 import { FC, ReactNode, useCallback } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
+import { useConnectedQuery } from "../connectivity";
 import { AuthContext } from "./auth-context";
 import { readJwtToken } from "./service";
 
@@ -22,7 +23,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({
   children,
 }) => {
   const queryClient = useQueryClient();
-  const isTokenValid = useQuery(
+  const isTokenValid = useConnectedQuery(
     "auth",
     async () => await client.auth.validate.query().catch(() => false),
   );

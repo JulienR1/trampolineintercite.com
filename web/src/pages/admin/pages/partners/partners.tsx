@@ -6,7 +6,8 @@ import { encodeImage } from "@trampo/resources/image";
 import { FormConfirmation, FormRef } from "@trampo/ui/form";
 import { useNotifications } from "@trampo/ui/notifications";
 import { useCallback, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
+import { useConnectedQuery } from "../../connectivity";
 import { admin } from "../admin";
 import { Partner, PartnerForm } from "./components";
 import type { INewPartner } from "./partners.schema";
@@ -22,7 +23,7 @@ const Partners = () => {
   const trpcErrorHandler = useTrpcErrorHandler();
 
   const queryClient = useQueryClient();
-  const partners = useQuery(
+  const partners = useConnectedQuery(
     "partners",
     async () => await client.partners.getAllWithDetails.query().catch(() => []),
   );

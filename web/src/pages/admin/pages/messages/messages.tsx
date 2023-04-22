@@ -5,7 +5,8 @@ import { useTrpcErrorHandler } from "@trampo/resources/client/trpc-error-handler
 import { FormConfirmation, FormRef } from "@trampo/ui/form";
 import { useNotifications } from "@trampo/ui/notifications";
 import { useCallback, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
+import { useConnectedQuery } from "../../connectivity";
 import { admin } from "../admin";
 import { DateFilter, MessageForm } from "./components";
 import { Message } from "./components/Message";
@@ -20,7 +21,7 @@ const Messages = () => {
   const trpcErrorHandler = useTrpcErrorHandler();
 
   const queryClient = useQueryClient();
-  const messages = useQuery(
+  const messages = useConnectedQuery(
     "messages",
     async () =>
       await client.messages.getAll.query().catch(() => {
