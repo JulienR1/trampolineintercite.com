@@ -2,18 +2,28 @@
 import Page from "@trampo/layouts/Page.astro";
 import { client } from "@trampo/resources/client";
 import Message from "@trampo/ui/Message.astro";
+import NoContent from "@trampo/ui/NoContent.astro";
 
 const messages = await client.messages.getAllVisible.query();
 ---
 
 <Page title="Annonces">
-  <div class="message-wrapper">
-    {messages.map((message, index) => <Message id={index} {...message} />)}
-  </div>
+  {
+    messages.length === 0 ? (
+      <NoContent>Aucune annonce à afficher pour l'instant</NoContent>
+    ) : (
+      <div class="message-wrapper">
+        {messages.map((message, index) => (
+          <Message id={index} {...message} />
+        ))}
+      </div>
+    )
+  }
 </Page>
 
 <style lang="scss">
   .message-wrapper {
+    width: fit-content;
     max-width: 95%;
     margin: 0 auto;
   }

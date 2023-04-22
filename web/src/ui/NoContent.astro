@@ -1,0 +1,27 @@
+<div class="no-content">
+  <p>
+    <slot />
+  </p>
+</div>
+
+<style lang="scss">
+  .no-content {
+    width: 85%;
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translate(-50%, -50%);
+
+    p {
+      opacity: 0.75;
+      text-align: center;
+      font-style: italic;
+    }
+  }
+
+  @include tablet {
+    .no-content {
+      width: 50%;
+    }
+  }
+</style>

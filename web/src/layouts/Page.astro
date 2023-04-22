@@ -4,6 +4,7 @@ import Footer from "./components/footer/Footer.astro";
 import Header from "./components/header/Header.astro";
 import SkipNavigation from "./components/skip-navigation/SkipNavigation.astro";
 import TopArrow from "./components/top-arrow/TopArrow.astro";
+
 import Shell from "./Shell.astro";
 
 import PageTitle from "@trampo/ui/page/PageTitle.astro";
@@ -53,7 +54,6 @@ const { className, title } = Astro.props;
 
 <style lang="scss">
   #content {
-    display: block;
     position: relative;
     min-height: calc(
       100vh - min($desktopHeight, $defaultHeight, $scrollHeight)

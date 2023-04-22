@@ -24,39 +24,48 @@ export const Message: FC<MessageProps> = ({ onDelete, ...message }) => {
   );
 
   return (
-    <Card
-      p="md"
-      shadow="md"
-      withBorder
-      radius="md"
-      className="deleteButton__container"
-      style={{ minWidth: "220px" }}
-      onClick={e => e.stopPropagation()}>
-      <Card.Section>
-        <DeleteOverlay
-          small
-          visible={isDeleting}
-          elementId={message.id}
-          onCancel={() => setIsDeleting(false)}
-          onDelete={handleDelete}
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <Card
+        p="md"
+        shadow="md"
+        withBorder
+        radius="md"
+        className="deleteButton__container"
+        onClick={e => e.stopPropagation()}
+        style={{ maxWidth: "260px" }}>
+        <Card.Section>
+          <DeleteOverlay
+            small
+            visible={isDeleting}
+            elementId={message.id}
+            onCancel={() => setIsDeleting(false)}
+            onDelete={handleDelete}
+          />
+        </Card.Section>
+
+        <DeleteButton hide={isDeleting} onDelete={() => setIsDeleting(true)} />
+
+        <Title size="h3" py="sm">
+          {message.title}
+        </Title>
+
+        <div
+          style={{
+            minWidth: "190px",
+            maxWidth: "290px",
+            minHeight: "60px",
+            maxHeight: "180px",
+            overflow: "auto",
+          }}
+          dangerouslySetInnerHTML={{ __html: message.content }}
         />
-      </Card.Section>
 
-      <DeleteButton hide={isDeleting} onDelete={() => setIsDeleting(true)} />
-
-      <Title size="h3" pt="sm">
-        {message.title}
-      </Title>
-      <div
-        style={{ minHeight: "60px" }}
-        dangerouslySetInnerHTML={{ __html: message.content }}
-      />
-
-      <Card.Section pt="xs">
-        <Container pb="xs" style={{ background: "rgba(0,0,0,0.025)" }}>
-          <ActivityRange {...message} />
-        </Container>
-      </Card.Section>
-    </Card>
+        <Card.Section pt="xs">
+          <Container pb="xs" style={{ background: "rgba(0,0,0,0.025)" }}>
+            <ActivityRange {...message} />
+          </Container>
+        </Card.Section>
+      </Card>
+    </div>
   );
 };

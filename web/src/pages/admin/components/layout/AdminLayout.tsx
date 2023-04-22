@@ -16,7 +16,7 @@ export const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
     <>
       <AdminHeader />
 
-      <div style={{ margin: "0 auto", maxWidth: "min(80vw,1000px)" }}>
+      <div style={{ margin: "0 auto", maxWidth: "min(80vw,1200px)" }}>
         <Breadcrumbs px="xl" py="md">
           {breadcrumbs.map((crumb, i) => (
             <Anchor
