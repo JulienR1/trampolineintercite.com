@@ -1,7 +1,7 @@
 import { INewUser, IPermissionData, IRoleData, IUser, IUserData } from "common";
 import { randomBytes } from "crypto";
 import { query, transaction } from "../lib";
-import { err, ok, Result } from "../types";
+import { Result, err, ok } from "../types";
 import { hashPassword } from "./auth.service";
 
 export const getUser = (options?: { includePassword: boolean }) => {
@@ -64,8 +64,10 @@ export const getUser = (options?: { includePassword: boolean }) => {
   return { fromId, fromEmail };
 };
 
-export const registerUser = async (newUser: INewUser) => {
-  const { firstname, lastname, email, password } = newUser;
+export const registerUser = async (
+  newUser: INewUser | ({ id: number } & Pick<INewUser, "email" | "password">)
+) => {
+  const { email, password } = newUser;
 
   const salt = randomBytes(16).toString("base64");
   const hashedPassword = await hashPassword(password, salt);
@@ -74,21 +76,44 @@ export const registerUser = async (newUser: INewUser) => {
     return err(hashedPassword.error);
   }
 
+  let existingPersonId: number | null = null;
+  if ("id" in newUser) {
+    const result = await getUser().fromId(newUser.id);
+    if (result.isOk()) {
+      if (result.value.email === null) {
+        existingPersonId = result.value.id;
+      } else {
+        return err(new Error("This person already has an account"));
+      }
+    } else {
+      return err(result.error);
+    }
+  }
+
   const saltAndPassword = salt + "." + hashedPassword.value.toString("base64");
   const response = await transaction(async ({ query, single }) => {
-    await query({
-      sql: "INSERT INTO person (firstname, lastname) VALUES (?, ?)",
-      values: [firstname, lastname],
-    });
-    const { new_user_id: newUserId } = await single<{ new_user_id: number }>({
-      sql: "SELECT id AS new_user_id FROM person WHERE firstname=? AND lastname=? ORDER BY id DESC LIMIT 1",
-      values: [firstname, lastname],
-    });
+    if (existingPersonId === null && !("id" in newUser)) {
+      await query({
+        sql: "INSERT INTO person (firstname, lastname) VALUES (?, ?)",
+        values: [newUser.firstname, newUser.lastname],
+      });
+
+      const result = await single<{ new_user_id: number }>({
+        sql: "SELECT id AS new_user_id FROM person WHERE LOWER(firstname)=? AND LOWER(lastname)=? ORDER BY id DESC LIMIT 1",
+        values: [
+          newUser.firstname.toLowerCase(),
+          newUser.lastname.toLowerCase(),
+        ],
+      });
+      existingPersonId = result.new_user_id;
+    }
+
     await query({
       sql: "INSERT INTO credentials (person_id, email, `password`) VALUES (?, ?, ?)",
-      values: [newUserId, email.toLowerCase(), saltAndPassword],
+      values: [existingPersonId, email.toLowerCase(), saltAndPassword],
     });
-    return { newUserId };
+
+    return { newUserId: existingPersonId! };
   });
 
   return response.isOk()
