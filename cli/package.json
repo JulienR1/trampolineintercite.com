@@ -4,8 +4,8 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npm run build:common && tsc",
-    "build:common": "cd ../common && npm ci && npm run build && cd ../cli"
+    "build": "npm run build:server && tsc",
+    "build:server": "cd ../server && npm ci && npm run build && cd ../cli"
   },
   "keywords": [],
   "author": "",

@@ -11,9 +11,6 @@ jobs:
     uses: ./.github/workflows/integrity.template.yml
     with:
       dir: ./common
-  cli:
-    needs: common-integrity
-    uses: ./.github/workflows/cli.run.yml
   server-integrity:
     needs: common-integrity
     uses: ./.github/workflows/integrity.template.yml
@@ -24,6 +21,9 @@ jobs:
     uses: ./.github/workflows/integrity.template.yml
     with:
       dir: ./web
+  cli:
+    needs: server-integrity
+    uses: ./.github/workflows/cli.run.yml
   server-preview:
     needs: server-integrity
     uses: ./.github/workflows/deploy.server.template.yml
