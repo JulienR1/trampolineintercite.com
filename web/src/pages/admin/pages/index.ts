@@ -1,4 +1,4 @@
-import { admin } from "./admin";
+import { admin } from "./admin/admin";
 import { messages } from "./messages";
 import { partners } from "./partners";
 

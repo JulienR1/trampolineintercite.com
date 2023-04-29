@@ -8,7 +8,7 @@ import { useNotifications } from "@trampo/ui/notifications";
 import { useCallback, useRef, useState } from "react";
 import { useQueryClient } from "react-query";
 import { useConnectedQuery } from "../../connectivity";
-import { admin } from "../admin";
+import { admin } from "../admin/admin";
 import { Partner, PartnerForm } from "./components";
 import type { INewPartner } from "./partners.schema";
 
