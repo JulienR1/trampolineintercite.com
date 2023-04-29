@@ -7,6 +7,7 @@ import {
 import { Spinner } from "@trampo/ui/spinner";
 import { FC, ReactNode, useCallback } from "react";
 import { useQueryClient } from "react-query";
+import { Permission } from "../components/permission";
 import { useConnectedQuery } from "../connectivity";
 import { AuthContext } from "./auth-context";
 import { readJwtToken } from "./service";
@@ -32,6 +33,10 @@ export const AuthProvider: FC<AuthProviderProps> = ({
   const hasToken = !!token;
   const user = hasToken ? readJwtToken(token) : undefined;
 
+  const isLoading =
+    isTokenValid.isLoading ||
+    (isTokenValid.isIdle && isTokenValid.dataUpdatedAt === 0);
+
   const login = useCallback(async (email: string, password: string) => {
     const token = await client.auth.login
       .query({ email, password })
@@ -50,14 +55,12 @@ export const AuthProvider: FC<AuthProviderProps> = ({
 
   return (
     <AuthContext.Provider value={{ login, logout, user }}>
-      {isTokenValid.isLoading ? (
+      {isLoading ? (
         <Spinner message="Connexion..." />
       ) : hasToken && isTokenValid.data ? (
-        user?.permissions.includes("ADMIN_PANEL") ? (
-          children
-        ) : (
-          blocked
-        )
+        <Permission permissions={["ADMIN_PANEL"]} fallback={blocked}>
+          {children}
+        </Permission>
       ) : (
         fallback
       )}
