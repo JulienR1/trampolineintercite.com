@@ -22,6 +22,9 @@ const envVariables = z.object({
     .string()
     .refine((num) => z.number().positive().parse(parseInt(num))),
 
+  GITHUB_DEPLOY_TOKEN: z.string().min(1),
+  GITHUB_REPO_API_URL: z.string().url(),
+
   REFERENCE_EMAIL: z.string().email(),
   CONTACT_URL: z.string().url(),
   LOGO_IMAGE_URL: z.string().url(),

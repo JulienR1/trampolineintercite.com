@@ -7,8 +7,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { randomBytes } from "crypto";
 import { S3Mock } from "./s3-mock";
-
-const isDev = () => !!process.env.TS_NODE_DEV;
+import { isDev } from "./utils";
 
 const client = () => {
   return isDev()

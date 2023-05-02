@@ -1,0 +1,16 @@
+name: Manual Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      workflowIdentifier:
+        description: "A unique identifier to find this workflow run in the future"
+        required: true
+
+jobs:
+  production-${{ github.event.inputs.workflowIdentifier }}:
+    uses: ./.github/workflows/deploy.web.template.yml
+    with:
+      env: production
+      arg: --prod
+    secrets:
+      token: ${{ secrets.VERCEL_TOKEN }}
