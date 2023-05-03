@@ -14,7 +14,7 @@ export class GithubClient {
   public async dispatchWorkflow(
     workflow: "manual-production.yml"
   ): Promise<Result<number>> {
-    const nowStr = new Date().toISOString().replace(/\.[0-9]*/, "");
+    const nowStr = this.formatDateForQuery(new Date());
     const workflowIdentifier = randomBytes(4).toString("hex");
 
     const result = await api(
@@ -71,5 +71,26 @@ export class GithubClient {
       return err(response.error);
     }
     return ok(response.value.data);
+  }
+
+  public async getActiveWorkflows(since?: Date) {
+    const dateStr = this.formatDateForQuery(
+      since ?? new Date(new Date().getTime() - 10 * 60 * 1000)
+    );
+
+    const workflows = await api(
+      `${process.env.GITHUB_REPO_API_URL}/actions/runs?branch=master&per_page=10&created>=${dateStr}`,
+      { headers: this.headers }
+    ).get(GetManyRunsResponse);
+
+    return workflows.isOk()
+      ? workflows.value.data.workflow_runs.filter(
+          (run) => run.status === "in_progress" || run.status === "queued"
+        )
+      : [];
+  }
+
+  private formatDateForQuery(date: Date): string {
+    return date.toISOString().replace(/\.[0-9]*/, "");
   }
 }

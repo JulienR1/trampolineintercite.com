@@ -6,5 +6,6 @@ CREATE TABLE deployments
   person_id INT NOT NULL,
   status_id INT NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
-  INDEX (run_identifier)
+  INDEX (run_identifier),
+  UNIQUE (run_identifier)
 );

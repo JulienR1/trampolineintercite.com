@@ -1,17 +1,17 @@
 import { TRPCError } from "@trpc/server";
-import { Deployment } from "common";
+import { CurrentDeploymentStatus, Deployment } from "common";
 import { z } from "zod";
 import {
   deployWebsite,
-  getCurrentDeployment,
+  getCurrentStatus,
   getPreviousDeployments,
 } from "../services/deployment.service";
 import { protectedProcedure, router } from "../trpc";
 
 export const deploy = router({
-  getCurrentDeployment: protectedProcedure(["ADMIN_PANEL"])
-    .output(Deployment.or(z.null()))
-    .query(getCurrentDeployment),
+  getDeploymentStatus: protectedProcedure(["ADMIN_PANEL"])
+    .output(CurrentDeploymentStatus)
+    .query(async ({ ctx }) => getCurrentStatus(ctx.user!)),
 
   getPreviousDeployments: protectedProcedure(["ADMIN_PANEL"])
     .output(z.array(Deployment))

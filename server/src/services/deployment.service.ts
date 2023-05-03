@@ -1,5 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { IDeployment, IDeploymentData, IDeploymentStatus, IUser } from "common";
+import {
+  ICurrentDeploymentStatus,
+  IDeployment,
+  IDeploymentData,
+  IDeploymentStatus,
+  IUser,
+} from "common";
 import { z } from "zod";
 import { github, query } from "../lib";
 import { GetRunResponse } from "../lib/github/schemas";
@@ -10,53 +16,68 @@ type LatestDeploymentData =
   | IDeploymentData
   | Record<keyof IDeploymentData, null>;
 
-export const getLatestDeployment = async (): Promise<IDeployment | null> => {
-  const latestDeploymentData = await query<LatestDeploymentData>({
-    sql: "SELECT * FROM latest_deployment",
-  }).single();
+export const getCurrentStatus = async (
+  user: IUser
+): Promise<ICurrentDeploymentStatus> => {
+  const client = github();
+  const latestDeployment = await getLatestDeployment();
 
-  if (!latestDeploymentData.isOk()) {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  if (
+    latestDeployment?.status === "PENDING" ||
+    latestDeployment?.status === "RUNNING"
+  ) {
+    const updatedRun = await client.getWorkflowRun(
+      latestDeployment.runIdentifier
+    );
+    if (!updatedRun.isOk()) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+
+    await query({
+      sql: "UPDATE deployments SET status_id=? WHERE run_identifier=?",
+      values: [
+        parseGithubStatusToDeploymentStatus(updatedRun.value.status),
+        updatedRun.value.id,
+      ],
+    }).execute();
+
+    const run = await getLatestDeployment();
+    return { status: "occupied", run };
   }
-  if (latestDeploymentData.value.id === null) {
-    return null;
+
+  const workflows = await client.getActiveWorkflows();
+  if (workflows.length === 1) {
+    await query({
+      sql: "REPLACE INTO deployments (run_identifier, person_id, status_id) VALUES (?, ?, ?)",
+      values: [
+        workflows[0].id,
+        user.id,
+        parseGithubStatusToDeploymentStatus(workflows[0].status),
+      ],
+    }).execute();
+
+    const run = await getLatestDeployment();
+    return { status: "occupied", run };
+  } else if (workflows.length > 1) {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Should not have many workflow runs at the same time.",
+    });
   }
 
-  const person = await getUser().fromId(latestDeploymentData.value.person_id);
-  if (!person.isOk()) {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-  }
-
-  const updatedRun = await github().getWorkflowRun(
-    latestDeploymentData.value.run_identifier
-  );
-  if (!updatedRun.isOk()) {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-  }
-
-  const statusId = parseGithubStatusToDeploymentStatus(updatedRun.value.status);
-  await query({
-    sql: "UPDATE deployments SET status_id=? WHERE run_identifier=?",
-    values: [statusId, updatedRun.value.id],
-  }).execute();
-
-  return {
-    person: person.value,
-    timestamp: latestDeploymentData.value.timestamp,
-    runIdentifier: latestDeploymentData.value.run_identifier,
-    status: parseDeploymentStatus(statusId),
-  };
+  return { status: "available" };
 };
 
-export const getCurrentDeployment = async (): Promise<IDeployment | null> => {
-  const latestDeployment = await getLatestDeployment();
-  if (
-    latestDeployment !== null &&
-    ["PENDING", "RUNNING"].includes(latestDeployment.status)
-  ) {
-    return latestDeployment;
+const getLatestDeployment = async (): Promise<IDeployment | null> => {
+  const latestDeployment = await query<LatestDeploymentData>({
+    sql: "SELECT * FROM latest_deployment",
+  }).single();
+  if (!latestDeployment.isOk()) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
   }
-  return null;
+  return latestDeployment.value.id
+    ? parseDeployment(latestDeployment.value)
+    : null;
 };
 
 export const getPreviousDeployments = async (): Promise<
@@ -95,10 +116,11 @@ export const getPreviousDeployments = async (): Promise<
 };
 
 export const deployWebsite = async (user: IUser): Promise<Result<number>> => {
-  if (await getCurrentDeployment()) {
-    return err(
-      new Error("Cannot launch a new deployment when one is alreay active.")
-    );
+  if ((await getCurrentStatus(user)).status !== "available") {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Cannot launch a new deployment when one is alreay active.",
+    });
   }
 
   const runId = await github().dispatchWorkflow("manual-production.yml");
@@ -115,6 +137,37 @@ export const deployWebsite = async (user: IUser): Promise<Result<number>> => {
   }
 
   return runId;
+};
+
+const parseDeployment = async <T extends IDeploymentData | IDeploymentData[]>(
+  data: T
+): Promise<T extends IDeploymentData[] ? IDeployment[] : IDeployment> => {
+  const people: Record<number, IUser> = {};
+  const dataArray: IDeploymentData[] = Array.isArray(data) ? data : [data];
+
+  for (const deploymentData of dataArray) {
+    if (!people[deploymentData.person_id]) {
+      const person = await getUser().fromId(deploymentData.person_id);
+      if (!person.isOk()) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Could not find the user associated with this deployment",
+        });
+      }
+      people[deploymentData.person_id] = person.value;
+    }
+  }
+
+  const parsedData = dataArray.map((deploymentData) => ({
+    person: people[deploymentData.person_id],
+    timestamp: deploymentData.timestamp,
+    runIdentifier: deploymentData.run_identifier,
+    status: parseDeploymentStatus(deploymentData.status_id),
+  }));
+
+  return (
+    Array.isArray(data) ? parsedData : parsedData[0]
+  ) as T extends IDeploymentData[] ? IDeployment[] : IDeployment;
 };
 
 const parseDeploymentStatus = (statusId: number): IDeploymentStatus => {

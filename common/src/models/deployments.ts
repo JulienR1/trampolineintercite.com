@@ -15,8 +15,18 @@ export const Deployment = z.object({
   person: User,
 });
 
+export const CurrentDeploymentStatus = z
+  .object({ status: z.literal("available") })
+  .or(
+    z.object({
+      status: z.literal("occupied"),
+      run: Deployment.or(z.null()),
+    })
+  );
+
 export type IDeployment = z.infer<typeof Deployment>;
 export type IDeploymentStatus = z.infer<typeof DeploymentStatus>;
+export type ICurrentDeploymentStatus = z.infer<typeof CurrentDeploymentStatus>;
 
 export type IDeploymentData = {
   id: number;

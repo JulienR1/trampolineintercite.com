@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { z } from "zod";
 import { Result, err, ok } from "../../types";
@@ -10,6 +10,10 @@ export class GithubClientMock {
     {};
 
   constructor() {
+    if (!existsSync(this.dir)) {
+      mkdirSync(this.dir);
+    }
+
     this.loadMockRuns();
   }
 
@@ -52,6 +56,12 @@ export class GithubClientMock {
 
     this.updateMockRuns();
     return ok(run);
+  }
+
+  public async getActiveWorkflows(since?: Date) {
+    return Object.values(this.workflowRuns).filter(
+      (run) => run.status === "queued" || run.status === "in_progress"
+    );
   }
 
   private loadMockRuns() {
