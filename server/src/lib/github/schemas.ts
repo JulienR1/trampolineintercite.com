@@ -20,6 +20,7 @@ const RunStatus = z.enum([
   "pending",
 ]);
 
+/* eslint-disable camelcase */
 export const GetManyRunsResponse = GithubResponse(
   z.object({
     workflow_runs: z.array(
@@ -48,5 +49,6 @@ export const GetRunResponse = GithubResponse(
     html_url: z.string().url(),
   })
 );
+/* eslint-enable camelcase */
 
 export type GetRunResponse = z.infer<typeof GetRunResponse>;

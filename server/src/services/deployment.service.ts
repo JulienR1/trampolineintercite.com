@@ -90,28 +90,7 @@ export const getPreviousDeployments = async (): Promise<
     return err(previousDeployments.error);
   }
 
-  const people: Record<number, IUser> = {};
-  for (const deployment of previousDeployments.value) {
-    if (!people[deployment.person_id]) {
-      const person = await getUser().fromId(deployment.person_id);
-      if (!person.isOk()) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Could not find the user associated with this deployment",
-        });
-      }
-
-      people[deployment.person_id] = person.value;
-    }
-  }
-
-  const parsedDeployments = previousDeployments.value.map((deployment) => ({
-    person: people[deployment.person_id],
-    timestamp: deployment.timestamp,
-    runIdentifier: deployment.run_identifier,
-    status: parseDeploymentStatus(deployment.status_id),
-  }));
-
+  const parsedDeployments = await parseDeployment(previousDeployments.value);
   return ok(parsedDeployments);
 };
 
@@ -143,20 +122,29 @@ const parseDeployment = async <T extends IDeploymentData | IDeploymentData[]>(
   data: T
 ): Promise<T extends IDeploymentData[] ? IDeployment[] : IDeployment> => {
   const people: Record<number, IUser> = {};
+  const promises: Array<Promise<unknown>> = [];
   const dataArray: IDeploymentData[] = Array.isArray(data) ? data : [data];
 
-  for (const deploymentData of dataArray) {
-    if (!people[deploymentData.person_id]) {
-      const person = await getUser().fromId(deploymentData.person_id);
-      if (!person.isOk()) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Could not find the user associated with this deployment",
-        });
-      }
-      people[deploymentData.person_id] = person.value;
+  for (const deployment of dataArray) {
+    if (!people[deployment.person_id]) {
+      promises.push(
+        getUser()
+          .fromId(deployment.person_id)
+          .then((person) => {
+            if (!person.isOk()) {
+              throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message:
+                  "Could not find the user associated with this deployment",
+              });
+            }
+            people[deployment.person_id] = person.value;
+          })
+      );
     }
   }
+
+  await Promise.all(promises);
 
   const parsedData = dataArray.map((deploymentData) => ({
     person: people[deploymentData.person_id],

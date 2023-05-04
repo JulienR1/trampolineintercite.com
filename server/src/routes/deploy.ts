@@ -11,7 +11,7 @@ import { protectedProcedure, router } from "../trpc";
 export const deploy = router({
   getDeploymentStatus: protectedProcedure(["ADMIN_PANEL"])
     .output(CurrentDeploymentStatus)
-    .query(async ({ ctx }) => getCurrentStatus(ctx.user!)),
+    .query(({ ctx }) => getCurrentStatus(ctx.user!)),
 
   getPreviousDeployments: protectedProcedure(["ADMIN_PANEL"])
     .output(z.array(Deployment))

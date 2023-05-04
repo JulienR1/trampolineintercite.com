@@ -33,6 +33,7 @@ export class GithubClient {
     // We can only poke their server until our request has been acknowledged
     const startTime = new Date().getTime();
     while (startTime - new Date().getTime() < 10 * 60 * 1000) {
+      /* eslint-disable-next-line no-await-in-loop */
       const dispatchedRuns = await api(
         `${process.env.GITHUB_REPO_API_URL}/actions/workflows/${workflow}/runs?branch=master&per_page=5&created>=${nowStr}`,
         { headers: this.headers }
@@ -53,6 +54,7 @@ export class GithubClient {
         }
       }
 
+      /* eslint-disable-next-line no-await-in-loop */
       await new Promise((resolve) => setTimeout(resolve, 500));
     }
 

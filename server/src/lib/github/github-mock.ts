@@ -17,12 +17,11 @@ export class GithubClientMock {
     this.loadMockRuns();
   }
 
-  public async dispatchWorkflow(
-    workflow: "manual-production.yml"
-  ): Promise<Result<number>> {
+  public dispatchWorkflow(_: "manual-production.yml"): Promise<Result<number>> {
     let runId = 0;
     do {
       runId = Math.round(Math.random() * 1_000_000_000);
+      /* eslint-disable camelcase */
       this.workflowRuns[runId] = {
         id: runId,
         created_at: new Date(),
@@ -32,18 +31,21 @@ export class GithubClientMock {
         name: "mock-deploy-run-" + runId,
         status: "queued",
       };
+      /* eslint-enable camelcase */
     } while (!this.workflowRuns[runId]);
 
     this.updateMockRuns();
-    return ok(runId);
+    return Promise.resolve(ok(runId));
   }
 
-  public async getWorkflowRun(
+  public getWorkflowRun(
     runId: number
   ): Promise<Result<GetRunResponse["data"]>> {
     const run = this.workflowRuns[runId];
     if (!run) {
-      return err(new Error("The specified run could not be found"));
+      return Promise.resolve(
+        err(new Error("The specified run could not be found"))
+      );
     }
 
     if (run.status === "queued") {
@@ -55,12 +57,14 @@ export class GithubClientMock {
     }
 
     this.updateMockRuns();
-    return ok(run);
+    return Promise.resolve(ok(run));
   }
 
-  public async getActiveWorkflows(since?: Date) {
-    return Object.values(this.workflowRuns).filter(
-      (run) => run.status === "queued" || run.status === "in_progress"
+  public getActiveWorkflows(_?: Date) {
+    return Promise.resolve(
+      Object.values(this.workflowRuns).filter(
+        (run) => run.status === "queued" || run.status === "in_progress"
+      )
     );
   }
 
