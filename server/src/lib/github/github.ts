@@ -13,7 +13,7 @@ export class GithubClient {
 
   public async dispatchWorkflow(
     workflow: "manual-production.yml"
-  ): Promise<Result<number>> {
+  ): Promise<Result<{ id: number; url: string }>> {
     const nowStr = this.formatDateForQuery(new Date());
     const workflowIdentifier = randomBytes(4).toString("hex");
 
@@ -50,7 +50,8 @@ export class GithubClient {
         );
 
         if (runIndex >= 0) {
-          return ok(dispatchedRuns.value.data.workflow_runs[runIndex].id);
+          const run = dispatchedRuns.value.data.workflow_runs[runIndex];
+          return ok({ id: run.id, url: run.html_url });
         }
       }
 

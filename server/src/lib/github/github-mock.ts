@@ -17,7 +17,9 @@ export class GithubClientMock {
     this.loadMockRuns();
   }
 
-  public dispatchWorkflow(_: "manual-production.yml"): Promise<Result<number>> {
+  public dispatchWorkflow(
+    _: "manual-production.yml"
+  ): Promise<Result<{ id: number; url: string }>> {
     let runId = 0;
     do {
       runId = Math.round(Math.random() * 1_000_000_000);
@@ -30,12 +32,13 @@ export class GithubClientMock {
         html_url: "#",
         name: "mock-deploy-run-" + runId,
         status: "queued",
+        steps: [],
       };
       /* eslint-enable camelcase */
     } while (!this.workflowRuns[runId]);
 
     this.updateMockRuns();
-    return Promise.resolve(ok(runId));
+    return Promise.resolve(ok({ id: runId, url: "#" }));
   }
 
   public getWorkflowRun(

@@ -20,6 +20,7 @@ export const deploy = router({
       if (!previousDeployments.isOk()) {
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
+
       return previousDeployments.value;
     }),
 

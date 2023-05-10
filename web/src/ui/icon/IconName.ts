@@ -16,4 +16,7 @@ export type IconName =
   | "delete"
   | "call"
   | "chat"
-  | "info";
+  | "info"
+  | "done"
+  | "question_mark"
+  | "open_in_new";

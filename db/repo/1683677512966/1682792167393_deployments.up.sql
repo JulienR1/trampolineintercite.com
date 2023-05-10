@@ -4,7 +4,7 @@ CREATE TABLE deployments
   `timestamp` DATETIME NOT NULL DEFAULT NOW(),
   run_identifier INT NOT NULL,
   person_id INT NOT NULL,
-  status_id INT NOT NULL DEFAULT 0,
+  `status` VARCHAR(64) NOT NULL DEFAULT "queued",
   PRIMARY KEY (id),
   INDEX (run_identifier),
   UNIQUE (run_identifier)

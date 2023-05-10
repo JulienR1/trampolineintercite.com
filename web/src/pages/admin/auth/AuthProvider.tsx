@@ -7,7 +7,7 @@ import {
 import { Spinner } from "@trampo/ui/spinner";
 import { FC, ReactNode, useCallback } from "react";
 import { useQueryClient } from "react-query";
-import { Permission } from "../components/permission";
+import { Permission } from "../components";
 import { useConnectedQuery } from "../connectivity";
 import { AuthContext } from "./auth-context";
 import { readJwtToken } from "./service";

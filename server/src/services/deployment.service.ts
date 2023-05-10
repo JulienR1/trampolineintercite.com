@@ -3,12 +3,9 @@ import {
   ICurrentDeploymentStatus,
   IDeployment,
   IDeploymentData,
-  IDeploymentStatus,
   IUser,
 } from "common";
-import { z } from "zod";
 import { github, query } from "../lib";
-import { GetRunResponse } from "../lib/github/schemas";
 import { Result, err, ok } from "../types";
 import { getUser } from "./users.service";
 
@@ -23,8 +20,10 @@ export const getCurrentStatus = async (
   const latestDeployment = await getLatestDeployment();
 
   if (
-    latestDeployment?.status === "PENDING" ||
-    latestDeployment?.status === "RUNNING"
+    latestDeployment &&
+    ["queued", "waiting", "pending", "requested", "in_progress"].includes(
+      latestDeployment.status
+    )
   ) {
     const updatedRun = await client.getWorkflowRun(
       latestDeployment.runIdentifier
@@ -34,11 +33,8 @@ export const getCurrentStatus = async (
     }
 
     await query({
-      sql: "UPDATE deployments SET status_id=? WHERE run_identifier=?",
-      values: [
-        parseGithubStatusToDeploymentStatus(updatedRun.value.status),
-        updatedRun.value.id,
-      ],
+      sql: "UPDATE deployments SET `status`=? WHERE run_identifier=?",
+      values: [updatedRun.value.status, updatedRun.value.id],
     }).execute();
 
     const run = await getLatestDeployment();
@@ -48,12 +44,8 @@ export const getCurrentStatus = async (
   const workflows = await client.getActiveWorkflows();
   if (workflows.length === 1) {
     await query({
-      sql: "REPLACE INTO deployments (run_identifier, person_id, status_id) VALUES (?, ?, ?)",
-      values: [
-        workflows[0].id,
-        user.id,
-        parseGithubStatusToDeploymentStatus(workflows[0].status),
-      ],
+      sql: "REPLACE INTO deployments (run_identifier, person_id, `status`) VALUES (?, ?, ?)",
+      values: [workflows[0].id, user.id, workflows[0].status],
     }).execute();
 
     const run = await getLatestDeployment();
@@ -84,7 +76,7 @@ export const getPreviousDeployments = async (): Promise<
   Result<IDeployment[]>
 > => {
   const previousDeployments = await query<IDeploymentData>({
-    sql: "SELECT * FROM deployments WHERE status_id >= 2 ORDER BY `timestamp` DESC",
+    sql: "SELECT * FROM deployments WHERE `status` IN ('completed', 'failure') ORDER BY `timestamp` DESC",
   }).execute();
   if (!previousDeployments.isOk()) {
     return err(previousDeployments.error);
@@ -102,20 +94,20 @@ export const deployWebsite = async (user: IUser): Promise<Result<number>> => {
     });
   }
 
-  const runId = await github().dispatchWorkflow("manual-production.yml");
-  if (!runId.isOk()) {
-    return err(runId.error);
+  const run = await github().dispatchWorkflow("manual-production.yml");
+  if (!run.isOk()) {
+    return err(run.error);
   }
 
   const result = await query({
-    sql: "INSERT INTO deployments (run_identifier, person_id) VALUES(?, ?)",
-    values: [runId.value, user.id],
+    sql: "INSERT INTO deployments (run_identifier, person_id, url) VALUES(?, ?, ?)",
+    values: [run.value.id, user.id, run.value.url],
   }).execute();
   if (!result.isOk()) {
     return err(result.error);
   }
 
-  return runId;
+  return ok(run.value.id);
 };
 
 const parseDeployment = async <T extends IDeploymentData | IDeploymentData[]>(
@@ -146,48 +138,17 @@ const parseDeployment = async <T extends IDeploymentData | IDeploymentData[]>(
 
   await Promise.all(promises);
 
-  const parsedData = dataArray.map((deploymentData) => ({
-    person: people[deploymentData.person_id],
-    timestamp: deploymentData.timestamp,
-    runIdentifier: deploymentData.run_identifier,
-    status: parseDeploymentStatus(deploymentData.status_id),
-  }));
+  const parsedData = dataArray.map(
+    (deploymentData): IDeployment => ({
+      person: people[deploymentData.person_id],
+      timestamp: deploymentData.timestamp,
+      runIdentifier: deploymentData.run_identifier,
+      status: deploymentData.status,
+      url: deploymentData.url,
+    })
+  );
 
   return (
     Array.isArray(data) ? parsedData : parsedData[0]
   ) as T extends IDeploymentData[] ? IDeployment[] : IDeployment;
-};
-
-const parseDeploymentStatus = (statusId: number): IDeploymentStatus => {
-  switch (statusId) {
-    case 0:
-      return "PENDING";
-    case 1:
-      return "RUNNING";
-    case 2:
-      return "SUCCESS";
-    case 3:
-    default:
-      return "FAILED";
-  }
-};
-
-const parseGithubStatusToDeploymentStatus = (
-  githubStatus: z.infer<typeof GetRunResponse>["data"]["status"]
-): number => {
-  switch (githubStatus) {
-    case "queued":
-    case "action_required":
-    case "requested":
-    case "waiting":
-    case "pending":
-      return 0;
-    case "in_progress":
-      return 1;
-    case "success":
-    case "completed":
-      return 2;
-    default:
-      return 3;
-  }
 };
