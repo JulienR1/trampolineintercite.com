@@ -8,69 +8,78 @@ import {
   Modal,
   Stepper,
   Text,
-  TextInput,
   Title,
 } from "@mantine/core";
-import { Permission } from "@trampo/pages/admin/components";
-import { PermissionButton } from "@trampo/pages/admin/components/PermissionButton";
+import { Permission, PermissionButton } from "@trampo/pages/admin/components";
 import { useConnectedQuery } from "@trampo/pages/admin/connectivity";
 import { client } from "@trampo/resources/client";
 import { Icon } from "@trampo/ui/icon";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
+import { ConfirmationInput } from "./ConfirmationInput";
+
+type DeployState = "idle" | "confirmation" | "deploying";
 
 export const DeployControls = () => {
   const queryClient = useQueryClient();
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [processingDeployment, setIsProcessingDeployment] = useState(false);
-  const [deployRunId, setDeployRunId] = useState<number | null>(null);
-
-  const [confirmationText, setConfirmationText] = useState("");
+  const [currentState, setCurrentState] = useState<DeployState>("idle");
+  const [hasConfirmed, setHasConfirmed] = useState(false);
 
   const currentStatus = useConnectedQuery("current-status", async () =>
     client.deploy.getDeploymentStatus.query(),
   );
 
   useEffect(() => {
-    let interval;
-
-    if (currentStatus.data?.status === "available") {
+    if (currentState === "idle") {
       queryClient.invalidateQueries("deployment-history");
-      setDeployRunId(null);
-    } else if (currentStatus.data?.status === "occupied") {
-      interval = setInterval(() => {
-        queryClient.invalidateQueries("current-status");
-      }, 10_000);
-
-      const runId = currentStatus.data.run?.runIdentifier ?? null;
-      setDeployRunId(previousRunId => previousRunId ?? runId);
     }
+  }, [currentState]);
 
-    return () => clearInterval(interval);
+  useEffect(() => {
+    if (currentStatus.data?.status === "available") {
+      setCurrentState(previousState =>
+        previousState === "deploying" ? "idle" : previousState,
+      );
+    } else if (
+      currentStatus.data?.status === "occupied" &&
+      currentStatus.data.run
+    ) {
+      setCurrentState("deploying");
+    }
   }, [currentStatus.data?.status]);
 
-  const openModal = () => {
-    setConfirmationText("");
-    setShowConfirmationModal(true);
-  };
+  useEffect(() => {
+    const interval = setInterval(
+      () => queryClient.invalidateQueries("current-status"),
+      10_000,
+    );
+    return () => clearInterval(interval);
+  }, []);
+
+  const openModal = () =>
+    setCurrentState(previousState =>
+      previousState === "idle" ? "confirmation" : previousState,
+    );
+
+  const closeModal = () =>
+    setCurrentState(previousState =>
+      previousState === "confirmation" ? "idle" : previousState,
+    );
 
   const handleDeploy = async () => {
-    if (processingDeployment) {
-      return;
+    if (currentState === "confirmation") {
+      setCurrentState("deploying");
+      await client.deploy.startNewDeployment.mutate();
     }
-
-    setShowConfirmationModal(false);
-    setIsProcessingDeployment(true);
-    const runId = await client.deploy.startNewDeployment.mutate();
-    setDeployRunId(runId);
-    setIsProcessingDeployment(false);
   };
 
   const stepperStatus =
     currentStatus.data?.status === "occupied"
       ? currentStatus.data.run?.status === "in_progress"
         ? 1
-        : ["failure", "success"].includes(currentStatus.data.run?.status ?? "")
+        : ["failure", "success", "completed"].includes(
+            currentStatus.data.run?.status ?? "",
+          )
         ? 2
         : 0
       : 0;
@@ -79,8 +88,8 @@ export const DeployControls = () => {
     <>
       <Permission permissions={["DEPLOY"]}>
         <Modal
-          opened={showConfirmationModal}
-          onClose={() => setShowConfirmationModal(false)}
+          opened={currentState === "confirmation"}
+          onClose={closeModal}
           title={<Title order={3}>Confirmation requise</Title>}>
           <Divider />
           <Box py={"md"}>
@@ -107,16 +116,14 @@ export const DeployControls = () => {
           <Box py="md">
             <form onSubmit={e => e.preventDefault()}>
               <Title order={5}>Veuillez saisir 'confirmer'.</Title>
-              <TextInput
-                my={"sm"}
-                placeholder="confirmer"
-                onChange={e => setConfirmationText(e.currentTarget.value)}
+              <ConfirmationInput
+                my="sm"
+                confirmationText="confirmer"
+                onConfirmationChange={setHasConfirmed}
               />
 
               <Group align="center" position="center">
-                <Button
-                  color="red"
-                  onClick={() => setShowConfirmationModal(false)}>
+                <Button color="red" onClick={closeModal}>
                   <Text weight={"bold"} color="white">
                     Annuler
                   </Text>
@@ -125,7 +132,7 @@ export const DeployControls = () => {
                   type="submit"
                   color="indigo"
                   onClick={handleDeploy}
-                  disabled={confirmationText !== "confirmer"}>
+                  disabled={!hasConfirmed}>
                   <Text weight={"bold"} color="white">
                     Confirmer
                   </Text>
@@ -138,18 +145,16 @@ export const DeployControls = () => {
 
       <Flex direction={"column"} gap={"md"}>
         <Center>
-          {currentStatus.data?.status === "available" && !deployRunId && (
+          {currentState !== "deploying" && (
             <PermissionButton
+              onClick={openModal}
               permissions={["DEPLOY"]}
-              loading={processingDeployment}
-              onClick={openModal}>
+              loading={currentState !== "idle"}>
               Publier une mise à jour du site web
             </PermissionButton>
           )}
-        </Center>
 
-        {(processingDeployment || deployRunId) && (
-          <Center>
+          {currentState === "deploying" && (
             <Stepper active={stepperStatus} style={{ minWidth: "80%" }}>
               <Stepper.Step
                 label={"Étape 1"}
@@ -167,8 +172,8 @@ export const DeployControls = () => {
                 loading={stepperStatus === 2}
               />
             </Stepper>
-          </Center>
-        )}
+          )}
+        </Center>
       </Flex>
     </>
   );

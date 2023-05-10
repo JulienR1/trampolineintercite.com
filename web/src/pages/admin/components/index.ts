@@ -1,6 +1,7 @@
 export * from "./ActivityRange";
 export * from "./IconLink";
 export * from "./NotAllowed";
+export * from "./PermissionButton";
 export * from "./delete-button";
 export * from "./delete-overlay";
 export * from "./layout";

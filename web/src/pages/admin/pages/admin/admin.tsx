@@ -1,4 +1,4 @@
-import { Card } from "@mantine/core";
+import { Card, Center } from "@mantine/core";
 import { Outlet, useRouter } from "@tanstack/react-router";
 import { Routes } from "@trampo/routes";
 import { useEffect } from "react";
@@ -21,8 +21,12 @@ const Admin = () => {
       <Greetings />
       <Card my="sm" withBorder style={{ width: "100%" }}>
         <DeployControls />
-        <DeployHistory />
       </Card>
+      <Center>
+        <Card my="sm" withBorder style={{ width: "100%", maxWidth: "800px" }}>
+          <DeployHistory />
+        </Card>
+      </Center>
 
     </div>
   ) : (

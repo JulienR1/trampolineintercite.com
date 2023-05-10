@@ -14,7 +14,8 @@ type LatestDeploymentData =
   | Record<keyof IDeploymentData, null>;
 
 export const getCurrentStatus = async (
-  user: IUser
+  user: IUser,
+  fetchNew = false
 ): Promise<ICurrentDeploymentStatus> => {
   const client = github();
   const latestDeployment = await getLatestDeployment();
@@ -41,20 +42,22 @@ export const getCurrentStatus = async (
     return { status: "occupied", run };
   }
 
-  const workflows = await client.getActiveWorkflows();
-  if (workflows.length === 1) {
-    await query({
-      sql: "REPLACE INTO deployments (run_identifier, person_id, `status`) VALUES (?, ?, ?)",
-      values: [workflows[0].id, user.id, workflows[0].status],
-    }).execute();
+  if (fetchNew) {
+    const workflows = await client.getActiveWorkflows();
+    if (workflows.length === 1) {
+      await query({
+        sql: "REPLACE INTO deployments (run_identifier, person_id, `status`) VALUES (?, ?, ?)",
+        values: [workflows[0].id, user.id, workflows[0].status],
+      }).execute();
 
-    const run = await getLatestDeployment();
-    return { status: "occupied", run };
-  } else if (workflows.length > 1) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Should not have many workflow runs at the same time.",
-    });
+      const run = await getLatestDeployment();
+      return { status: "occupied", run };
+    } else if (workflows.length > 1) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Should not have many workflow runs at the same time.",
+      });
+    }
   }
 
   return { status: "available" };
@@ -87,7 +90,7 @@ export const getPreviousDeployments = async (): Promise<
 };
 
 export const deployWebsite = async (user: IUser): Promise<Result<number>> => {
-  if ((await getCurrentStatus(user)).status !== "available") {
+  if ((await getCurrentStatus(user, true)).status !== "available") {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Cannot launch a new deployment when one is alreay active.",
