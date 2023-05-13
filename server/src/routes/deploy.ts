@@ -33,4 +33,8 @@ export const deploy = router({
       }
       return runId.value;
     }),
+
+  notifyDeployment: protectedProcedure(["AUTOMATIC"]).mutation(
+    async ({ ctx }) => getCurrentStatus(ctx.user!, true)
+  ),
 });

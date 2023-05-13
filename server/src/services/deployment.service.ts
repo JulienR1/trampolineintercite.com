@@ -46,8 +46,13 @@ export const getCurrentStatus = async (
     const workflows = await client.getActiveWorkflows();
     if (workflows.length === 1) {
       await query({
-        sql: "REPLACE INTO deployments (run_identifier, person_id, `status`) VALUES (?, ?, ?)",
-        values: [workflows[0].id, user.id, workflows[0].status],
+        sql: "REPLACE INTO deployments (run_identifier, person_id, `status`, `url`) VALUES (?, ?, ?, ?)",
+        values: [
+          workflows[0].id,
+          user.id,
+          workflows[0].status,
+          workflows[0].html_url,
+        ],
       }).execute();
 
       const run = await getLatestDeployment();

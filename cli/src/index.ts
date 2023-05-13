@@ -51,6 +51,8 @@ const selectEnvironment = async () => {
   return z
     .object({
       SERVER_URL: z.string().min(1),
+      EMAIL: z.string().email().optional(),
+      PASSWORD: z.string().optional(),
     })
     .parse(process.env);
 };
@@ -77,16 +79,25 @@ const pingServer = async () => {
 };
 
 const authorizeUser = async () => {
-  const { email } = await inquirer.prompt({
-    name: "email",
-    message: "Enter your email:",
-    type: "input",
-  });
-  const { password } = await inquirer.prompt({
-    name: "password",
-    message: "Enter your password:",
-    type: "password",
-  });
+  const email =
+    env.EMAIL ??
+    (
+      await inquirer.prompt({
+        name: "email",
+        message: "Enter your email:",
+        type: "input",
+      })
+    ).email;
+
+  const password =
+    env.PASSWORD ??
+    (
+      await inquirer.prompt({
+        name: "password",
+        message: "Enter your password:",
+        type: "password",
+      })
+    ).password;
 
   try {
     jwtToken = await client.auth.login.query({ email, password });
@@ -96,22 +107,27 @@ const authorizeUser = async () => {
   }
 };
 
+const args = process.argv.slice(2);
 const OPERATIONS = [
   "Create a new user",
   "Create a new user for an existing person",
   "Assign role to user",
+  "Notify deployment",
 ] as const;
 
-const { operation }: { operation: (typeof OPERATIONS)[number] } =
-  await inquirer.prompt({
-    name: "operation",
-    message: "Select an operation",
-    type: "list",
-    choices: OPERATIONS,
-  });
+const operation =
+  args.join(" ") ||
+  (
+    await inquirer.prompt({
+      name: "operation",
+      message: "Select an operation",
+      type: "list",
+      choices: OPERATIONS,
+    })
+  ).operation;
 
 await pingServer();
-switch (operation) {
+switch (args.join(" ") || operation) {
   case "Create a new user":
     await createNewUser(client);
     break;
@@ -122,4 +138,10 @@ switch (operation) {
     await authorizeUser();
     await assignRoleToUser(client);
     break;
+  case "Notify deployment":
+    await authorizeUser();
+    await client.deploy.notifyDeployment.mutate();
+    break;
+  default:
+    throw new Error(`Invalid operation: '${operation}'`);
 }

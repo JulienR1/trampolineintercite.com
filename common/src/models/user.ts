@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const Role = z.enum(["ADMIN", "SUPERADMIN", "READONLY"]);
+export const Role = z.enum(["ADMIN", "SUPERADMIN", "READONLY", "BOT"]);
 export type IRole = z.infer<typeof Role>;
 
 export interface IRoleData {
@@ -8,7 +8,12 @@ export interface IRoleData {
   label: string;
 }
 
-export const Permission = z.enum(["ADMIN_PANEL", "EDIT", "DEPLOY"]);
+export const Permission = z.enum([
+  "ADMIN_PANEL",
+  "EDIT",
+  "DEPLOY",
+  "AUTOMATIC",
+]);
 export type IPermission = z.infer<typeof Permission>;
 
 export interface IPermissionData {
