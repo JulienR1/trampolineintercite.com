@@ -8,10 +8,6 @@ on:
       - master
   workflow_dispatch:
 jobs:
-  notify-users:
-    steps:
-
-    if: ${{ contains(fromJSON('["push"]'), github.event_name) }}
   common-integrity:
     uses: ./.github/workflows/integrity.template.yml
     with:

@@ -115,7 +115,7 @@ jobs:
     needs: [lint-and-tests-server, notify-deployment]
     runs-on: ubuntu-latest
     defaults:
-      runs:
+      run:
         working-directory: ./server/deploy
     steps:
       - uses: actions/checkout@v3
