@@ -39,9 +39,9 @@ jobs:
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v3
-        retention-days: 1
         with:
           name: common
+          retention-days: 1
           path: ./common/dist/
 
   build-server:
@@ -63,9 +63,9 @@ jobs:
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v3
-        retention-days: 1
         with:
           name: server
+          retention-days: 1
           path: ./server/dist/
 
   notify-deployment:
