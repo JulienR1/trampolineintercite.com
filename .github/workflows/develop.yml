@@ -94,7 +94,7 @@ jobs:
           name: server
           path: ./server/dist/
       - run: npm ci
-        working-dZirectory: ../server/
+        working-directory: ../server/
       - run: npm ci
       - run: npm run build
       - run: node cli Notify deployment
