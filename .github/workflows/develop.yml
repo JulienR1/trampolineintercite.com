@@ -33,7 +33,7 @@ jobs:
         working-directory: ./common
     steps:
       - uses: actions/checkout@v3
-      - uses: action/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
       - run: npm ci
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
-      - uses: action/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: common
           path: ./common/
