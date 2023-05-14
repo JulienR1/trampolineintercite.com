@@ -61,6 +61,9 @@ jobs:
           name: common
           path: ./common/dist/
       - run: npm ci
+        with:
+          working-directory: ../common/
+      - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v3
         with:
@@ -85,10 +88,16 @@ jobs:
         with:
           name: common
           path: ./common/dist/
+      - run: npm ci
+        with:
+          working-directory: ../common/
       - uses: actions/download-artifact@v3
         with:
           name: server
           path: ./server/dist/
+      - run: npm ci
+        with:
+          working-directory: ../server/
       - run: npm ci
       - run: npm run build
       - run: node cli Notify deployment
