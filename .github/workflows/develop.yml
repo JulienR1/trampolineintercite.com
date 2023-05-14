@@ -2,9 +2,6 @@ name: DEV actions
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  SERVER_URL: ${{ secrets.SERVER_URL }}
-  USERNAME: ${{ secrets.CLI_USERNAME }}
-  PASSWORD: ${{ secrets.CLI_PASSWORD }}
 on:
   push:
     branches-ignore:
@@ -33,7 +30,7 @@ jobs:
         working-directory: ./common
     steps:
       - uses: actions/checkout@v3
-      - uses: action/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
       - run: npm ci
@@ -41,7 +38,8 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: common
-          path: ./common/
+          retention-days: 1
+          path: ./common/dist/
 
   build-server:
     name: Build 'server'
@@ -55,16 +53,19 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "18.x"
-      - uses: action/download-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: common
-          path: ./common/
+          path: ./common/dist/
+      - run: npm ci
+        working-directory: ./common/
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v3
         with:
           name: server
-          path: ./server/
+          retention-days: 1
+          path: ./server/dist/
 
   notify-deployment:
     name: Notify deployment
@@ -82,15 +83,23 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: common
-          path: ./common/
+          path: ./common/dist/
+      - run: npm ci
+        working-directory: ./common/
       - uses: actions/download-artifact@v3
         with:
           name: server
-          path: ./server/
+          path: ./server/dist/
+      - run: npm ci
+        working-directory: ./server/
       - run: npm ci
       - run: npm run build
       - run: node cli Notify deployment
-        working-directory: ../
+        working-directory: ./
+        env:
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          EMAIL: ${{ secrets.CLI_USERNAME }}
+          PASSWORD: ${{ secrets.CLI_PASSWORD }}
 
   lint-and-tests-common:
     needs: build-common
@@ -115,7 +124,7 @@ jobs:
     needs: [lint-and-tests-server, notify-deployment]
     runs-on: ubuntu-latest
     defaults:
-      runs:
+      run:
         working-directory: ./server/deploy
     steps:
       - uses: actions/checkout@v3

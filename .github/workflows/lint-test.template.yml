@@ -6,7 +6,7 @@ on:
         required: true
         type: string
 jobs:
-  build:
+  task:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,12 +20,16 @@ jobs:
         if: ${{ contains(inputs.dir, 'server') || contains(inputs.dir, 'web') }}
         with:
           name: common
-          path: ./common/
+          path: ./common/dist/
+      - run: npm ci
+        working-directory: ./common
       - uses: actions/download-artifact@v3
         if: ${{ contains(inputs.dir, 'web') }}
         with:
           name: server
-          path: ./server/
+          path: ./server/dist/
+      - run: npm ci
+        working-directory: ./server
       - run: npm ci
       - run: npm run lint
       - run: npm run test

@@ -13,7 +13,18 @@ import {
   createNewUser,
 } from "./operations/create-user.js";
 
+const envSchema = z.object({
+  SERVER_URL: z.string().min(1),
+  EMAIL: z.string().email().optional(),
+  PASSWORD: z.string().optional(),
+});
+
 const selectEnvironment = async () => {
+  const result = envSchema.safeParse(process.env);
+  if (result.success) {
+    return result.data;
+  }
+
   const dir = join(process.cwd(), "cli");
   const filesInRoot = readdirSync(dir);
   const envFiles = filesInRoot.filter((filename) =>
@@ -47,14 +58,7 @@ const selectEnvironment = async () => {
     ];
 
   config({ path: join(dir, configurationFile) });
-
-  return z
-    .object({
-      SERVER_URL: z.string().min(1),
-      EMAIL: z.string().email().optional(),
-      PASSWORD: z.string().optional(),
-    })
-    .parse(process.env);
+  return envSchema.parse(process.env);
 };
 
 let jwtToken: string | null = null;
