@@ -39,9 +39,10 @@ jobs:
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v3
+        retention-days: 1
         with:
           name: common
-          path: ./common/
+          path: ./common/dist/
 
   build-server:
     name: Build 'server'
@@ -58,13 +59,14 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: common
-          path: ./common/
+          path: ./common/dist/
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-artifact@v3
+        retention-days: 1
         with:
           name: server
-          path: ./server/
+          path: ./server/dist/
 
   notify-deployment:
     name: Notify deployment
@@ -82,11 +84,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: common
-          path: ./common/
+          path: ./common/dist/
       - uses: actions/download-artifact@v3
         with:
           name: server
-          path: ./server/
+          path: ./server/dist/
       - run: npm ci
       - run: npm run build
       - run: node cli Notify deployment

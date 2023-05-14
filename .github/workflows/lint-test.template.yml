@@ -20,12 +20,12 @@ jobs:
         if: ${{ contains(inputs.dir, 'server') || contains(inputs.dir, 'web') }}
         with:
           name: common
-          path: ./common/
+          path: ./common/dist/
       - uses: actions/download-artifact@v3
         if: ${{ contains(inputs.dir, 'web') }}
         with:
           name: server
-          path: ./server/
+          path: ./server/dist/
       - run: npm ci
       - run: npm run lint
       - run: npm run test
