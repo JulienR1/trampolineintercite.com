@@ -5,11 +5,10 @@
   "private": true,
   "scripts": {
     "start": "vercel dev",
-    "build": "npm run build:common && astro build",
-    "build:common": "cd ../common && npm ci && npm run build && cd ../web",
+    "build": "astro build",
     "preview": "astro preview",
-    "lint": "npm run build:common && astro check && eslint --ext .ts,.astro --fix src",
-    "test": "npm run build:common && echo \"TODO: tests\""
+    "lint": "astro check && eslint --ext .ts,.astro --fix src",
+    "test": "echo \"TODO: tests\""
   },
   "dependencies": {
     "@astrojs/react": "^1.2.2",

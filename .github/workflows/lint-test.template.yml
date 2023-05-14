@@ -1,0 +1,31 @@
+name: Lint and tests
+on:
+  workflow_call:
+    inputs:
+      dir:
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.dir }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - uses: actions/download-artifact@v3
+        if: ${{ contains(inputs.dir, 'server') || contains(inputs.dir, 'web') }}
+        with:
+          name: common
+          path: ./common/
+      - uses: actions/download-artifact@v3
+        if: ${{ contains(inputs.dir, 'web') }}
+        with:
+          name: server
+          path: ./server/
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test

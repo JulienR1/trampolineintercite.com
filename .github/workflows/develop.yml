@@ -1,39 +1,137 @@
-name: Develop actions
+name: DEV actions
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  SERVER_URL: ${{ secrets.SERVER_URL }}
+  USERNAME: ${{ secrets.CLI_USERNAME }}
+  PASSWORD: ${{ secrets.CLI_PASSWORD }}
 on:
   push:
     branches-ignore:
       - master
 jobs:
-  common-integrity:
-    uses: ./.github/workflows/integrity.template.yml
+  db-tool:
+    name: DB tool
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: ./db/manager
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - run: npm ci
+      - run: npm run build
+
+  build-common:
+    name: Build 'common'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./common
+    steps:
+      - uses: actions/checkout@v3
+      - uses: action/setup-node@v3
+        with:
+          node-version: "18.x"
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: common
+          path: ./common/
+
+  build-server:
+    name: Build 'server'
+    needs: build-common
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - uses: action/download-artifact@v3
+        with:
+          name: common
+          path: ./common/
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: server
+          path: ./server/
+
+  notify-deployment:
+    name: Notify deployment
+    needs: build-server
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./cli
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+      - uses: actions/download-artifact@v3
+        with:
+          name: common
+          path: ./common/
+      - uses: actions/download-artifact@v3
+        with:
+          name: server
+          path: ./server/
+      - run: npm ci
+      - run: npm run build
+      - run: node cli Notify deployment
+        working-directory: ../
+
+  lint-and-tests-common:
+    needs: build-common
+    uses: ./.github/workflows/lint-test.template.yml
     with:
       dir: ./common
-  server-integrity:
-    needs: common-integrity
-    uses: ./.github/workflows/integrity.template.yml
+
+  lint-and-tests-server:
+    needs: build-server
+    uses: ./.github/workflows/lint-test.template.yml
     with:
       dir: ./server
-  astro-integrity:
-    needs: common-integrity
-    uses: ./.github/workflows/integrity.template.yml
+
+  lint-and-tests-web:
+    needs: build-server
+    uses: ./.github/workflows/lint-test.template.yml
     with:
       dir: ./web
-  cli:
-    needs: server-integrity
-    uses: ./.github/workflows/cli.run.yml
-  server-preview:
-    needs: server-integrity
-    uses: ./.github/workflows/deploy.server.template.yml
-    secrets:
-      render_api_key: ${{ secrets.RENDER_API_KEY_DEV }}
-      service_id: ${{ secrets.SERVICE_ID_DEV }}
-  preview:
-    needs: [server-preview, astro-integrity]
-    uses: ./.github/workflows/deploy.web.template.yml
-    with:
-      env: preview
-    secrets:
-      token: ${{ secrets.VERCEL_TOKEN }}
+
+  deploy-server:
+    name: Deploy server
+    needs: [lint-and-tests-server, notify-deployment]
+    runs-on: ubuntu-latest
+    defaults:
+      runs:
+        working-directory: ./server/deploy
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+      - run: npm start -- --key=${{ secrets.RENDER_API_KEY_DEV }} --serviceId=${{ secrets.SERVICE_ID_DEV }}
+
+  deploy-web-preview:
+    name: Deploy web preview
+    needs: [lint-and-tests-web, deploy-server]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install --global vercel@latest
+      - run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      - run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      - run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
