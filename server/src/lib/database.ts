@@ -1,7 +1,7 @@
 import { QueryOptions } from "mysql2";
 import { Connection, createConnection } from "mysql2/promise";
 import { ConnectionOptions } from "mysql2/typings/mysql";
-import { err, ok, Result } from "../types";
+import { Result, err, ok } from "../types";
 
 type TransactionConnection = {
   query: <T>(query: QueryOptions) => Promise<T[]>;

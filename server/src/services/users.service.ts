@@ -1,4 +1,11 @@
-import { INewUser, IPermissionData, IRoleData, IUser, IUserData } from "common";
+import {
+  INewUser,
+  IPermission,
+  IPermissionData,
+  IRoleData,
+  IUser,
+  IUserData,
+} from "common";
 import { randomBytes } from "crypto";
 import { query, transaction } from "../lib";
 import { Result, err, ok } from "../types";
@@ -21,8 +28,8 @@ export const getUser = (options?: { includePassword: boolean }) => {
       return err(roles.error);
     }
 
-    const permissions = await query<IPermissionData>({
-      sql: "SELECT * FROM role_permissions WHERE role_id IN (?)",
+    const permissions = await query<Pick<IPermissionData, "label">>({
+      sql: "SELECT DISTINCT label FROM role_permissions WHERE role_id IN (?)",
       values: [roles.value.map((role) => role.id).join(",")],
     }).execute();
 
@@ -37,9 +44,7 @@ export const getUser = (options?: { includePassword: boolean }) => {
       email: user.value.email,
       password: options?.includePassword ? user.value.password : null,
       roles: roles.value.map(({ label }) => label) as IUser["roles"],
-      permissions: [
-        ...new Set(permissions.value.map(({ label }) => label)),
-      ] as IUser["permissions"],
+      permissions: permissions.value.map(({ label }) => label) as IPermission[],
     });
   };
 
