@@ -6,11 +6,12 @@ on:
   push:
     branches-ignore:
       - master
+
 jobs:
   deploy-dev:
     uses: ./.github/workflows/deploy.template.yml
     with:
-      server_url: ${{ vars.SERVER_URL }}
+      server_url: ${{ vars.SERVER_URL_DEV }}
       cli_username: ${{ vars.CLI_USERNAME }}
     secrets:
       cli_password: ${{ secrets.CLI_PASSWORD }}

@@ -8,9 +8,22 @@ on:
 
 jobs:
   production-${{ github.event.inputs.workflowIdentifier }}:
-    uses: ./.github/workflows/deploy.web.template.yml
-    with:
-      env: production
-      arg: --prod
-    secrets:
-      token: ${{ secrets.VERCEL_TOKEN }}
+    name: Automatic web deployment
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci
+        working-directory: ./common
+      - run: npm run build
+        working-directory: ./common
+      - run: npm ci
+        working-directory: ./server
+      - run: npm run build
+        working-directory: ./server
+      - run: npm install --global vercel@latest
+      - run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - run: vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}

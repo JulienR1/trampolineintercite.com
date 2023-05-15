@@ -71,8 +71,8 @@ jobs:
           retention-days: 1
           path: ./server/dist/
 
-  build-cli:
-    name: Build CLI
+  notify-deployment:
+    name: Notify deployment
     needs: build-server
     runs-on: ubuntu-latest
     defaults:
@@ -80,6 +80,9 @@ jobs:
         working-directory: ./cli
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
       - uses: actions/download-artifact@v3
         with:
           name: common
@@ -94,29 +97,9 @@ jobs:
         working-directory: ./server/
       - run: npm ci
       - run: npm run build
-      - uses: actions/upload-artifact@v3
-        with:
-          name: cli
-          retention-days: 1
-          path: ./cli/dist/
-
-  notify-deployment:
-    name: Notify deployment
-    needs: build-cli
-    runs-on: ubuntu-latest
-    if: ${{ inputs.production == true }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "18.x"
-      - uses: actions/download-artifact@v3
-        with:
-          name: cli
-          path: ./cli/dist/
-      - run: npm ci
-        working-directory: ./cli
       - run: node cli Notify deployment
+        if: ${{ inputs.production == true }}
+        working-directory: ./
         env:
           SERVER_URL: ${{ inputs.server_url }}
           EMAIL: ${{ inputs.cli_username }}
@@ -144,19 +127,16 @@ jobs:
     name: Deploy server
     needs: [lint-and-tests-server, notify-deployment]
     runs-on: ubuntu-latest
-    if: always()
     defaults:
       run:
         working-directory: ./server/deploy
     steps:
-      - if: ${{ needs.lint-and-tests-server.result == 'failure' || needs.notify-deployment.result == 'failure' }}
-        run: exit 1
       - uses: actions/checkout@v3
       - run: npm ci
       - run: npm start -- --key=${{ secrets.render_api_key }} --serviceId=${{ secrets.render_service_id }}
 
-  deploy-web-preview:
-    name: Deploy web preview
+  deploy-web:
+    name: Deploy web
     needs: [lint-and-tests-web, deploy-server]
     runs-on: ubuntu-latest
     defaults:
@@ -177,6 +157,17 @@ jobs:
       - run: npm ci
         working-directory: ./server/
       - run: npm install --global vercel@latest
+
       - run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production != true }}
       - run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production != true }}
       - run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production != true }}
+
+      - run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production == true }}
+      - run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production == true }}
+      - run: vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production == true }}
