@@ -144,10 +144,13 @@ jobs:
     name: Deploy server
     needs: [lint-and-tests-server, notify-deployment]
     runs-on: ubuntu-latest
+    if: always()
     defaults:
       run:
         working-directory: ./server/deploy
     steps:
+      - if: ${{ needs.lint-and-tests-server.result == 'failure' || needs.notify-deployment.result == 'failure' }}
+        run: exit 1
       - uses: actions/checkout@v3
       - run: npm ci
       - run: npm start -- --key=${{ secrets.render_api_key }} --serviceId=${{ secrets.render_service_id }}
