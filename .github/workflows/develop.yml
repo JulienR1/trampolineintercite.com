@@ -94,8 +94,12 @@ jobs:
         working-directory: ./server/
       - run: npm ci
       - run: npm run build
-      - run: SERVER_URL=${{ secrets.SERVER_URL }} USERNAME=${{ secrets.CLI_USERNAME }} PASSWORD=${{ secrets.CLI_PASSWORD }} node cli Notify deployment
+      - run: node cli Notify deployment
         working-directory: ./
+        env:
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          EMAIL: ${{ secrets.CLI_USERNAME }}
+          PASSWORD: ${{ secrets.CLI_PASSWORD }}
 
   lint-and-tests-common:
     needs: build-common
