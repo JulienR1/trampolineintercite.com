@@ -95,8 +95,9 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: actions/upload-artifact@v3
-        name: cli
-        path: ./cli/dist/
+        with:
+          name: cli
+          path: ./cli/dist/
 
   notify-deployment:
     name: Notify deployment
