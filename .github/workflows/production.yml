@@ -18,3 +18,4 @@ jobs:
       cli_password: ${{ secrets.CLI_PASSWORD }}
       render_api_key: ${{ secrets.RENDER_API_KEY_PROD }}
       render_service_id: ${{ secrets.SERVICE_ID_PROD }}
+      vercel_token: ${{ secrets.VERCEL_TOKEN }}
