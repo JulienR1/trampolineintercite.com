@@ -94,9 +94,10 @@ jobs:
         working-directory: ./server/
       - run: npm ci
       - run: npm run build
-      - run: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v3
         with:
           name: cli
+          retention-days: 1
           path: ./cli/dist/
 
   notify-deployment:
