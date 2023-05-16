@@ -7,7 +7,7 @@ import inquirer from "inquirer";
 import { join } from "path";
 import SuperJSON from "superjson";
 import type { AppRouter } from "trampolineintercite-server";
-import { assignRoleToUser } from "./operations/assign-role.js";
+import { assignRoleToUser as assignPermissionToUser } from "./operations/assign-permission.js";
 import {
   associateUserToExistingPerson,
   createNewUser,
@@ -115,7 +115,7 @@ const args = process.argv.slice(2);
 const OPERATIONS = [
   "Create a new user",
   "Create a new user for an existing person",
-  "Assign role to user",
+  "Assign permission to user",
   "Notify deployment",
 ] as const;
 
@@ -138,9 +138,9 @@ switch (args.join(" ") || operation) {
   case "Create a new user for an existing person":
     await associateUserToExistingPerson(client);
     break;
-  case "Assign role to user":
+  case "Assign permission to user":
     await authorizeUser();
-    await assignRoleToUser(client);
+    await assignPermissionToUser(client);
     break;
   case "Notify deployment":
     await authorizeUser();

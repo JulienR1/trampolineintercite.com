@@ -1,4 +1,4 @@
-import { Role } from "common";
+import { Permission } from "common";
 import inquirer from "inquirer";
 import { Client } from "../types.js";
 
@@ -21,13 +21,13 @@ export const assignRoleToUser = async (client: Client) => {
     return;
   }
 
-  const { roles } = await inquirer.prompt({
-    name: "roles",
-    message: "Select the roles to assign to this user",
+  const { permissions } = await inquirer.prompt({
+    name: "permissions",
+    message: "Select the permissions to assign to this user",
     type: "checkbox",
-    choices: Role.options,
-    default: Role.options.map((option) =>
-      user.roles.includes(option) ? option : null
+    choices: Permission.options,
+    default: Permission.options.map((option) =>
+      user.permissions.includes(option) ? option : null
     ),
   });
 
