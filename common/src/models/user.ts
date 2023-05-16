@@ -1,13 +1,5 @@
 import z from "zod";
 
-export const Role = z.enum(["ADMIN", "SUPERADMIN", "READONLY", "BOT"]);
-export type IRole = z.infer<typeof Role>;
-
-export interface IRoleData {
-  id: number;
-  label: string;
-}
-
 export const Permission = z.enum([
   "ADMIN_PANEL",
   "EDIT",
@@ -36,7 +28,6 @@ export const User = z.object({
   lastname: z.string(),
   email: z.string().email().nullable(),
   password: z.string().nullable(),
-  roles: z.array(Role),
   permissions: z.array(Permission),
 });
 
