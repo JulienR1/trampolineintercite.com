@@ -18,7 +18,7 @@ export class GithubClientMock {
   }
 
   public dispatchWorkflow(
-    _: "manual-production.yml"
+    _: "manual-deployment.yml"
   ): Promise<Result<{ id: number; url: string }>> {
     let runId = 0;
     do {

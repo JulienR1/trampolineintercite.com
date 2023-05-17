@@ -102,7 +102,7 @@ export const deployWebsite = async (user: IUser): Promise<Result<number>> => {
     });
   }
 
-  const run = await github().dispatchWorkflow("manual-production.yml");
+  const run = await github().dispatchWorkflow("manual-deployment.yml");
   if (!run.isOk()) {
     return err(run.error);
   }

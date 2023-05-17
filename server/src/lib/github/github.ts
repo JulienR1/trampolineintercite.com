@@ -12,7 +12,7 @@ export class GithubClient {
   };
 
   public async dispatchWorkflow(
-    workflow: "manual-production.yml"
+    workflow: "manual-deployment.yml"
   ): Promise<Result<{ id: number; url: string }>> {
     const nowStr = this.formatDateForQuery(new Date());
     const workflowIdentifier = randomBytes(4).toString("hex");
@@ -25,7 +25,7 @@ export class GithubClient {
           ref: process.env.GITHUB_REF,
           inputs: {
             workflowIdentifier,
-            production: process.env.GITHUB_REF === "master",
+            production: process.env.GITHUB_REF === "main",
           },
         },
       }
@@ -41,7 +41,7 @@ export class GithubClient {
     while (startTime - new Date().getTime() < 10 * 60 * 1000) {
       /* eslint-disable-next-line no-await-in-loop */
       const dispatchedRuns = await api(
-        `${process.env.GITHUB_REPO_API_URL}/actions/workflows/${workflow}/runs?branch=master&per_page=5&created>=${nowStr}`,
+        `${process.env.GITHUB_REPO_API_URL}/actions/workflows/${workflow}/runs?branch=${process.env.GITHUB_REF}&per_page=5&created>=${nowStr}`,
         { headers: this.headers }
       ).get(GetManyRunsResponse);
 
@@ -88,7 +88,7 @@ export class GithubClient {
     );
 
     const workflows = await api(
-      `${process.env.GITHUB_REPO_API_URL}/actions/runs?branch=master&per_page=10&created>=${dateStr}`,
+      `${process.env.GITHUB_REPO_API_URL}/actions/runs?branch=${process.env.GITHUB_REF}&per_page=10&created>=${dateStr}`,
       { headers: this.headers }
     ).get(GetManyRunsResponse);
 
