@@ -100,7 +100,6 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: node cli Notify deployment
-        if: ${{ inputs.production == true }}
         working-directory: ./
         env:
           SERVER_URL: ${{ inputs.server_url }}
