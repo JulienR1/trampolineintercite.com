@@ -13,6 +13,7 @@ import {
 import { Permission, PermissionButton } from "@trampo/pages/admin/components";
 import { useConnectedQuery } from "@trampo/pages/admin/connectivity";
 import { client } from "@trampo/resources/client";
+import { useTrpcErrorHandler } from "@trampo/resources/client/trpc-error-handler";
 import { Icon } from "@trampo/ui/icon";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "react-query";
@@ -22,6 +23,8 @@ type DeployState = "idle" | "confirmation" | "deploying";
 
 export const DeployControls = () => {
   const queryClient = useQueryClient();
+
+  const trpcErrorHandler = useTrpcErrorHandler();
   const [currentState, setCurrentState] = useState<DeployState>("idle");
   const [hasConfirmed, setHasConfirmed] = useState(false);
 
@@ -69,7 +72,15 @@ export const DeployControls = () => {
   const handleDeploy = async () => {
     if (currentState === "confirmation") {
       setCurrentState("deploying");
-      await client.deploy.startNewDeployment.mutate();
+      try {
+        await client.deploy.startNewDeployment.mutate();
+      } catch (err) {
+        trpcErrorHandler(
+          err,
+          "Le déploiement n'a pas pu être démarré. Le service est probablement déjà occupé.",
+        );
+        setCurrentState("idle");
+      }
     }
   };
 

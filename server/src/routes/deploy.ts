@@ -29,7 +29,7 @@ export const deploy = router({
     .mutation(async ({ ctx }) => {
       const runId = await deployWebsite(ctx.user!);
       if (!runId.isOk()) {
-        throw new TRPCError({ code: "BAD_REQUEST" });
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
       }
       return runId.value;
     }),

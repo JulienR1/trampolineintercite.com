@@ -1,10 +1,17 @@
 name: Manual Deploy
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
   workflow_dispatch:
     inputs:
       workflowIdentifier:
         description: "A unique identifier to find this workflow run in the future"
         required: true
+      production:
+        description: "A flag that notifies if the deployment should be in production or in preview mode"
+        required: false
+        type: boolean
 
 jobs:
   production-${{ github.event.inputs.workflowIdentifier }}:
@@ -24,6 +31,17 @@ jobs:
       - run: npm run build
         working-directory: ./server
       - run: npm install --global vercel@latest
+
+      - run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production != true }}
+      - run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production != true }}
+      - run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production != true }}
+
       - run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production == true }}
       - run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production == true }}
       - run: vercel deploy --prod --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        if: ${{ inputs.production == true }}

@@ -24,6 +24,7 @@ const envVariables = z.object({
 
   GITHUB_DEPLOY_TOKEN: z.string().min(1),
   GITHUB_REPO_API_URL: z.string().url(),
+  GITHUB_REF: z.literal("master").or(z.literal("develop")),
 
   REFERENCE_EMAIL: z.string().email(),
   CONTACT_URL: z.string().url(),

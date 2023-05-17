@@ -21,7 +21,13 @@ export class GithubClient {
       `${process.env.GITHUB_REPO_API_URL}/actions/workflows/${workflow}/dispatches`,
       {
         headers: this.headers,
-        body: { ref: "master", inputs: { workflowIdentifier } },
+        body: {
+          ref: process.env.GITHUB_REF,
+          inputs: {
+            workflowIdentifier,
+            production: process.env.GITHUB_REF === "master",
+          },
+        },
       }
     ).post(z.any());
 
