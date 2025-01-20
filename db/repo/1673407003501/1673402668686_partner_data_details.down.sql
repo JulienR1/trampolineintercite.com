@@ -1,1 +1,0 @@
-DROP VIEW IF EXISTS partner_data_details;

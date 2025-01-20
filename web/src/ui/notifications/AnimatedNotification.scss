@@ -1,8 +1,0 @@
-.animatedNotification {
-  max-height: 0px;
-  transition: max-height 400ms ease;
-}
-
-.animatedNotification--mounted {
-  max-height: var(--height);
-}

@@ -6,40 +6,48 @@ Website repo for [Trampoline Intercité](https://trampolineintercite.com)
 
 This is a monorepo that contains the following. More documentation can be found in the [docs section](./docs/docs.md).
 
-<hr/>
+---
 
-## 1. Web
+## 1. [`/packages/web`](/packages/web)
 
-The actual website.
+The actual user facing website.
 
-### Tech:
+| Framework                     | Language                                      |
+| ----------------------------- | --------------------------------------------- |
+| [Astro](https://astro.build/) | [TypeScript](https://www.typescriptlang.org/) |
 
-- [Astro](https://astro.build/);
-- [ReactJS](https://reactjs.org) (Admin portal).
+## 2. [`/packages/app`](/packages/app)
 
-## 2. Server
+The admin portal used to configure and edit the user facing website.
 
-The web service managing the UI. It is used to:
+| Framework                   | Language                                      |
+| --------------------------- | --------------------------------------------- |
+| [React](https://react.dev/) | [TypeScript](https://www.typescriptlang.org/) |
 
-- Get the proper data when building the website;
-- Edit the website via the admin portal;
-- Manage other requests (e.g.: emails).
+## 3. [`/packages/server`](/packages/server)
 
-### Tech:
+The common backend used to:
 
-- [NodeJS](https://nodejs.dev/);
-- [ExpressJS](https://expressjs.com/);
-- [tRPC](https://trpc.io/).
+- Build the user facing website;
+- Edit and configure the user facing website;
+- Access other web services required by the website (eg: emails).
 
-## 3. Common
+| Framework | Language              |
+| --------- | --------------------- |
+| [TBD](#)  | [Go](https://go.dev/) |
 
-A collection of interfaces and types used by both the frontend and the backend.
+## 4. [`/packages/common`](/packages/common)
 
-### Tech:
+A collection of interfaces and types used by both frontends.
 
-- [Zod](https://zod.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
+| Framework               | Language                                      |
+| ----------------------- | --------------------------------------------- |
+| [Zod](https://zod.dev/) | [TypeScript](https://www.typescriptlang.org/) |
 
-## 4. DB
+## 5. [`/packages/db`](/packages/db)
 
-A custom versioning and deploying tool for MySQL.
+A custom versioning and deploying tool for PostgreSQL.
+
+## 6. [`/packages/cli`](/packages/cli)
+
+A custom cli tool used to perform admin operations without requiring the portal.
