@@ -1,5 +1,28 @@
 ---
-
+const year = new Date().getFullYear().toString();
 ---
 
-<footer>bye bye</footer>
+<footer class="bg-primary">
+    <div class="flex flex-col p-2 py-4 gap-4">
+        <nav>TODO nav</nav>
+        <ul>TODO partners</ul>
+    </div>
+
+    <div
+        class="bg-primary-dark text-white font-semibold text-center p-2 text-sm"
+    >
+        <span>
+            &copy; Trampoline Intercité
+            <span id="copy-year">
+                {year}
+            </span>
+        </span>
+    </div>
+</footer>
+
+<script>
+    const yearElement = document.getElementById("copy-year");
+    if (yearElement) {
+        yearElement.innerText = new Date().getFullYear().toString();
+    }
+</script>

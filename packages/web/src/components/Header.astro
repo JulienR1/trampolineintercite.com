@@ -1,5 +1,22 @@
 ---
-
+import Link from "./Link.astro";
+import Logo from "./Logo.astro";
 ---
 
-<header>allo :)</header>
+<header class="p-4 bg-white">
+    <div class="grid grid-cols-[1fr_auto_1fr] items-center">
+        <Link href="/" class="col-start-2">
+            <figure class="h-12 mx-auto">
+                <Logo />
+            </figure>
+        </Link>
+
+        <div>
+            <button class="block ml-auto">
+                <span class="material-symbols-outlined block text-3xl">
+                    menu
+                </span>
+            </button>
+        </div>
+    </div>
+</header>

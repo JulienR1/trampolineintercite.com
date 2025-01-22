@@ -1,0 +1,15 @@
+---
+import type { JSX } from "astro/jsx-runtime";
+import type { Routes } from "../routes/routes";
+
+interface Props extends Omit<JSX.AnchorHTMLAttributes, "href"> {
+    href: Routes;
+    children: any;
+}
+
+const props = Astro.props;
+---
+
+<a {...props}>
+    <slot />
+</a>
