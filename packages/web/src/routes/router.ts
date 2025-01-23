@@ -29,5 +29,6 @@ export const router = [
 ] as const
 router satisfies RouteArray
 
-export const routes = (allowed: RouteModifer[] = []) => filter(allowed, router)
+export const headerRouter = filter(['header-only'], router)
+export const footerRouter = filter(['footer-only'], router)
 export type Routes<M extends RouteModifer[] = []> = ListRoutes<FilterRoutes<typeof router, M>>

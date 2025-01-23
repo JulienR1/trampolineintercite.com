@@ -1,5 +1,5 @@
 ---
-import { routes } from "../routes/router";
+import { footerRouter } from "../routes/router";
 
 const year = new Date().getFullYear().toString();
 ---
@@ -9,7 +9,7 @@ const year = new Date().getFullYear().toString();
         <nav>
             <ul>
                 {
-                    routes(["footer-only"]).map((route) => (
+                    footerRouter.map((route) => (
                         <li>
                             <a href={route.path}>{route.label}</a>
                         </li>
