@@ -1,10 +1,23 @@
 ---
+import { routes } from "../routes/router";
+
 const year = new Date().getFullYear().toString();
 ---
 
 <footer class="bg-primary">
     <div class="flex flex-col p-2 py-4 gap-4">
-        <nav>TODO nav</nav>
+        <nav>
+            <ul>
+                {
+                    routes(["footer-only"]).map((route) => (
+                        <li>
+                            <a href={route.path}>{route.label}</a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </nav>
+
         <ul>TODO partners</ul>
     </div>
 
@@ -21,8 +34,6 @@ const year = new Date().getFullYear().toString();
 </footer>
 
 <script>
-    const yearElement = document.getElementById("copy-year");
-    if (yearElement) {
-        yearElement.innerText = new Date().getFullYear().toString();
-    }
+    const year = new Date().getFullYear().toString();
+    document.getElementById("copy-year")!.innerText = year;
 </script>

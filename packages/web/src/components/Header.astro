@@ -5,7 +5,7 @@ import Logo from "./Logo.astro";
 
 <header class="p-4 bg-white">
     <div class="grid grid-cols-[1fr_auto_1fr] items-center">
-        <Link href="/" class="col-start-2">
+        <Link modifiers={["header-only"]} href="/" class="col-start-2">
             <figure class="h-12 mx-auto">
                 <Logo />
             </figure>

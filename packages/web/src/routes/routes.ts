@@ -1,4 +1,5 @@
-export type RouteModifer = "disabled" | "desktop-only" | "header-only" | "footer-only"
+
+export type RouteModifer = "disabled" | "header-only" | "footer-only"
 
 export type Route = {
     path: string,
@@ -7,37 +8,30 @@ export type Route = {
     modifiers?: readonly RouteModifer[],
 }
 
-type RouteArray = readonly Route[]
+export type RouteArray = readonly Route[]
 
-export const routes = [
-    { path: "/", label: "Accueil", modifiers: ["footer-only"] },
-    {
-        path: "/a-propos",
-        label: "À propos",
-        subroutes: [
-            { path: "/actualites", label: "Actualités" },
-            { path: "/reglements", label: "Règlements" },
-            { path: "/annonces", label: "Annonces" },
-        ]
-    },
-    {
-        "path": "/activites",
-        label: "Activités",
-        subroutes: [
-            { path: "/activites/details#recreatif", label: "Récréatif" },
-            { path: "/activites/details#fetes", label: "Fête d'enfants" },
-            { path: "/activites/details#competitif", label: "Compétitif" },
-            { path: "/activites/sport-etudes", label: "Sport-Études" },
-            { path: "/activites/inscription", label: "Comment s'inscrire" },
-        ]
-    },
-    { path: "/", label: "Accueil", modifiers: ["header-only"] },
-    { path: "/horaire", label: "Horaire" },
-    { path: "/contact", label: "Contact" }
-] as const
-routes satisfies RouteArray
+type FilterRoute<
+    R extends Route,
+    AllowedModifiers extends readonly RouteModifer[] = [],
+    RequiredModifiers extends readonly RouteModifer[] | undefined = R['modifiers']
+> =
+    RequiredModifiers extends readonly [infer FirstRequiredModifier extends RouteModifer, ...infer RestOfRequiredModifiers extends RouteModifer[]] ?
+    FirstRequiredModifier extends AllowedModifiers[number] ?
+    FilterRoute<R, AllowedModifiers, RestOfRequiredModifiers> :
+    never
+    : R
 
-type ListRoutes<R extends RouteArray> =
+export type FilterRoutes<R extends RouteArray, M extends readonly RouteModifer[]> =
+    R extends readonly [infer First extends Route, ...infer Rest extends RouteArray] ?
+    [FilterRoute<First, M>, ...FilterRoutes<Rest, M>]
+    : [];
+
+export const filter = <R extends RouteArray, M extends readonly RouteModifer[]>(allowed: M, toFilter: R): FilterRoutes<R, M> =>
+    toFilter
+        .filter(route => (route.modifiers ?? []).every(modifier => allowed.includes(modifier)))
+        .map(route => "subroutes" in route ? ({ ...route, subroutes: filter(allowed, route.subroutes!) }) : route) as FilterRoutes<R, M>
+
+export type ListRoutes<R extends RouteArray> =
     R extends readonly [infer First extends Route, ...infer Rest extends RouteArray] ?
     First['path'] |
     ListRoutes<Rest> | (
@@ -45,4 +39,5 @@ type ListRoutes<R extends RouteArray> =
         ListRoutes<First['subroutes']> : never
     ) : never
 
-export type Routes = ListRoutes<typeof routes>
+
+

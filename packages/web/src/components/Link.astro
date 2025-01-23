@@ -1,9 +1,12 @@
 ---
 import type { JSX } from "astro/jsx-runtime";
-import type { Routes } from "../routes/routes";
+import type { RouteModifer } from "../routes/routes";
+import type { Routes } from "../routes/router";
 
-interface Props extends Omit<JSX.AnchorHTMLAttributes, "href"> {
-    href: Routes;
+interface Props<M extends RouteModifer[] = []>
+    extends Omit<JSX.AnchorHTMLAttributes, "href"> {
+    modifiers: M;
+    href: Routes<M>;
     children: any;
 }
 
