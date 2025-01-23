@@ -1,39 +1,59 @@
 ---
 import { footerRouter } from "../routes/router";
+import Link from "./Link.astro";
 
 const year = new Date().getFullYear().toString();
 ---
 
-<footer class="bg-primary">
-    <div class="flex flex-col p-2 py-4 gap-4">
-        <nav>
-            <ul>
-                {
-                    footerRouter.map((route) => (
-                        <li>
-                            <a href={route.path}>{route.label}</a>
-                        </li>
-                    ))
-                }
-            </ul>
-        </nav>
+<footer class="bg-primary text-white">
+  <div class="flex flex-col p-2 py-4 gap-4">
+    <nav>
+      <ul class="flex flex-col gap-4 text-center">
+        {
+          footerRouter.map((route) => (
+            <li>
+              <Link
+                modifiers={["footer-only"]}
+                href={route.path}
+                class="font-semibold"
+              >
+                {route.label}
+              </Link>
+              {"subroutes" in route && (
+                <ul>
+                  {route.subroutes.map((subroute) => (
+                    <li>
+                      <Link
+                        modifiers={["footer-only"]}
+                        href={subroute.path}
+                        class="font-light"
+                      >
+                        {subroute.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
 
-        <ul>TODO partners</ul>
-    </div>
+    <ul>TODO partners</ul>
+  </div>
 
-    <div
-        class="bg-primary-dark text-white font-semibold text-center p-2 text-sm"
-    >
-        <span>
-            &copy; Trampoline Intercité
-            <span id="copy-year">
-                {year}
-            </span>
-        </span>
-    </div>
+  <div class="bg-primary-dark font-semibold text-center p-2 text-sm">
+    <span class="opacity-60">
+      &copy; Trampoline Intercité
+      <span id="copy-year">
+        {year}
+      </span>
+    </span>
+  </div>
 </footer>
 
 <script>
-    const year = new Date().getFullYear().toString();
-    document.getElementById("copy-year")!.innerText = year;
+  const year = new Date().getFullYear().toString();
+  document.getElementById("copy-year")!.innerText = year;
 </script>

@@ -5,57 +5,61 @@ import Footer from "../components/Footer.astro";
 
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-        <link rel="sitemap" href="/sitemap-index.xml" />
-        <meta name="generator" content={Astro.generator} />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
 
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
 
-        <title>Trampoline Intercité</title>
-    </head>
-    <body>
-        <Header />
-        <main style={{ "--header-height": "0px" }}>
-            <slot />
-        </main>
-        <Footer />
-    </body>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+
+    <title>Trampoline Intercité</title>
+  </head>
+  <body>
+    <Header />
+    <main style={{ "--header-height": "0px" }}>
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>
 
 <style>
-    html,
-    body {
-        margin: 0;
-        width: 100%;
-        min-height: 100vh;
-    }
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+  }
 
-    main {
-        min-height: calc(100vh - var(--header-height));
-    }
+  main {
+    min-height: calc(100vh - var(--header-height));
+  }
 </style>
 
 <script>
-    // NOTE: When the header is loaded or resized, update the body's min-height.
-    document.addEventListener("DOMContentLoaded", function () {
-        const main = document.querySelector("main");
-        const header = document.querySelector("header");
+  // NOTE: When the header is loaded or resized, update the body's min-height.
+  document.addEventListener("DOMContentLoaded", function () {
+    const main = document.querySelector("main");
+    const header = document.querySelector("header");
 
-        if (main && header) {
-            const resize = () =>
-                main.style.setProperty(
-                    "--header-height",
-                    `${header.offsetHeight}px`,
-                );
+    if (main && header) {
+      const resize = () =>
+        main.style.setProperty("--header-height", `${header.offsetHeight}px`);
 
-            resize();
-            header.addEventListener("resize", resize);
-        }
-    });
+      resize();
+      header.addEventListener("resize", resize);
+    }
+  });
 </script>
