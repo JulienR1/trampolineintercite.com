@@ -1,8 +1,23 @@
 ---
+import type { Partner } from "common";
 import { footerRouter } from "../routes/router";
 import Link from "./Link.astro";
 
 const year = new Date().getFullYear().toString();
+
+// TODO: eventually get this data from the backend at build time
+const partners: Partner[] = [
+  {
+    label: "Ville de Trois-Rivières",
+    url: "https://www.v3r.net/",
+    image: {
+      src: "https://www.v3r.net/wp-content/themes/v3r/Images/icons/logo-v3r-v2.svg",
+      alt: "Logo de la ville de Trois-Rivières",
+      width: 94,
+      height: 105,
+    },
+  },
+];
 ---
 
 <footer class="bg-primary text-white">
@@ -42,7 +57,27 @@ const year = new Date().getFullYear().toString();
       </ul>
     </nav>
 
-    <ul>TODO partners</ul>
+    {
+      partners.length > 0 && (
+        <>
+          <div class="h-[2px] bg-white w-[10%] mx-auto rounded mt-2" />
+          <div class="mt-4">
+            <ul class="flex justify-center w-[90%] mx-auto gap-8 flex-wrap">
+              {partners.map((partner) => (
+                <li class="flex-shrink-0 w-20 sm:w-24">
+                  <a href={partner.url} title={partner.label}>
+                    <img
+                      src={partner.image.src}
+                      alt={partner.label ?? partner.image.alt}
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )
+    }
   </div>
 
   <div class="bg-primary-dark font-semibold text-center p-2 text-sm">
