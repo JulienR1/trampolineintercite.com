@@ -1,0 +1,17 @@
+---
+import { headerRouter } from "../routes/router";
+import Link from "./Link.astro";
+
+type Props = (typeof headerRouter)[number];
+const { path, label } = Astro.props;
+---
+
+<Link
+  modifiers={["header-only"]}
+  href={path}
+  aria-label={label}
+  style={{ "font-variant": "small-caps" }}
+  class="relative flex font-semibold px-4 items-center text-lg hocus:bg-primary hocus:text-white md:mx-2 transition-all"
+>
+  {label}
+</Link>

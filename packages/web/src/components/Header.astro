@@ -1,5 +1,6 @@
 ---
 import { headerRouter } from "../routes/router";
+import HeaderLink from "./HeaderLink.astro";
 import Link from "./Link.astro";
 import Logo from "./Logo.astro";
 
@@ -15,19 +16,7 @@ const headerRight = headerRouter.slice(headerRouter.length / 2);
       </button>
 
       <div class="hidden sm:flex h-full justify-end">
-        {
-          headerLeft.map((route) => (
-            <Link
-              modifiers={["header-only"]}
-              href={route.path}
-              aria-label={route.label}
-              style={{ "font-variant": "small-caps" }}
-              class="relative flex font-semibold px-4 items-center text-lg hocus:bg-primary hocus:text-white md:mx-2 transition-all"
-            >
-              {route.label}
-            </Link>
-          ))
-        }
+        {headerLeft.map((route) => <HeaderLink {...route} />)}
       </div>
     </div>
 
@@ -38,19 +27,7 @@ const headerRight = headerRouter.slice(headerRouter.length / 2);
     </a>
 
     <div class="hidden sm:flex h-full">
-      {
-        headerRight.map((route) => (
-          <Link
-            modifiers={["header-only"]}
-            href={route.path}
-            aria-label={route.label}
-            style={{ "font-variant": "small-caps" }}
-            class="flex font-semibold px-4 items-center text-lg hocus:bg-primary hocus:text-white md:mx-2 transition-all"
-          >
-            {route.label}
-          </Link>
-        ))
-      }
+      {headerRight.map((route) => <HeaderLink {...route} />)}
     </div>
   </nav>
 
