@@ -2,26 +2,61 @@
 import { headerRouter } from "../routes/router";
 import Link from "./Link.astro";
 import Logo from "./Logo.astro";
+
+const headerLeft = headerRouter.slice(0, headerRouter.length / 2);
+const headerRight = headerRouter.slice(headerRouter.length / 2);
 ---
 
-<header class="group p-4 bg-white relative shadow-md">
-  <div class="grid grid-cols-[1fr_auto_1fr] items-center">
-    <div>
-      <button class="block" id="header-open">
-        <span class="material-symbols-outlined block text-3xl"> menu </span>
+<header class="group bg-white relative shadow-md px-4">
+  <nav class="grid grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-4">
+    <div class="sm:h-full">
+      <button class="block sm:hidden" id="header-open">
+        <span class="material-symbols-outlined block text-3xl">menu</span>
       </button>
+
+      <div class="hidden sm:flex h-full justify-end">
+        {
+          headerLeft.map((route) => (
+            <Link
+              modifiers={["header-only"]}
+              href={route.path}
+              aria-label={route.label}
+              style={{ "font-variant": "small-caps" }}
+              class="relative flex font-semibold px-4 items-center text-lg hocus:bg-primary hocus:text-white md:mx-2 transition-all"
+            >
+              {route.label}
+            </Link>
+          ))
+        }
+      </div>
     </div>
 
-    <Link modifiers={["header-only"]} href="/">
+    <a href="/" class="p-4">
       <figure class="h-12 mx-auto">
         <Logo />
       </figure>
-    </Link>
-  </div>
+    </a>
+
+    <div class="hidden sm:flex h-full">
+      {
+        headerRight.map((route) => (
+          <Link
+            modifiers={["header-only"]}
+            href={route.path}
+            aria-label={route.label}
+            style={{ "font-variant": "small-caps" }}
+            class="flex font-semibold px-4 items-center text-lg hocus:bg-primary hocus:text-white md:mx-2 transition-all"
+          >
+            {route.label}
+          </Link>
+        ))
+      }
+    </div>
+  </nav>
 
   <aside
     id="sidebar"
-    class="absolute left-0 top-0 w-[100vw] h-[100vh] overflow-hidden z-50 invisible group-data-[open=true]:visible"
+    class="absolute left-0 top-0 w-[100vw] h-[100vh] overflow-hidden z-50 invisible group-data-[open=true]:visible sm:hidden"
   >
     <div
       class="absolute bg-black w-full h-full opacity-0 group-data-[open=true]:opacity-20 transition-all"
