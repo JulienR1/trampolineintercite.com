@@ -4,6 +4,7 @@ export type RouteModifer = "disabled" | "header-only" | "footer-only"
 export type Route = {
     path: string,
     label: string,
+    icon?: string
     subroutes?: readonly Route[],
     modifiers?: readonly RouteModifer[],
 }

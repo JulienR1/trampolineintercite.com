@@ -26,9 +26,9 @@ import Footer from "../components/Footer.astro";
 
     <title>Trampoline Intercité</title>
   </head>
-  <body>
+  <body style={{ "--header-height": "0px" }}>
     <Header />
-    <main style={{ "--header-height": "0px" }}>
+    <main>
       <slot />
     </main>
     <Footer />
@@ -41,6 +41,11 @@ import Footer from "../components/Footer.astro";
     margin: 0;
     width: 100%;
     min-height: 100vh;
+  }
+
+  body[data-no-scroll="true"] {
+    height: 100vh;
+    overflow: hidden;
   }
 
   main {
@@ -56,7 +61,10 @@ import Footer from "../components/Footer.astro";
 
     if (main && header) {
       const resize = () =>
-        main.style.setProperty("--header-height", `${header.offsetHeight}px`);
+        document.body.style.setProperty(
+          "--header-height",
+          `${header.offsetHeight}px`,
+        );
 
       resize();
       header.addEventListener("resize", resize);

@@ -1,22 +1,95 @@
 ---
+import { headerRouter } from "../routes/router";
 import Link from "./Link.astro";
 import Logo from "./Logo.astro";
 ---
 
-<header class="p-4 bg-white">
-    <div class="grid grid-cols-[1fr_auto_1fr] items-center">
-        <Link modifiers={["header-only"]} href="/" class="col-start-2">
-            <figure class="h-12 mx-auto">
-                <Logo />
-            </figure>
-        </Link>
-
-        <div>
-            <button class="block ml-auto">
-                <span class="material-symbols-outlined block text-3xl">
-                    menu
-                </span>
-            </button>
-        </div>
+<header class="group p-4 bg-white relative shadow-md">
+  <div class="grid grid-cols-[1fr_auto_1fr] items-center">
+    <div>
+      <button class="block" id="header-open">
+        <span class="material-symbols-outlined block text-3xl"> menu </span>
+      </button>
     </div>
+
+    <Link modifiers={["header-only"]} href="/">
+      <figure class="h-12 mx-auto">
+        <Logo />
+      </figure>
+    </Link>
+  </div>
+
+  <aside
+    id="sidebar"
+    class="absolute left-0 top-0 w-[100vw] h-[100vh] overflow-hidden z-50 invisible group-data-[open=true]:visible"
+  >
+    <div
+      class="absolute bg-black w-full h-full opacity-0 group-data-[open=true]:opacity-20 transition-all"
+    >
+    </div>
+    <div
+      class="absolute bg-white h-full left-0 p-4 min-w-40 -translate-x-full group-data-[open=true]:translate-x-0 transition-all"
+      id="sidebar-contents"
+    >
+      <button class="block text-xs ml-auto" id="header-close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <nav>
+        <ul class="w-fit mx-auto pr-8">
+          {
+            headerRouter.map((route) => (
+              <li class="text-xl py-2">
+                <div class="flex gap-2 items-center font-semibold">
+                  {"icon" in route && (
+                    <span class="material-symbols-outlined text-xl">
+                      {route.icon}
+                    </span>
+                  )}
+                  <Link modifiers={["header-only"]} href={route.path}>
+                    {route.label}
+                  </Link>
+                </div>
+                {"subroutes" in route && (
+                  <ul class="ml-7">
+                    {route.subroutes.map((subroute) => (
+                      <li class="text-lg">
+                        <Link modifiers={["header-only"]} href={subroute.path}>
+                          {subroute.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </aside>
 </header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const header = document.querySelector("header")!;
+    const sidebar = document.getElementById("sidebar")!;
+    const contents = document.getElementById("sidebar-contents")!;
+    const opener = document.getElementById("header-open")!;
+    const closer = document.getElementById("header-close")!;
+
+    function toggle(open: boolean) {
+      window.scrollTo({ top: 0 });
+      header.dataset.open = open.toString();
+      document.body.dataset.noScroll = open.toString();
+    }
+
+    const open = () => toggle(true);
+    const close = () => toggle(false);
+
+    opener.addEventListener("click", open);
+    sidebar.addEventListener("click", close);
+    closer.addEventListener("click", close);
+    contents.addEventListener("click", (e) => e.stopPropagation());
+  });
+</script>

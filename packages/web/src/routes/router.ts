@@ -6,6 +6,7 @@ export const router = [
     {
         path: "/a-propos",
         label: "À propos",
+        icon: "star",
         subroutes: [
             { path: "/actualites", label: "Actualités", modifiers: ['footer-only'] },
             { path: "/reglements", label: "Règlements" },
@@ -15,6 +16,7 @@ export const router = [
     {
         "path": "/activites",
         label: "Activités",
+        icon: "sports_gymnastics",
         subroutes: [
             { path: "/activites/details#recreatif", label: "Récréatif" },
             { path: "/activites/details#fetes", label: "Fête d'enfants" },
@@ -23,9 +25,8 @@ export const router = [
             { path: "/activites/inscription", label: "Comment s'inscrire" },
         ]
     },
-    { path: "/", label: "Accueil", modifiers: ["header-only"] },
-    { path: "/horaire", label: "Horaire" },
-    { path: "/contact", label: "Contact" }
+    { path: "/horaire", label: "Horaire", icon: "date_range" },
+    { path: "/contact", label: "Contact", icon: "call" }
 ] as const
 router satisfies RouteArray
 
