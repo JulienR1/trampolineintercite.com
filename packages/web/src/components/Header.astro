@@ -46,7 +46,11 @@ import Logo from "./Logo.astro";
                       {route.icon}
                     </span>
                   )}
-                  <Link modifiers={["header-only"]} href={route.path}>
+                  <Link
+                    modifiers={["header-only"]}
+                    href={route.path}
+                    aria-label={route.label}
+                  >
                     {route.label}
                   </Link>
                 </div>
@@ -54,7 +58,11 @@ import Logo from "./Logo.astro";
                   <ul class="ml-7">
                     {route.subroutes.map((subroute) => (
                       <li class="text-lg">
-                        <Link modifiers={["header-only"]} href={subroute.path}>
+                        <Link
+                          modifiers={["header-only"]}
+                          href={subroute.path}
+                          aria-label={subroute.label}
+                        >
                           {subroute.label}
                         </Link>
                       </li>

@@ -2,6 +2,7 @@
 import type { Partner } from "common";
 import { footerRouter } from "../routes/router";
 import Link from "./Link.astro";
+import { Image } from "astro:assets";
 
 const year = new Date().getFullYear().toString();
 
@@ -66,7 +67,8 @@ const partners: Partner[] = [
               {partners.map((partner) => (
                 <li class="flex-shrink-0 w-20 sm:w-24">
                   <a href={partner.url} title={partner.label}>
-                    <img
+                    <Image
+                      inferSize
                       src={partner.image.src}
                       alt={partner.label ?? partner.image.alt}
                     />
