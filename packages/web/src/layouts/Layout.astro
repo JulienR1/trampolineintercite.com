@@ -27,8 +27,15 @@ import Footer from "../components/Footer.astro";
     <title>Trampoline Intercité</title>
   </head>
   <body style={{ "--header-height": "0px" }}>
+    <div
+      class="fixed top-0 left-0 z-50 bg-white -translate-y-full focus-within:translate-y-0 transition-all pointer-events-none"
+    >
+      <a href="#content" class="block font-bold text-lg p-2">
+        Omettre la navigation
+      </a>
+    </div>
     <Header />
-    <main>
+    <main id="content">
       <slot />
     </main>
     <Footer />
