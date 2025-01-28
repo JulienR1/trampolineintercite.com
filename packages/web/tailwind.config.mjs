@@ -12,7 +12,12 @@ export default {
   },
   plugins: [
     function ({ addVariant }) {
-      addVariant("hocus", ["&:hover", "&:focus"]);
+      addVariant("hocus", ["&:hover", "&:focus", "&:focus-within"]);
+      addVariant("group-hocus", [
+        ".group:hover &",
+        ".group:focus &",
+        ".group:focus-within &",
+      ]);
     },
   ],
 };

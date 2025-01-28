@@ -8,7 +8,7 @@ const headerLeft = headerRouter.slice(0, headerRouter.length / 2);
 const headerRight = headerRouter.slice(headerRouter.length / 2);
 ---
 
-<header class="group bg-white relative shadow-md px-4">
+<header class="group/header bg-white relative shadow-md px-4">
   <nav class="grid grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-4">
     <div class="sm:h-full">
       <button class="block sm:hidden" id="header-open">
@@ -33,14 +33,14 @@ const headerRight = headerRouter.slice(headerRouter.length / 2);
 
   <aside
     id="sidebar"
-    class="absolute left-0 top-0 w-[100vw] h-[100vh] overflow-hidden z-50 invisible group-data-[open=true]:visible sm:hidden"
+    class="absolute left-0 top-0 w-[100vw] h-[100vh] overflow-hidden z-50 invisible group-data-[open=true]/header:visible sm:hidden"
   >
     <div
-      class="absolute bg-black w-full h-full opacity-0 group-data-[open=true]:opacity-20 transition-all"
+      class="absolute bg-black w-full h-full opacity-0 group-data-[open=true]/header:opacity-20 transition-all"
     >
     </div>
     <div
-      class="absolute bg-white h-full left-0 p-4 min-w-40 -translate-x-full group-data-[open=true]:translate-x-0 transition-all"
+      class="absolute bg-white h-full left-0 p-4 min-w-40 -translate-x-full group-data-[open=true]/header:translate-x-0 transition-all"
       id="sidebar-contents"
     >
       <button class="block text-xs ml-auto" id="header-close">
