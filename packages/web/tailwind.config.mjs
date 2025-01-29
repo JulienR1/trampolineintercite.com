@@ -2,7 +2,22 @@
 export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
-    extend: {},
+    fontFamily: { sans: ["Lato", "sans-serif"] },
+    extend: {
+      colors: {
+        primary: "#f71f44",
+        "primary-dark": "#ca1735",
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    function ({ addVariant }) {
+      addVariant("hocus", ["&:hover", "&:focus", "&:focus-within"]);
+      addVariant("group-hocus", [
+        ".group:hover &",
+        ".group:focus &",
+        ".group:focus-within &",
+      ]);
+    },
+  ],
 };
