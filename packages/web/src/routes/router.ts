@@ -8,9 +8,9 @@ export const router = [
         label: "À propos",
         icon: "star",
         subroutes: [
-            { path: "/actualites", label: "Actualités", modifiers: ['footer-only'] },
-            { path: "/reglements", label: "Règlements" },
-            { path: "/annonces", label: "Annonces" },
+            { path: "/actualites", label: "Actualités", },
+            { path: "/reglements", label: "Règlements", },
+            { path: "/annonces", label: "Annonces", },
         ]
     },
     {

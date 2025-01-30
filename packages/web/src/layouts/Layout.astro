@@ -2,6 +2,15 @@
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import TopArrow from "../components/TopArrow.astro";
+
+interface Props {
+  title?: string;
+}
+
+let title = "Trampoline Intercité";
+if (Astro.props.title) {
+  title += " | " + Astro.props.title;
+}
 ---
 
 <!doctype html>
@@ -25,7 +34,7 @@ import TopArrow from "../components/TopArrow.astro";
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
     />
 
-    <title>Trampoline Intercité</title>
+    <title>{title}</title>
   </head>
   <body style={{ "--header-height": "0px" }}>
     <div
