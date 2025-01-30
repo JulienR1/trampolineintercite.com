@@ -1,5 +1,5 @@
 import type { FilterRoutes, ListRoutes, RouteArray, RouteModifer } from "./routes"
-import { filter } from "./routes"
+import { filter, labels } from "./routes"
 
 export const router = [
     { path: "/", label: "Accueil", modifiers: ["footer-only"] },
@@ -26,10 +26,13 @@ export const router = [
         ]
     },
     { path: "/horaire", label: "Horaire", icon: "date_range" },
-    { path: "/contact", label: "Contact", icon: "call" }
+    { path: "/contact", label: "Contact", icon: "call" },
+    { path: "/404", label: "404", modifiers: ['disabled'] }
 ] as const
 router satisfies RouteArray
 
 export const headerRouter = filter(['header-only'], router)
 export const footerRouter = filter(['footer-only'], router)
 export type Routes<M extends RouteModifer[] = []> = ListRoutes<FilterRoutes<typeof router, M>>
+
+export const routerLabels = labels(router)

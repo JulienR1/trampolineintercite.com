@@ -2,15 +2,24 @@
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import TopArrow from "../components/TopArrow.astro";
+import type { Routes } from "../routes/router";
+import { routerLabels } from "../routes/router";
+import { asArray } from "../lib/utils";
+
+type Path = Routes<["footer-only", "disabled"]>;
 
 interface Props {
-  title?: string;
+  path: Path | Path[];
 }
 
-let title = "Trampoline Intercité";
-if (Astro.props.title) {
-  title += " | " + Astro.props.title;
-}
+const paths = asArray(Astro.props.path);
+const labels = paths.reduce(
+  (acc, path) => ({ ...acc, [path]: routerLabels[path] }),
+  {} as Record<Path, string>,
+);
+
+const label = labels[paths[0]];
+const title = "Trampoline Intercité" + (label ? ` | ${label}` : "");
 ---
 
 <!doctype html>
@@ -91,6 +100,15 @@ if (Astro.props.title) {
 
       resize();
       header.addEventListener("resize", resize);
+    }
+  });
+</script>
+
+<script is:inline define:vars={{ labels }}>
+  addEventListener("hashchange", function () {
+    const path = window.location.pathname + window.location.hash;
+    if (labels[path]) {
+      document.title = document.title.replace(/\| .*/, `| ${labels[path]}`);
     }
   });
 </script>

@@ -32,6 +32,16 @@ export const filter = <R extends RouteArray, M extends readonly RouteModifer[]>(
         .filter(route => (route.modifiers ?? []).every(modifier => allowed.includes(modifier)))
         .map(route => "subroutes" in route ? ({ ...route, subroutes: filter(allowed, route.subroutes!) }) : route) as FilterRoutes<R, M>
 
+export type Labels<R extends RouteArray> = { [key in ListRoutes<R>]: string }
+
+export const labels = <R extends RouteArray>(routes: R): Labels<R> => {
+    return routes.reduce((acc, route) => ({
+        ...acc,
+        [route.path]: route.label,
+        ...('subroutes' in route ? labels(route.subroutes!) : {})
+    }), {} as Labels<R>)
+}
+
 export type ListRoutes<R extends RouteArray> =
     R extends readonly [infer First extends Route, ...infer Rest extends RouteArray] ?
     First['path'] |
@@ -39,6 +49,3 @@ export type ListRoutes<R extends RouteArray> =
         First['subroutes'] extends RouteArray ?
         ListRoutes<First['subroutes']> : never
     ) : never
-
-
-
