@@ -85,6 +85,18 @@ const title = "Trampoline Intercité" + (label ? ` | ${label}` : "");
   }
 </style>
 
+{
+  Object.keys(labels).length > 1 &&
+    <script is:inline define:vars={{ labels }}>
+        addEventListener("hashchange", function () {
+        const path = window.location.pathname + window.location.hash;
+        if (labels[path]) {
+          document.title = document.title.replace(/\| .*/, `| ${labels[path]}`);
+        }
+      });
+    </script>
+}
+
 <script>
   // NOTE: When the header is loaded or resized, update the body's min-height.
   document.addEventListener("DOMContentLoaded", function () {
@@ -100,15 +112,6 @@ const title = "Trampoline Intercité" + (label ? ` | ${label}` : "");
 
       resize();
       header.addEventListener("resize", resize);
-    }
-  });
-</script>
-
-<script is:inline define:vars={{ labels }}>
-  addEventListener("hashchange", function () {
-    const path = window.location.pathname + window.location.hash;
-    if (labels[path]) {
-      document.title = document.title.replace(/\| .*/, `| ${labels[path]}`);
     }
   });
 </script>
