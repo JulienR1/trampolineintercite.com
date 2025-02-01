@@ -12,11 +12,19 @@ const timeMin = 8;
 const timeMax = 22;
 const timeStep = 1;
 
-function cells(callback: (time: number) => JSX.Element) {
+function cells(
+  label: (time: number) => JSX.Element,
+  cell: (weekday: number, time: number) => JSX.Element,
+) {
   return Array.from({ length: (timeMax - timeMin + 1) / timeStep }).map(
     (_, i) => {
       const time = timeMin + i * timeStep;
-      return callback(time);
+      return (
+        <div>
+          {label(time)}
+          {Array.from({ length: 7 }).map((_, weekday) => cell(weekday, time))}
+        </div>
+      );
     },
   );
 }
@@ -28,30 +36,17 @@ function formatTime(time: number): string {
 }
 ---
 
-<!-- this should be a 2d css grid section so that each activity can be placed directly w/ grid-start-n etc -->
 <div class="relative w-full">
-  <div class="flex">
-    <div>
-      {
-        cells((time) => (
-          <div class="row flex items-center -translate-y-1/2 gap-1">
-            <span class="text-xs">{formatTime(time)}</span>
-            <div class="w-2 h-1 bg-black" />
-          </div>
-        ))
-      }
-    </div>
-
+  <div class="grid">
     {
-      Array.from({ length: 7 }).map((_, weekday) => (
-        <div class="flex-1">
-          {cells((time) => (
-            <div class="row border-2 border-black text-xs">
-              {weekday} - {formatTime(time)}
-            </div>
-          ))}
-        </div>
-      ))
+      cells(
+        (time) => <div>{formatTime(time)}</div>,
+        (weekday, time) => (
+          <div>
+            {weekday} - {formatTime(time)}
+          </div>
+        ),
+      )
     }
   </div>
 </div>
