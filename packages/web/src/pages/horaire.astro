@@ -1,5 +1,32 @@
 ---
+import Calendar from "../components/Calendar.astro";
 import Layout from "../layouts/Layout.astro";
+import { Activity } from "common";
+
+const activities: Activity[][] = [
+  [],
+  [
+    {
+      type: 0,
+      title: "Récréatif",
+      subtitle: "6 ans et plus",
+      time: { start: 9, end: 10.5 },
+      lessons: {
+        count: 8,
+        first: new Date(2025, 1, 6),
+        last: new Date(2025, 5, 5),
+      },
+      price: 120,
+    },
+  ],
+  [],
+  [],
+  [],
+  [],
+  [],
+];
 ---
 
-<Layout path="/horaire">horaire</Layout>
+<Layout path="/horaire">
+  <Calendar activities={activities} />
+</Layout>

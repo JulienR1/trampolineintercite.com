@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Image } from "./image";
+import { Image } from "./images";
 
 export const Partner = z.object({
     label: z.string(),
