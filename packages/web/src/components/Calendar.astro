@@ -1,5 +1,4 @@
 ---
-import type { JSX } from "astro/jsx-runtime";
 import type { Activity } from "common";
 
 interface Props {
@@ -12,23 +11,6 @@ const timeMin = 8;
 const timeMax = 22;
 const timeStep = 1;
 
-function cells(
-  label: (time: number) => JSX.Element,
-  cell: (weekday: number, time: number) => JSX.Element,
-) {
-  return Array.from({ length: (timeMax - timeMin + 1) / timeStep }).map(
-    (_, i) => {
-      const time = timeMin + i * timeStep;
-      return (
-        <div>
-          {label(time)}
-          {Array.from({ length: 7 }).map((_, weekday) => cell(weekday, time))}
-        </div>
-      );
-    },
-  );
-}
-
 function formatTime(time: number): string {
   const hour = Math.floor(time);
   const minutes = Math.round((time - hour) * 60);
@@ -37,22 +19,64 @@ function formatTime(time: number): string {
 ---
 
 <div class="relative w-full">
-  <div class="grid">
+  <div
+    class="grid grid-cols-[auto_repeat(7,1fr)]"
+    style={{
+      "grid-template-rows": `auto repeat(${(timeMax - timeMin) / timeStep}, 4rem)`,
+    }}
+  >
     {
-      cells(
-        (time) => <div>{formatTime(time)}</div>,
-        (weekday, time) => (
-          <div>
-            {weekday} - {formatTime(time)}
-          </div>
+      // --- Weekday column headers ---
+      ["L", "M", "M", "J", "V", "S", "D"].map((weekday, i) => (
+        <div
+          class="text-center h-fit mb-2"
+          style={{ "grid-row": 1, "grid-column": i + 2 }}
+        >
+          <span>{weekday}</span>
+        </div>
+      ))
+    }
+    {
+      // --- Vertical grid lines ---
+      Array.from({ length: 8 }).map((_, col) => (
+        <div
+          class="row-span-full gridline row-start-2"
+          style={{ height: "100%", "grid-column": col + 2 }}
+        />
+      ))
+    }
+    {
+      // --- Horizontal grid lines ---
+      Array.from({ length: (timeMax - timeMin) / timeStep + 1 }).map(
+        (_, row) => (
+          <div
+            class="col-span-full gridline"
+            style={{ width: "100%", "grid-row": row + 2 }}
+          />
         ),
       )
+    }
+    {
+      // --- Time labels on side of grid ---
+      Array.from({ length: (timeMax - timeMin) / timeStep + 1 }).map((_, i) => (
+        <div
+          class="flex items-center col-start-1 -translate-y-1/2 pr-2"
+          style={{ "grid-row": i + 2 }}
+        >
+          <span class="text-sm bg-white pr-1">
+            {formatTime(timeMin + i * timeStep)}
+          </span>
+        </div>
+      ))
     }
   </div>
 </div>
 
 <style>
-  .row {
-    @apply h-10;
+  .gridline {
+    --weight: 0.05rem;
+    width: var(--weight);
+    height: var(--weight);
+    @apply bg-slate-200;
   }
 </style>
