@@ -10,19 +10,34 @@ const activities: Activity[][] = [
       type: 0,
       title: "Récréatif",
       subtitle: "6 ans et plus",
-      time: { start: 9, end: 10.5 },
+      time: { start: { hour: 8, minute: 0 }, end: { hour: 10, minute: 45 } },
       lessons: {
         count: 8,
         first: new Date(2025, 1, 6),
         last: new Date(2025, 5, 5),
       },
       price: 120,
+      color: "#ff00ff",
     },
   ],
   [],
   [],
   [],
-  [],
+  [
+    {
+      type: 0,
+      title: "Récréatif",
+      subtitle: "12 ans et plus",
+      time: { start: { hour: 10, minute: 15 }, end: { hour: 12, minute: 45 } },
+      lessons: {
+        count: 8,
+        first: new Date(2025, 1, 6),
+        last: new Date(2025, 5, 5),
+      },
+      price: 120,
+      color: "#ff0000",
+    },
+  ],
   [],
 ];
 ---

@@ -1,5 +1,6 @@
 ---
 import type { Activity } from "common";
+import { gcd } from "../lib/maths";
 
 interface Props {
   activities: Activity[][];
@@ -9,7 +10,25 @@ const { activities } = Astro.props;
 
 const timeMin = 8;
 const timeMax = 22;
-const timeStep = 1;
+const cellSize = 4;
+const minutesPerTick = 30;
+
+// NOTE: CSS grid does not allow to have fractional spans.
+// Therefore, it is needed to scale it by the smallest time interval in every activity.
+const minutes = [
+  ...activities.flat(2).reduce(
+    (set, activity) => {
+      set.add(activity.time.start.minute);
+      set.add(activity.time.end.minute);
+      return set;
+    },
+    new Set<number>([minutesPerTick]),
+  ),
+].filter((min) => min !== 0);
+const minuteScale = gcd(minutes);
+const gridScale = minutesPerTick / minuteScale;
+const timeStep = minutesPerTick / 60;
+const cellScale = gridScale / timeStep;
 
 function formatTime(time: number): string {
   const hour = Math.floor(time);
@@ -22,7 +41,7 @@ function formatTime(time: number): string {
   <div
     class="grid grid-cols-[auto_repeat(7,1fr)]"
     style={{
-      "grid-template-rows": `auto repeat(${(timeMax - timeMin) / timeStep}, 4rem)`,
+      "grid-template-rows": `auto repeat(${(timeMax - timeMin) * cellScale}, ${cellSize / cellScale}rem)`,
     }}
   >
     {
@@ -51,7 +70,7 @@ function formatTime(time: number): string {
         (_, row) => (
           <div
             class="col-span-full gridline"
-            style={{ width: "100%", "grid-row": row + 2 }}
+            style={{ width: "100%", "grid-row": row * gridScale + 2 }}
           />
         ),
       )
@@ -61,13 +80,30 @@ function formatTime(time: number): string {
       Array.from({ length: (timeMax - timeMin) / timeStep + 1 }).map((_, i) => (
         <div
           class="flex items-center col-start-1 -translate-y-1/2 pr-2"
-          style={{ "grid-row": i + 2 }}
+          style={{ "grid-row": i * gridScale + 2 }}
         >
           <span class="text-sm bg-white pr-1">
             {formatTime(timeMin + i * timeStep)}
           </span>
         </div>
       ))
+    }
+
+    {
+      // --- Activity squares ---
+      activities.map((list, weekday) =>
+        list.map((activity) => (
+          <div
+            style={{
+              background: activity.color,
+              "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
+              "grid-column": ((weekday + 6) % 7) + 2,
+            }}
+          >
+            {activity.title} - {activity.subtitle}
+          </div>
+        )),
+      )
     }
   </div>
 </div>

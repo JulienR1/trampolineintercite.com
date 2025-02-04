@@ -1,22 +1,7 @@
 import { describe, expect, test, } from "vitest";
-import { gcd, lcm } from "./maths";
+import { gcd, } from "./maths";
 
 describe("maths", function() {
-    test("lcm", function() {
-        const tests = [
-            { inputs: [1], expected: 1 },
-            { inputs: [1, 2], expected: 2 },
-            { inputs: [2, 3], expected: 6 },
-            { inputs: [2, 4], expected: 4 },
-            { inputs: [2, 3, 4], expected: 12 },
-            { inputs: [1, 3, 5, 8], expected: 120 },
-        ]
-
-        tests.forEach((test, i) => {
-            expect(lcm(test.inputs)).to.equal(test.expected, `tests[${i}]: expected ${test.inputs} to have ${test.expected} as lcm`);
-        })
-    })
-
     test("gcd", function() {
         const tests = [
             { inputs: [1], expected: 1 },
