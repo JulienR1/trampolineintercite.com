@@ -29,8 +29,8 @@ const activities = Astro.props.activities.map((w) => {
 
     if (overlap(previous, current)) {
       if (decimal(current.time.start) - decimal(previous.time.start) < 0.5) {
-        adjacents.add(current);
         adjacents.add(previous);
+        adjacents.add(current);
       } else {
         current.inset = previous.inset + 1;
       }
@@ -40,12 +40,11 @@ const activities = Astro.props.activities.map((w) => {
       adjacents.size === adjacentCount ||
       (adjacents.size > 0 && i === weekday.length - 1)
     ) {
-      [...adjacents]
-        .sort((a, b) => decimal(a.time.start) - decimal(b.time.start))
-        .forEach(
-          (activity, position) =>
-            (activity.adjacent = { position, count: adjacents.size }),
-        );
+      let position = 0;
+      for (const activity of adjacents) {
+        activity.adjacent = { position, count: adjacents.size };
+        position++;
+      }
       adjacents.clear();
     }
   }
