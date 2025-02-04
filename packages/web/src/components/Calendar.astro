@@ -2,6 +2,8 @@
 import type { Activity, Time } from "common";
 import { gcd } from "../lib/maths";
 import { cn, dark } from "../lib/utils";
+import { dateFormatter } from "../lib/formatters";
+import { weekdays } from "../lib/constants";
 
 interface Props {
   activities: Activity[][];
@@ -90,6 +92,7 @@ function formatTime(time: number | Time): string {
 
 <div class="relative w-full">
   <div
+    id="calendar"
     class="grid grid-cols-[auto_repeat(7,1fr)] [--cell-size:3rem] sm:[--cell-size:4rem]"
     style={{
       "grid-template-rows": `auto repeat(${(timeMax - timeMin) * cellScale}, calc(var(--cell-size) / ${cellScale}))`,
@@ -160,11 +163,21 @@ function formatTime(time: number | Time): string {
                 : { width: 100 - 10 * activity.inset + "%" }),
             }}
             class={cn([
-              "min-w-0 min-h-0 rounded p-1 overflow-hidden ml-auto bg-primary",
+              "activity",
+              "min-w-0 min-h-0 rounded p-1 overflow-hidden ml-auto bg-primary relative",
               dark(activity.color) && "text-white",
               activity.inset > 0 &&
                 "border-l-[1px] border-t-[1px] border-white",
             ])}
+            data-title={activity.title}
+            data-subtitle={activity.subtitle}
+            data-start-time={formatTime(activity.time.start)}
+            data-end-time={formatTime(activity.time.end)}
+            data-first-lesson={dateFormatter.format(activity.lessons.first)}
+            data-last-lesson={dateFormatter.format(activity.lessons.last)}
+            data-amount={activity.price.toFixed(2)}
+            data-lessons={activity.lessons.count}
+            data-weekday={weekdays[weekday]}
           >
             <span class="hidden sm:block text-xs">
               {`${formatTime(activity.time.start)} - ${formatTime(activity.time.end)}`}
@@ -176,12 +189,110 @@ function formatTime(time: number | Time): string {
             {activity.subtitle?.length && (
               <span class="block text-xs">{activity.subtitle}</span>
             )}
+
+            <button class="absolute top-0 left-0 w-full h-full opacity-0" />
           </div>
         )),
       )
     }
   </div>
 </div>
+
+<div
+  role="dialog"
+  data-open="false"
+  id="calendar-dialog"
+  class="fixed top-0 left-0 w-full h-full group/dialog invisible data-[open=true]:visible"
+>
+  <div
+    id="dialog-contents"
+    class="absolute bottom-0 bg-white w-full p-4 z-10 rounded-t-xl pb-8 translate-y-full group-data-[open=true]/dialog:translate-y-0 transition-all"
+  >
+    <div class="flex items-start mb-4">
+      <h3 class="flex gap-2 items-center">
+        <span id="dialog-title" class="font-bold text-2xl leading-none"></span>
+        <span
+          id="dialog-dot"
+          data-visible="false"
+          class="text-lg invisible data-[visible=true]:visible">&middot;</span
+        >
+        <span id="dialog-subtitle" class="text-base font-medium"></span>
+      </h3>
+
+      <button class="block text-xs ml-auto" id="dialog-close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="grid gap-2">
+      <p class="flex items-center text-base gap-2">
+        <span class="material-symbols-outlined">schedule</span>
+        <span id="dialog-time"></span>
+      </p>
+      <p class="flex items-center text-base gap-2">
+        <span class="material-symbols-outlined">date_range</span>
+        <span id="dialog-date-range"></span>
+      </p>
+      <p class="flex items-center text-base gap-2">
+        <span class="material-symbols-outlined">sell</span>
+        <span id="dialog-price"></span>
+      </p>
+    </div>
+  </div>
+
+  <div
+    class="bg-black w-full h-full opacity-0 group-data-[open=true]/dialog:opacity-20 transition-all"
+  >
+  </div>
+</div>
+
+<script>
+  const dialog = document.getElementById("calendar-dialog")!;
+  const contents = document.getElementById("dialog-contents")!;
+  const closer = document.getElementById("dialog-close")!;
+
+  const dialogTitle = document.getElementById("dialog-title")!;
+  const dot = document.getElementById("dialog-dot")!;
+  const dialogSubtitle = document.getElementById("dialog-subtitle")!;
+  const time = document.getElementById("dialog-time")!;
+  const dateRange = document.getElementById("dialog-date-range")!;
+  const price = document.getElementById("dialog-price")!;
+
+  const calendar = document.getElementById("calendar")!;
+  const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
+
+  function toggleDialog(open: boolean) {
+    dialog.dataset.open = open.toString();
+    document.body.dataset.noScroll = open.toString();
+  }
+
+  const open = () => toggleDialog(true);
+  const close = () => toggleDialog(false);
+
+  function paint({ dataset }: HTMLDivElement) {
+    dialogTitle.innerText = dataset.title ?? "";
+    dialogSubtitle.innerText = dataset.subtitle ?? "";
+    dot.dataset.visible = ((dataset.subtitle ?? "").length > 0).toString();
+
+    time.innerText = `${dataset.weekday}, de ${dataset.startTime} à ${dataset.endTime}`;
+    dateRange.innerText = `${dataset.firstLesson} au ${dataset.lastLesson}`;
+    price.innerText = `${dataset.amount}$ pour ${dataset.lessons} cours`;
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    dialog.addEventListener("click", close);
+    closer.addEventListener("click", close);
+    contents.addEventListener("click", (e) => e.stopPropagation());
+
+    for (const activity of activities) {
+      activity.querySelector("button")!.addEventListener("click", function (e) {
+        const target = e.target as HTMLButtonElement;
+        paint(target.parentElement! as HTMLDivElement);
+        open();
+      });
+    }
+  });
+</script>
 
 <style>
   .gridline {
