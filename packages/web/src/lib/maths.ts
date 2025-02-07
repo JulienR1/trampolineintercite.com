@@ -25,3 +25,7 @@ export function gcd(n: number[]): number {
     }
     return stack[0]
 }
+
+export function clamp(value: number, min: number, max: number) {
+    return Math.min(Math.max(min, value), max)
+}

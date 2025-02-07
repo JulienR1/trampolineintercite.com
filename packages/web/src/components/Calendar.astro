@@ -1,7 +1,7 @@
 ---
 import type { Activity, Time } from "common";
 import { gcd } from "../lib/maths";
-import { cn, dark } from "../lib/utils";
+import { cn, dark, contrast } from "../lib/utils";
 import { dateFormatter } from "../lib/formatters";
 import { weekdays } from "../lib/constants";
 
@@ -146,53 +146,60 @@ function formatTime(time: number | Time): string {
     {
       // --- Activity squares ---
       activities.map((list, weekday) =>
-        list.map((activity) => (
-          <div
-            style={{
-              background: activity.color,
-              "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
-              "grid-column": ((weekday + 6) % 7) + 2,
-              ...(activity.adjacent
-                ? {
-                    width: 100 / activity.adjacent.count + "%",
-                    "margin-left":
-                      100 *
-                        (activity.adjacent.position / activity.adjacent.count) +
-                      "%",
-                  }
-                : { width: 100 - 10 * activity.inset + "%" }),
-            }}
-            class={cn([
-              "activity",
-              "min-w-0 min-h-0 rounded p-1 overflow-hidden ml-auto bg-primary relative",
-              dark(activity.color) && "text-white",
-              activity.inset > 0 &&
-                "border-l-[1px] border-t-[1px] border-white",
-            ])}
-            data-title={activity.title}
-            data-subtitle={activity.subtitle}
-            data-start-time={formatTime(activity.time.start)}
-            data-end-time={formatTime(activity.time.end)}
-            data-first-lesson={dateFormatter.format(activity.lessons.first)}
-            data-last-lesson={dateFormatter.format(activity.lessons.last)}
-            data-amount={activity.price.toFixed(2)}
-            data-lessons={activity.lessons.count}
-            data-weekday={weekdays[weekday]}
-          >
-            <span class="hidden sm:block text-xs">
-              {`${formatTime(activity.time.start)} - ${formatTime(activity.time.end)}`}
-            </span>
+        list.map((activity) => {
+          const width =
+            (activity.adjacent
+              ? 100 / activity.adjacent.count
+              : 100 - 10 * activity.inset) + "%";
+          const marginLeft = activity.adjacent
+            ? (activity.adjacent.position / activity.adjacent.count) * 100 + "%"
+            : undefined;
 
-            <span class="block text-xs font-semibold overflow-hidden break-words">
-              {activity.title}
-            </span>
-            {activity.subtitle?.length && (
-              <span class="block text-xs">{activity.subtitle}</span>
-            )}
+          return (
+            <div
+              style={{
+                width,
+                marginLeft,
+                background: activity.color,
+                "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
+                "grid-column": ((weekday + 6) % 7) + 2,
+                "outline-style": "solid",
+                "outline-color": contrast(activity.color),
+              }}
+              class={cn([
+                "activity",
+                "min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative",
+                "outline-0 hocus:outline-2 hocus:z-20 hocus:border-none",
+                dark(activity.color) && "text-white",
+                activity.inset > 0 &&
+                  "border-l-[1px] border-t-[1px] border-white",
+              ])}
+              data-title={activity.title}
+              data-subtitle={activity.subtitle}
+              data-start-time={formatTime(activity.time.start)}
+              data-end-time={formatTime(activity.time.end)}
+              data-first-lesson={dateFormatter.format(activity.lessons.first)}
+              data-last-lesson={dateFormatter.format(activity.lessons.last)}
+              data-amount={activity.price.toFixed(2)}
+              data-lessons={activity.lessons.count}
+              data-weekday={weekdays[weekday]}
+            >
+              <span class="hidden sm:block text-xs whitespace-nowrap overflow-hidden">
+                {formatTime(activity.time.start)} -{" "}
+                {formatTime(activity.time.end)}
+              </span>
 
-            <button class="absolute top-0 left-0 w-full h-full opacity-0" />
-          </div>
-        )),
+              <span class="block text-xs font-semibold overflow-hidden break-words">
+                {activity.title}
+              </span>
+              {activity.subtitle?.length && (
+                <span class="block text-xs">{activity.subtitle}</span>
+              )}
+
+              <button class="absolute top-0 left-0 w-full h-full opacity-0" />
+            </div>
+          );
+        }),
       )
     }
   </div>
@@ -202,47 +209,50 @@ function formatTime(time: number | Time): string {
   role="dialog"
   data-open="false"
   id="calendar-dialog"
-  class="fixed top-0 left-0 w-full h-full group/dialog invisible data-[open=true]:visible"
+  class="group/dialog invisible data-[open=true]:visible"
 >
   <div
-    id="dialog-contents"
-    class="absolute bottom-0 bg-white w-full p-4 z-10 rounded-t-xl pb-8 translate-y-full group-data-[open=true]/dialog:translate-y-0 transition-all"
+    class="fixed top-0 left-0 bg-black w-full h-full opacity-0 group-data-[open=true]/dialog:opacity-20 transition-all z-10"
   >
-    <div class="flex items-start mb-4">
-      <h3 class="flex gap-2 items-center">
-        <span id="dialog-title" class="font-bold text-2xl leading-none"></span>
-        <span
-          id="dialog-dot"
-          data-visible="false"
-          class="text-lg invisible data-[visible=true]:visible">&middot;</span
-        >
-        <span id="dialog-subtitle" class="text-base font-medium"></span>
-      </h3>
-
-      <button class="block text-xs ml-auto" id="dialog-close">
-        <span class="material-symbols-outlined">close</span>
-      </button>
-    </div>
-
-    <div class="grid gap-2">
-      <p class="flex items-center text-base gap-2">
-        <span class="material-symbols-outlined">schedule</span>
-        <span id="dialog-time"></span>
-      </p>
-      <p class="flex items-center text-base gap-2">
-        <span class="material-symbols-outlined">date_range</span>
-        <span id="dialog-date-range"></span>
-      </p>
-      <p class="flex items-center text-base gap-2">
-        <span class="material-symbols-outlined">sell</span>
-        <span id="dialog-price"></span>
-      </p>
-    </div>
   </div>
 
-  <div
-    class="bg-black w-full h-full opacity-0 group-data-[open=true]/dialog:opacity-20 transition-all"
-  >
+  <div class="fixed top-0 left-0 w-full h-full z-20">
+    <div
+      id="dialog-contents"
+      class="absolute bottom-0 w-full bg-white p-4 pb-8 rounded-t-xl translate-y-full group-data-[open=true]/dialog:translate-y-0 transition-all"
+    >
+      <div class="flex items-start mb-4">
+        <h3 class="flex gap-2 items-center">
+          <span id="dialog-title" class="font-bold text-2xl leading-none"
+          ></span>
+          <span
+            id="dialog-dot"
+            data-visible="false"
+            class="text-lg invisible data-[visible=true]:visible">&middot;</span
+          >
+          <span id="dialog-subtitle" class="text-base font-medium"></span>
+        </h3>
+
+        <button class="block text-xs ml-auto" id="dialog-close">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="grid gap-2">
+        <p class="flex items-center text-base gap-2">
+          <span class="material-symbols-outlined">schedule</span>
+          <span id="dialog-time"></span>
+        </p>
+        <p class="flex items-center text-base gap-2">
+          <span class="material-symbols-outlined">date_range</span>
+          <span id="dialog-date-range"></span>
+        </p>
+        <p class="flex items-center text-base gap-2">
+          <span class="material-symbols-outlined">sell</span>
+          <span id="dialog-price"></span>
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
