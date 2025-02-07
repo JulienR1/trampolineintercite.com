@@ -169,7 +169,8 @@ function formatTime(time: number | Time): string {
               class={cn([
                 "activity",
                 "min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative",
-                "outline-0 hocus:outline-2 hocus:z-20 hocus:border-none",
+                "outline-0 hocus:outline-2 hocus:border-none",
+                "data-[showcased=true]:outline-2 data-[showcased=true]:border-none data-[showcased=true]:z-20 ",
                 dark(activity.color) && "text-white",
                 activity.inset > 0 &&
                   "border-l-[1px] border-t-[1px] border-white",
@@ -223,8 +224,8 @@ function formatTime(time: number | Time): string {
     >
       <div class="flex items-start mb-4">
         <h3 class="flex gap-2 items-center">
-          <span id="dialog-title" class="font-bold text-2xl leading-none"
-          ></span>
+          <span id="dialog-title" class="font-bold text-2xl leading-none">
+          </span>
           <span
             id="dialog-dot"
             data-visible="false"
@@ -271,13 +272,12 @@ function formatTime(time: number | Time): string {
   const calendar = document.getElementById("calendar")!;
   const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
 
-  function toggleDialog(open: boolean) {
-    dialog.dataset.open = open.toString();
-    document.body.dataset.noScroll = open.toString();
+  function close() {
+    dialog.dataset.open = "false";
+    for (const activity of activities) {
+      activity.dataset.showcased = "false";
+    }
   }
-
-  const open = () => toggleDialog(true);
-  const close = () => toggleDialog(false);
 
   function paint({ dataset }: HTMLDivElement) {
     dialogTitle.innerText = dataset.title ?? "";
@@ -297,8 +297,11 @@ function formatTime(time: number | Time): string {
     for (const activity of activities) {
       activity.querySelector("button")!.addEventListener("click", function (e) {
         const target = e.target as HTMLButtonElement;
-        paint(target.parentElement! as HTMLDivElement);
-        open();
+        const activity = target.parentElement! as HTMLDivElement;
+
+        paint(activity);
+        activity.dataset.showcased = "true";
+        dialog.dataset.open = "true";
       });
     }
   });
