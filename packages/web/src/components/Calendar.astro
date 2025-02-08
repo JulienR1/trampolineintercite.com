@@ -88,6 +88,13 @@ function formatTime(time: number | Time): string {
     typeof time === "number" ? Math.round((time - hour) * 60) : time.minute;
   return `${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 }
+
+/***
+ * Changes from a 'sunday to saturday' week index to a 'monday to sunday' week index.
+ */
+function shiftWeekday(weekday: number) {
+  return (weekday + 6) % 7;
+}
 ---
 
 <div class="relative w-full">
@@ -100,12 +107,12 @@ function formatTime(time: number | Time): string {
   >
     {
       // --- Weekday column headers ---
-      ["L", "M", "M", "J", "V", "S", "D"].map((weekday, i) => (
+      weekdays.map((weekday, i) => (
         <div
           class="text-xs sm:text-sm text-center h-fit mb-2"
-          style={{ "grid-row": 1, "grid-column": i + 2 }}
+          style={{ "grid-row": 1, "grid-column": shiftWeekday(i) + 2 }}
         >
-          <span>{weekday}</span>
+          <span class="uppercase">{weekday[0]}</span>
         </div>
       ))
     }
@@ -162,13 +169,13 @@ function formatTime(time: number | Time): string {
                 marginLeft,
                 background: activity.color,
                 "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
-                "grid-column": ((weekday + 6) % 7) + 2,
+                "grid-column": shiftWeekday(weekday) + 2,
                 "outline-style": "solid",
                 "outline-color": contrast(activity.color),
               }}
               class={cn([
                 "activity",
-                "min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative",
+                "min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative overflow-hidden",
                 "outline-0 hocus:outline-2 hocus:border-none",
                 "data-[showcased=true]:outline-2 data-[showcased=true]:border-none data-[showcased=true]:z-20 ",
                 dark(activity.color) && "text-white",
@@ -190,11 +197,13 @@ function formatTime(time: number | Time): string {
                 {formatTime(activity.time.end)}
               </span>
 
-              <span class="block text-xs font-semibold overflow-hidden break-words">
+              <span class="block text-xs sm:text-sm font-semibold sm:font-bold overflow-hidden break-words">
                 {activity.title}
               </span>
               {activity.subtitle?.length && (
-                <span class="block text-xs">{activity.subtitle}</span>
+                <span class="block text-xs sm:text-sm sm:font-medium">
+                  {activity.subtitle}
+                </span>
               )}
 
               <button class="absolute top-0 left-0 w-full h-full opacity-0" />
