@@ -222,45 +222,68 @@ function shiftWeekday(weekday: number) {
   class="group/dialog invisible data-[open=true]:visible"
 >
   <div
-    class="fixed top-0 left-0 bg-black w-full h-full opacity-0 group-data-[open=true]/dialog:opacity-20 transition-all z-10"
+    class="fixed top-0 left-0 bg-black w-full h-full opacity-0 group-data-[open=true]/dialog:opacity-20 transition-all z-10 sm:hidden"
+  >
+  </div>
+  <div
+    id="calendar-click-handler"
+    class="fixed top-0 left-0 w-full h-full sm:hidden z-10"
   >
   </div>
 
-  <div class="fixed top-0 left-0 w-full h-full z-20">
+  <div
+    class="fixed bottom-0 left-0 w-full h-fit z-20 sm:top-0 sm:h-full sm:pointer-events-none"
+  >
     <div
       id="dialog-contents"
-      class="absolute bottom-0 w-full bg-white p-4 pb-8 rounded-t-xl translate-y-full group-data-[open=true]/dialog:translate-y-0 transition-all"
+      class={cn([
+        "absolute bottom-0 transition-all pointer-events-auto w-full",
+        "translate-y-full group-data-[open=true]/dialog:translate-y-0",
+        "sm:opacity-0 sm:top-0 sm:bottom-auto sm:w-fit",
+        "sm:translate-x-[var(--x)] sm:translate-y-[var(--y)]",
+        "sm:group-data-[open=true]/dialog:translate-x-[var(--x)] sm:group-data-[open=true]/dialog:translate-y-[var(--y)] sm:group-data-[open=true]/dialog:opacity-100",
+      ])}
+      style={{ "--x": "0px", "--y": "0px" }}
     >
-      <div class="flex items-start mb-4">
-        <h3 class="flex gap-2 items-center">
-          <span id="dialog-title" class="font-bold text-2xl leading-none">
-          </span>
-          <span
-            id="dialog-dot"
-            data-visible="false"
-            class="text-lg invisible data-[visible=true]:visible">&middot;</span
-          >
-          <span id="dialog-subtitle" class="text-base font-medium"></span>
-        </h3>
+      <div
+        class="bg-white p-4 pb-8 sm:pb-6 rounded-t-xl sm:rounded-xl sm:border-[1px] sm:border-slate-400 sm:shadow-xl sm:m-2 sm:mt-0"
+      >
+        <div class="flex items-start mb-4">
+          <h3 class="flex gap-2 items-center">
+            <span
+              id="dialog-title"
+              class="font-bold text-2xl leading-none sm:text-xl"
+            >
+            </span>
+            <span
+              id="dialog-dot"
+              data-visible="false"
+              class="text-lg invisible data-[visible=true]:visible"
+            >
+              &middot;
+            </span>
+            <span id="dialog-subtitle" class="text-base font-medium"></span>
+          </h3>
 
-        <button class="block text-xs ml-auto" id="dialog-close">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
+          <button class="block text-xs ml-auto" id="dialog-close">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
 
-      <div class="grid gap-2">
-        <p class="flex items-center text-base gap-2">
-          <span class="material-symbols-outlined">schedule</span>
-          <span id="dialog-time"></span>
-        </p>
-        <p class="flex items-center text-base gap-2">
-          <span class="material-symbols-outlined">date_range</span>
-          <span id="dialog-date-range"></span>
-        </p>
-        <p class="flex items-center text-base gap-2">
-          <span class="material-symbols-outlined">sell</span>
-          <span id="dialog-price"></span>
-        </p>
+        <div class="grid gap-2 sm:pr-10">
+          <p class="flex items-center text-sm gap-2">
+            <span class="material-symbols-outlined">schedule</span>
+            <span id="dialog-time"></span>
+          </p>
+          <p class="flex items-center text-sm gap-2">
+            <span class="material-symbols-outlined">date_range</span>
+            <span id="dialog-date-range"></span>
+          </p>
+          <p class="flex items-center text-sm gap-2">
+            <span class="material-symbols-outlined">sell</span>
+            <span id="dialog-price"></span>
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -270,6 +293,7 @@ function shiftWeekday(weekday: number) {
   const dialog = document.getElementById("calendar-dialog")!;
   const contents = document.getElementById("dialog-contents")!;
   const closer = document.getElementById("dialog-close")!;
+  const clickHandler = document.getElementById("calendar-click-handler")!;
 
   const dialogTitle = document.getElementById("dialog-title")!;
   const dot = document.getElementById("dialog-dot")!;
@@ -281,14 +305,14 @@ function shiftWeekday(weekday: number) {
   const calendar = document.getElementById("calendar")!;
   const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
 
-  function close() {
+  const close = () => {
     dialog.dataset.open = "false";
-    for (const activity of activities) {
-      activity.dataset.showcased = "false";
-    }
-  }
+    activities.forEach((a) => (a.dataset.showcased = "false"));
+  };
 
-  function paint({ dataset }: HTMLDivElement) {
+  function paint(activity: HTMLDivElement) {
+    const { dataset } = activity;
+
     dialogTitle.innerText = dataset.title ?? "";
     dialogSubtitle.innerText = dataset.subtitle ?? "";
     dot.dataset.visible = ((dataset.subtitle ?? "").length > 0).toString();
@@ -298,19 +322,42 @@ function shiftWeekday(weekday: number) {
     price.innerText = `${dataset.amount}$ pour ${dataset.lessons} cours`;
   }
 
+  function position(activity: HTMLDivElement, xOffset = 0) {
+    const dialogWidth = contents.getBoundingClientRect().width;
+    let { left: x, top: y, width } = activity.getBoundingClientRect();
+
+    if (x + width + dialogWidth < 0.9 * window.innerWidth) {
+      x += width + xOffset;
+    } else {
+      x -= dialogWidth + xOffset;
+    }
+
+    contents.style.setProperty("--x", `${x}px`);
+    contents.style.setProperty("--y", `${y}px`);
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
-    dialog.addEventListener("click", close);
     closer.addEventListener("click", close);
+    clickHandler.addEventListener("click", close);
     contents.addEventListener("click", (e) => e.stopPropagation());
 
     for (const activity of activities) {
-      activity.querySelector("button")!.addEventListener("click", function (e) {
-        const target = e.target as HTMLButtonElement;
-        const activity = target.parentElement! as HTMLDivElement;
+      const target = activity.querySelector("button")!;
+      const element = target.parentElement! as HTMLDivElement;
 
-        paint(activity);
-        activity.dataset.showcased = "true";
+      target.addEventListener("click", function () {
+        paint(element);
+        position(element);
+        activities.forEach((a) => (a.dataset.showcased = "false"));
+        element.dataset.showcased = "true";
         dialog.dataset.open = "true";
+      });
+
+      target.addEventListener("pointerenter", function () {
+        if (dialog.dataset.open !== "true") {
+          paint(element);
+          position(element, 20);
+        }
       });
     }
   });
