@@ -1,23 +1,23 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
-  theme: {
-    fontFamily: { sans: ["Lato", "sans-serif"] },
-    extend: {
-      colors: {
-        primary: "#f71f44",
-        "primary-dark": "#ca1735",
-      },
+    content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+    theme: {
+        fontFamily: { sans: ["Lato", "sans-serif"] },
+        extend: {
+            colors: {
+                primary: "#f71f44",
+                "primary-dark": "#ca1735",
+            },
+        },
     },
-  },
-  plugins: [
-    function ({ addVariant }) {
-      addVariant("hocus", ["&:hover", "&:focus", "&:focus-within"]);
-      addVariant("group-hocus", [
-        ".group:hover &",
-        ".group:focus &",
-        ".group:focus-within &",
-      ]);
-    },
-  ],
+    plugins: [
+        function ({ addVariant }) {
+            addVariant("hocus", ["&:hover", "&:focus", "&:focus-within"]);
+            addVariant("group-hocus", [
+                ".group:hover &",
+                ".group:focus &",
+                ".group:focus-within &",
+            ]);
+        },
+    ],
 };

@@ -1,0 +1,24 @@
+---
+interface Props {
+    title: string;
+    subtitle?: string;
+}
+
+const { title, subtitle = "" } = Astro.props;
+---
+
+<h1 class="my-6 text-lg sm:text-2xl text-center font-medium">
+    <span class="font-semibold" style={{ "font-variant": "small-caps" }}>
+        {title}
+    </span>
+    {
+        subtitle.length > 0 && (
+            <>
+                <span class="mx-2">&middot;</span>
+                <span>{subtitle}</span>
+            </>
+        )
+    }
+</h1>
+
+<hr class="w-1/2 max-w-xl mx-auto" />

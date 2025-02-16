@@ -7,38 +7,38 @@ const route = Astro.props;
 ---
 
 <div class="group relative h-full md:mx-2">
-  <Link
-    modifiers={["header-only"]}
-    href={route.path}
-    aria-label={route.label}
-    style={{ fontVariant: "small-caps" }}
-    class="flex h-full font-semibold px-4 items-center text-lg group-hocus:bg-primary group-hocus:text-white transition-all"
-  >
-    {route.label}
-  </Link>
+    <Link
+        modifiers={["header-only"]}
+        href={route.path}
+        aria-label={route.label}
+        style={{ fontVariant: "small-caps" }}
+        class="flex h-full font-semibold px-4 items-center text-lg group-hocus:bg-primary group-hocus:text-white transition-all"
+    >
+        {route.label}
+    </Link>
 
-  {
-    "subroutes" in route && (
-      <div class="absolute top-full left-0 min-w-[calc(100%+2rem)] overflow-y-hidden invisible group-hocus:visible">
-        <ul class="flex flex-col shadow border-l-2 border-primary bg-white -translate-y-full group-hocus:translate-y-0 transition-all duration-200">
-          {route.subroutes.map((subroute) => (
-            <li >
-              <Link
-                modifiers={["header-only"]}
-                href={subroute.path}
-                aria-label={subroute.label}
-                style={{ fontVariant: "small-caps" }}
-                            class="block hocus:bg-primary hocus:text-white transition-all px-2 py-[0.125rem] font-semibold text-nowrap"
-              >
-                {subroute.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+    {
+        "subroutes" in route && (
+            <div class="absolute top-full left-0 min-w-[calc(100%+2rem)] overflow-y-hidden invisible group-hocus:visible">
+                <ul class="flex flex-col shadow border-l-2 border-primary bg-white -translate-y-full group-hocus:translate-y-0 transition-all duration-200">
+                    {route.subroutes.map((subroute) => (
+                        <li>
+                            <Link
+                                modifiers={["header-only"]}
+                                href={subroute.path}
+                                aria-label={subroute.label}
+                                style={{ fontVariant: "small-caps" }}
+                                class="block hocus:bg-primary hocus:text-white transition-all px-2 py-[0.125rem] font-semibold text-nowrap"
+                            >
+                                {subroute.label}
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
 
-        <!-- Required for proper shadow rendering w/ overflow-y-hidden. -->
-        <div class="h-1"></div>
-      </div>
-    )
-  }
+                {/* Required for proper shadow rendering w/ overflow-y-hidden.*/}
+                <div class="h-1" />
+            </div>
+        )
+    }
 </div>
