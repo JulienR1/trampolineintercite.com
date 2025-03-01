@@ -314,6 +314,12 @@ function shiftWeekday(weekday: number) {
       });
     }
   });
+
+  document.addEventListener("keyup", function (event) {
+    if (event.code === "Escape") {
+      close();
+    }
+  });
 </script>
 
 <style>
