@@ -1,0 +1,18 @@
+---
+interface Props {
+    labels: Record<string, string>;
+}
+const { labels } = Astro.props;
+---
+
+<script is:inline define:vars={{ labels }}>
+    addEventListener("hashchange", function () {
+        const path = window.location.pathname + window.location.hash;
+        if (labels[path]) {
+            document.title = document.title.replace(
+                /\| .*/,
+                `| ${labels[path]}`,
+            );
+        }
+    });
+</script>

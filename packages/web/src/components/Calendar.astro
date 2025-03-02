@@ -6,7 +6,7 @@ import { dateFormatter } from "../lib/formatters";
 import { weekdays } from "../lib/constants";
 
 interface Props {
-  activities: Activity[][];
+    activities: Activity[][];
 }
 
 const timeMin = 8;
@@ -14,57 +14,60 @@ const timeMax = 22;
 const minutesPerTick = 60;
 
 type ActivityRender = Activity & {
-  inset: number;
-  adjacent?: { position: number; count: number };
+    inset: number;
+    adjacent?: { position: number; count: number };
 };
 
 const activities = Astro.props.activities.map((w) => {
-  const weekday: ActivityRender[] = w
-    .sort((a, b) => decimal(a.time.start) - decimal(b.time.start))
-    .map((a) => ({ ...a, inset: 0 }));
+    const weekday: ActivityRender[] = w
+        .sort((a, b) => decimal(a.time.start) - decimal(b.time.start))
+        .map((a) => ({ ...a, inset: 0 }));
 
-  const adjacents = new Set<ActivityRender>();
-  for (let i = 1; i < weekday.length; i++) {
-    const adjacentCount = adjacents.size;
-    const current = weekday[i];
-    const previous = weekday[i - 1];
+    const adjacents = new Set<ActivityRender>();
+    for (let i = 1; i < weekday.length; i++) {
+        const adjacentCount = adjacents.size;
+        const current = weekday[i];
+        const previous = weekday[i - 1];
 
-    if (overlap(previous, current)) {
-      if (decimal(current.time.start) - decimal(previous.time.start) < 0.5) {
-        adjacents.add(previous);
-        adjacents.add(current);
-      } else {
-        current.inset = previous.inset + 1;
-      }
+        if (overlap(previous, current)) {
+            if (
+                decimal(current.time.start) - decimal(previous.time.start) <
+                0.5
+            ) {
+                adjacents.add(previous);
+                adjacents.add(current);
+            } else {
+                current.inset = previous.inset + 1;
+            }
+        }
+
+        if (
+            adjacents.size === adjacentCount ||
+            (adjacents.size > 0 && i === weekday.length - 1)
+        ) {
+            let position = 0;
+            for (const activity of adjacents) {
+                activity.adjacent = { position, count: adjacents.size };
+                position++;
+            }
+            adjacents.clear();
+        }
     }
 
-    if (
-      adjacents.size === adjacentCount ||
-      (adjacents.size > 0 && i === weekday.length - 1)
-    ) {
-      let position = 0;
-      for (const activity of adjacents) {
-        activity.adjacent = { position, count: adjacents.size };
-        position++;
-      }
-      adjacents.clear();
-    }
-  }
-
-  return weekday;
+    return weekday;
 });
 
 // NOTE: CSS grid does not allow to have fractional spans.
 // Therefore, it is needed to scale it by the smallest time interval in every activity.
 const minutes = [
-  ...activities.flat(2).reduce(
-    (set, activity) => {
-      set.add(activity.time.start.minute);
-      set.add(activity.time.end.minute);
-      return set;
-    },
-    new Set<number>([minutesPerTick]),
-  ),
+    ...activities.flat(2).reduce(
+        (set, activity) => {
+            set.add(activity.time.start.minute);
+            set.add(activity.time.end.minute);
+            return set;
+        },
+        new Set<number>([minutesPerTick]),
+    ),
 ].filter((min) => min !== 0);
 const minuteScale = gcd(minutes);
 const gridScale = minutesPerTick / minuteScale;
@@ -72,261 +75,325 @@ const timeStep = minutesPerTick / 60;
 const cellScale = gridScale / timeStep;
 
 function decimal(time: Time): number {
-  return time.hour + time.minute / 60;
+    return time.hour + time.minute / 60;
 }
 
 function overlap(a: Activity, b: Activity): boolean {
-  return (
-    decimal(a.time.start) <= decimal(b.time.start) &&
-    decimal(b.time.start) < decimal(a.time.end)
-  );
+    return (
+        decimal(a.time.start) <= decimal(b.time.start) &&
+        decimal(b.time.start) < decimal(a.time.end)
+    );
 }
 
 function formatTime(time: number | Time): string {
-  const hour = typeof time === "number" ? Math.floor(time) : time.hour;
-  const minutes =
-    typeof time === "number" ? Math.round((time - hour) * 60) : time.minute;
-  return `${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    const hour = typeof time === "number" ? Math.floor(time) : time.hour;
+    const minutes =
+        typeof time === "number" ? Math.round((time - hour) * 60) : time.minute;
+    return `${hour.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 }
 
 /***
  * Changes from a 'sunday to saturday' week index to a 'monday to sunday' week index.
  */
 function shiftWeekday(weekday: number) {
-  return (weekday + 6) % 7;
+    return (weekday + 6) % 7;
 }
 ---
 
 <div class="relative w-full">
-  <div
-    id="calendar"
-    class="grid grid-cols-[auto_repeat(7,1fr)] [--cell-size:3rem] sm:[--cell-size:4rem]"
-    style={{
-      "grid-template-rows": `auto repeat(${(timeMax - timeMin) * cellScale}, calc(var(--cell-size) / ${cellScale}))`,
-    }}
-  >
-    {
-      // --- Weekday column headers ---
-      weekdays.map((weekday, i) => (
-        <div
-          class="text-xs sm:text-sm text-center h-fit mb-2"
-          style={{ "grid-row": 1, "grid-column": shiftWeekday(i) + 2 }}
-        >
-          <span class="uppercase">{weekday[0]}</span>
-        </div>
-      ))
-    }
-    {
-      // --- Vertical grid lines ---
-      Array.from({ length: 8 }).map((_, col) => (
-        <div
-          class="row-span-full gridline row-start-2"
-          style={{ height: "100%", "grid-column": col + 2 }}
-        />
-      ))
-    }
-    {
-      // --- Horizontal grid lines ---
-      Array.from({ length: (timeMax - timeMin) / timeStep + 1 }).map(
-        (_, row) => (
-          <div
-            class="col-span-full gridline"
-            style={{ width: "100%", "grid-row": row * gridScale + 2 }}
-          />
-        ),
-      )
-    }
-    {
-      // --- Time labels on side of grid ---
-      Array.from({ length: (timeMax - timeMin) / timeStep + 1 }).map((_, i) => (
-        <div
-          class="flex items-center col-start-1 -translate-y-1/2 pr-2"
-          style={{ "grid-row": i * gridScale + 2 }}
-        >
-          <span class="text-xs bg-white pr-1 sm:text-sm">
-            {formatTime(timeMin + i * timeStep)}
-          </span>
-        </div>
-      ))
-    }
+    <div
+        id="calendar"
+        class="grid grid-cols-[auto_repeat(7,1fr)] [--cell-size:3rem] sm:[--cell-size:4rem]"
+        style={{
+            "grid-template-rows": `auto repeat(${(timeMax - timeMin) * cellScale}, calc(var(--cell-size) / ${cellScale}))`,
+        }}
+    >
+        {
+            // --- Weekday column headers ---
+            weekdays.map((weekday, i) => (
+                <div
+                    class="text-xs sm:text-sm text-center h-fit mb-2"
+                    style={{
+                        "grid-row": 1,
+                        "grid-column": shiftWeekday(i) + 2,
+                    }}
+                >
+                    <span class="uppercase">{weekday[0]}</span>
+                </div>
+            ))
+        }
+        {
+            // --- Vertical grid lines ---
+            Array.from({ length: 8 }).map((_, col) => (
+                <div
+                    class="row-span-full gridline row-start-2"
+                    style={{ height: "100%", "grid-column": col + 2 }}
+                />
+            ))
+        }
+        {
+            // --- Horizontal grid lines ---
+            Array.from({ length: (timeMax - timeMin) / timeStep + 1 }).map(
+                (_, row) => (
+                    <div
+                        class="col-span-full gridline"
+                        style={{
+                            width: "100%",
+                            "grid-row": row * gridScale + 2,
+                        }}
+                    />
+                ),
+            )
+        }
+        {
+            // --- Time labels on side of grid ---
+            Array.from({ length: (timeMax - timeMin) / timeStep + 1 }).map(
+                (_, i) => (
+                    <div
+                        class="flex items-center col-start-1 -translate-y-1/2 pr-2"
+                        style={{ "grid-row": i * gridScale + 2 }}
+                    >
+                        <span class="text-xs bg-white pr-1 sm:text-sm">
+                            {formatTime(timeMin + i * timeStep)}
+                        </span>
+                    </div>
+                ),
+            )
+        }
 
-    {
-      // --- Activity squares ---
-      activities.map((list, weekday) =>
-        list.map((activity) => {
-          const width =
-            (activity.adjacent
-              ? 100 / activity.adjacent.count
-              : 100 - 10 * activity.inset) + "%";
-          const marginLeft = activity.adjacent
-            ? (activity.adjacent.position / activity.adjacent.count) * 100 + "%"
-            : undefined;
+        {
+            // --- Activity squares ---
+            activities.map((list, weekday) =>
+                list.map((activity) => {
+                    const width =
+                        (activity.adjacent
+                            ? 100 / activity.adjacent.count
+                            : 100 - 10 * activity.inset) + "%";
+                    const marginLeft = activity.adjacent
+                        ? (activity.adjacent.position /
+                              activity.adjacent.count) *
+                              100 +
+                          "%"
+                        : undefined;
 
-          return (
-            <div
-              style={{
-                width,
-                marginLeft,
-                background: activity.color,
-                "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
-                "grid-column": shiftWeekday(weekday) + 2,
-                "outline-style": "solid",
-                "outline-color": contrast(activity.color),
-              }}
-              class={cn([
-                "activity",
-                "min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative overflow-hidden",
-                "outline-0 hocus:outline-2 hocus:border-none",
-                "data-[showcased=true]:outline-2 data-[showcased=true]:border-none data-[showcased=true]:z-20 ",
-                dark(activity.color) && "text-white",
-                activity.inset > 0 &&
-                  "border-l-[1px] border-t-[1px] border-white",
-              ])}
-              data-title={activity.title}
-              data-subtitle={activity.subtitle}
-              data-start-time={formatTime(activity.time.start)}
-              data-end-time={formatTime(activity.time.end)}
-              data-first-lesson={dateFormatter.format(activity.lessons.first)}
-              data-last-lesson={dateFormatter.format(activity.lessons.last)}
-              data-amount={activity.price.toFixed(2)}
-              data-lessons={activity.lessons.count}
-              data-weekday={weekdays[weekday]}
-            >
-              <span class="hidden sm:block text-xs whitespace-nowrap overflow-hidden">
-                {formatTime(activity.time.start)} -{" "}
-                {formatTime(activity.time.end)}
-              </span>
+                    return (
+                        <div
+                            style={{
+                                width,
+                                marginLeft,
+                                background: activity.color,
+                                "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
+                                "grid-column": shiftWeekday(weekday) + 2,
+                                "outline-style": "solid",
+                                "outline-color": contrast(activity.color),
+                            }}
+                            class={cn([
+                                "activity",
+                                "min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative overflow-hidden",
+                                "outline-0 hocus:outline-2 hocus:border-none",
+                                "data-[showcased=true]:outline-2 data-[showcased=true]:border-none data-[showcased=true]:z-20 ",
+                                dark(activity.color) && "text-white",
+                                activity.inset > 0 &&
+                                    "border-l-[1px] border-t-[1px] border-white",
+                            ])}
+                            data-title={activity.title}
+                            data-subtitle={activity.subtitle}
+                            data-start-time={formatTime(activity.time.start)}
+                            data-end-time={formatTime(activity.time.end)}
+                            data-first-lesson={dateFormatter.format(
+                                activity.lessons.first,
+                            )}
+                            data-last-lesson={dateFormatter.format(
+                                activity.lessons.last,
+                            )}
+                            data-amount={activity.price.toFixed(2)}
+                            data-lessons={activity.lessons.count}
+                            data-weekday={weekdays[weekday]}
+                        >
+                            <span class="hidden sm:block text-xs whitespace-nowrap overflow-hidden">
+                                {formatTime(activity.time.start)} -{" "}
+                                {formatTime(activity.time.end)}
+                            </span>
 
-              <span class="block text-xs sm:text-sm font-semibold sm:font-bold overflow-hidden break-words">
-                {activity.title}
-              </span>
-              {activity.subtitle?.length && (
-                <span class="block text-xs sm:text-sm sm:font-medium">
-                  {activity.subtitle}
-                </span>
-              )}
+                            <span class="block text-xs sm:text-sm font-semibold sm:font-bold overflow-hidden break-words">
+                                {activity.title}
+                            </span>
+                            {activity.subtitle?.length && (
+                                <span class="block text-xs sm:text-sm sm:font-medium">
+                                    {activity.subtitle}
+                                </span>
+                            )}
 
-              <button class="absolute top-0 left-0 w-full h-full opacity-0" />
-            </div>
-          );
-        }),
-      )
-    }
-  </div>
+                            <button class="absolute top-0 left-0 w-full h-full opacity-0" />
+                        </div>
+                    );
+                }),
+            )
+        }
+    </div>
 </div>
 
 <div
-  role="dialog"
-  data-open="false"
-  id="calendar-dialog"
-  class="group/dialog invisible data-[open=true]:visible"
+    role="dialog"
+    data-open="false"
+    id="calendar-dialog"
+    class="group/dialog invisible data-[open=true]:visible"
 >
-  <div
-    class="fixed top-0 left-0 bg-black w-full h-full opacity-0 group-data-[open=true]/dialog:opacity-20 transition-all z-10"
-  >
-  </div>
-
-  <div class="fixed top-0 left-0 w-full h-full z-20">
     <div
-      id="dialog-contents"
-      class="absolute bottom-0 w-full bg-white p-4 pb-8 rounded-t-xl translate-y-full group-data-[open=true]/dialog:translate-y-0 transition-all"
+        class="fixed top-0 left-0 bg-black w-full h-full opacity-0 group-data-[open=true]/dialog:opacity-20 transition-all z-10 sm:hidden"
     >
-      <div class="flex items-start mb-4">
-        <h3 class="flex gap-2 items-center">
-          <span id="dialog-title" class="font-bold text-2xl leading-none">
-          </span>
-          <span
-            id="dialog-dot"
-            data-visible="false"
-            class="text-lg invisible data-[visible=true]:visible">&middot;</span
-          >
-          <span id="dialog-subtitle" class="text-base font-medium"></span>
-        </h3>
-
-        <button class="block text-xs ml-auto" id="dialog-close">
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
-
-      <div class="grid gap-2">
-        <p class="flex items-center text-base gap-2">
-          <span class="material-symbols-outlined">schedule</span>
-          <span id="dialog-time"></span>
-        </p>
-        <p class="flex items-center text-base gap-2">
-          <span class="material-symbols-outlined">date_range</span>
-          <span id="dialog-date-range"></span>
-        </p>
-        <p class="flex items-center text-base gap-2">
-          <span class="material-symbols-outlined">sell</span>
-          <span id="dialog-price"></span>
-        </p>
-      </div>
     </div>
-  </div>
+    <div
+        id="calendar-click-handler"
+        class="fixed top-0 left-0 w-full h-full sm:hidden z-10"
+    >
+    </div>
+
+    <div
+        class="fixed bottom-0 left-0 w-full h-fit z-20 sm:top-0 sm:h-full sm:pointer-events-none"
+    >
+        <div
+            id="dialog-contents"
+            class={cn([
+                "absolute bottom-0 transition-all pointer-events-auto w-full",
+                "translate-y-full group-data-[open=true]/dialog:translate-y-0",
+                "sm:opacity-0 sm:top-0 sm:bottom-auto sm:w-fit",
+                "sm:translate-x-[var(--x)] sm:translate-y-[var(--y)]",
+                "sm:group-data-[open=true]/dialog:translate-x-[var(--x)] sm:group-data-[open=true]/dialog:translate-y-[var(--y)] sm:group-data-[open=true]/dialog:opacity-100",
+            ])}
+            style={{ "--x": "0px", "--y": "0px" }}
+        >
+            <div
+                class="bg-white p-4 pb-8 sm:pb-6 rounded-t-xl sm:rounded-xl sm:border-[1px] sm:border-slate-400 sm:shadow-xl sm:m-2 sm:mt-0"
+            >
+                <div class="flex items-start mb-4">
+                    <h3 class="flex gap-2 items-center">
+                        <span
+                            id="dialog-title"
+                            class="font-bold text-2xl leading-none sm:text-xl"
+                        >
+                        </span>
+                        <span
+                            id="dialog-dot"
+                            data-visible="false"
+                            class="text-lg invisible data-[visible=true]:visible"
+                        >
+                            &middot;
+                        </span>
+                        <span id="dialog-subtitle" class="text-base font-medium"
+                        ></span>
+                    </h3>
+
+                    <button class="block text-xs ml-auto" id="dialog-close">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <div class="grid gap-2 sm:pr-10">
+                    <p class="flex items-center text-sm gap-2">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <span id="dialog-time"></span>
+                    </p>
+                    <p class="flex items-center text-sm gap-2">
+                        <span class="material-symbols-outlined">date_range</span
+                        >
+                        <span id="dialog-date-range"></span>
+                    </p>
+                    <p class="flex items-center text-sm gap-2">
+                        <span class="material-symbols-outlined">sell</span>
+                        <span id="dialog-price"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-  const dialog = document.getElementById("calendar-dialog")!;
-  const contents = document.getElementById("dialog-contents")!;
-  const closer = document.getElementById("dialog-close")!;
+    const dialog = document.getElementById("calendar-dialog")!;
+    const contents = document.getElementById("dialog-contents")!;
+    const closer = document.getElementById("dialog-close")!;
+    const clickHandler = document.getElementById("calendar-click-handler")!;
 
-  const dialogTitle = document.getElementById("dialog-title")!;
-  const dot = document.getElementById("dialog-dot")!;
-  const dialogSubtitle = document.getElementById("dialog-subtitle")!;
-  const time = document.getElementById("dialog-time")!;
-  const dateRange = document.getElementById("dialog-date-range")!;
-  const price = document.getElementById("dialog-price")!;
+    const dialogTitle = document.getElementById("dialog-title")!;
+    const dot = document.getElementById("dialog-dot")!;
+    const dialogSubtitle = document.getElementById("dialog-subtitle")!;
+    const time = document.getElementById("dialog-time")!;
+    const dateRange = document.getElementById("dialog-date-range")!;
+    const price = document.getElementById("dialog-price")!;
 
-  const calendar = document.getElementById("calendar")!;
-  const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
+    const calendar = document.getElementById("calendar")!;
+    const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
 
-  function close() {
-    dialog.dataset.open = "false";
-    for (const activity of activities) {
-      activity.dataset.showcased = "false";
+    const close = () => {
+        dialog.dataset.open = "false";
+        activities.forEach((a) => (a.dataset.showcased = "false"));
+    };
+
+    function paint(activity: HTMLDivElement) {
+        const { dataset } = activity;
+
+        dialogTitle.innerText = dataset.title ?? "";
+        dialogSubtitle.innerText = dataset.subtitle ?? "";
+        dot.dataset.visible = ((dataset.subtitle ?? "").length > 0).toString();
+
+        time.innerText = `${dataset.weekday}, de ${dataset.startTime} à ${dataset.endTime}`;
+        dateRange.innerText = `${dataset.firstLesson} au ${dataset.lastLesson}`;
+        price.innerText = `${dataset.amount}$ pour ${dataset.lessons} cours`;
     }
-  }
 
-  function paint({ dataset }: HTMLDivElement) {
-    dialogTitle.innerText = dataset.title ?? "";
-    dialogSubtitle.innerText = dataset.subtitle ?? "";
-    dot.dataset.visible = ((dataset.subtitle ?? "").length > 0).toString();
+    function position(activity: HTMLDivElement, xOffset = 0) {
+        const dialogWidth = contents.getBoundingClientRect().width;
+        let { left: x, top: y, width } = activity.getBoundingClientRect();
 
-    time.innerText = `${dataset.weekday}, de ${dataset.startTime} à ${dataset.endTime}`;
-    dateRange.innerText = `${dataset.firstLesson} au ${dataset.lastLesson}`;
-    price.innerText = `${dataset.amount}$ pour ${dataset.lessons} cours`;
-  }
+        if (x + width + dialogWidth < 0.9 * window.innerWidth) {
+            x += width + xOffset;
+        } else {
+            x -= dialogWidth + xOffset;
+        }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    dialog.addEventListener("click", close);
-    closer.addEventListener("click", close);
-    contents.addEventListener("click", (e) => e.stopPropagation());
-
-    for (const activity of activities) {
-      activity.querySelector("button")!.addEventListener("click", function (e) {
-        const target = e.target as HTMLButtonElement;
-        const activity = target.parentElement! as HTMLDivElement;
-
-        paint(activity);
-        activity.dataset.showcased = "true";
-        dialog.dataset.open = "true";
-      });
+        contents.style.setProperty("--x", `${x}px`);
+        contents.style.setProperty("--y", `${y}px`);
     }
-  });
 
-  document.addEventListener("keyup", function (event) {
-    if (event.code === "Escape") {
-      close();
-    }
-  });
+    document.addEventListener("keyup", function (event) {
+        if (event.code === "Escape") {
+            close();
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        closer.addEventListener("click", close);
+        clickHandler.addEventListener("click", close);
+        contents.addEventListener("click", (e) => e.stopPropagation());
+
+        for (const activity of activities) {
+            const target = activity.querySelector("button")!;
+            const element = target.parentElement! as HTMLDivElement;
+
+            target.addEventListener("click", function () {
+                paint(element);
+                position(element);
+                activities.forEach((a) => (a.dataset.showcased = "false"));
+                element.dataset.showcased = "true";
+                dialog.dataset.open = "true";
+            });
+
+            target.addEventListener("pointerenter", function () {
+                if (dialog.dataset.open !== "true") {
+                    paint(element);
+                    position(element, 20);
+                }
+            });
+        }
+    });
 </script>
 
 <style>
-  .gridline {
-    --weight: 0.05rem;
-    width: var(--weight);
-    height: var(--weight);
-    @apply bg-slate-200;
-  }
+    .gridline {
+        --weight: 0.05rem;
+        width: var(--weight);
+        height: var(--weight);
+        @apply bg-slate-200;
+    }
 </style>
