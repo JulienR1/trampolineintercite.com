@@ -7,16 +7,21 @@ import { weekdays } from "../lib/constants";
 
 interface Props {
     activities: Activity[][];
+    min?: number;
+    max?: number;
+    interval?: number;
 }
-
-const timeMin = 8;
-const timeMax = 22;
-const minutesPerTick = 60;
 
 type ActivityRender = Activity & {
     inset: number;
     adjacent?: { position: number; count: number };
 };
+
+const {
+    min: timeMin = 8,
+    max: timeMax = 22,
+    interval: minutesPerTick = 60,
+} = Astro.props;
 
 const activities = Astro.props.activities.map((w) => {
     const weekday: ActivityRender[] = w
@@ -45,10 +50,8 @@ const activities = Astro.props.activities.map((w) => {
             adjacents.size === adjacentCount ||
             (adjacents.size > 0 && i === weekday.length - 1)
         ) {
-            let position = 0;
-            for (const activity of adjacents) {
+            for (const [position, activity] of [...adjacents].entries()) {
                 activity.adjacent = { position, count: adjacents.size };
-                position++;
             }
             adjacents.clear();
         }
@@ -209,14 +212,9 @@ function shiftWeekday(weekday: number) {
                             data-amount={activity.price.toFixed(2)}
                             data-lessons={activity.lessons.count}
                             data-weekday={weekdays[weekday]}
-                            data-except-dates={listFormatter.format(
-                                activity.lessons.exceptions
-                                    .sort((a, b) => a.getTime() - b.getTime())
-                                    .map(
-                                        (date) =>
-                                            `<b class="text-nowrap">${dateFormatter.format(date)}</b>`,
-                                    ),
-                            )}
+                            data-except-dates={activity.lessons.exceptions
+                                .sort((a, b) => a.getTime() - b.getTime())
+                                .map((date) => dateFormatter.format(date))}
                         >
                             <span class="hidden sm:block text-xs whitespace-nowrap overflow-hidden">
                                 {formatTime(activity.time.start)} -{" "}
@@ -319,10 +317,7 @@ function shiftWeekday(weekday: number) {
                         <span class="material-symbols-outlined">
                             do_not_disturb_on
                         </span>
-                        <span class="sm:max-w-56 ml-2 -indent-2">
-                            Hormis ces dates:
-                            <span id="dialog-except-dates-list"></span>{"."}
-                        </span>
+                        <span class="sm:max-w-56 ml-2 -indent-2"> </span>
                     </p>
                 </div>
             </div>
@@ -331,6 +326,8 @@ function shiftWeekday(weekday: number) {
 </div>
 
 <script>
+    import { listFormatter } from "../lib/formatters";
+
     const dialog = document.getElementById("calendar-dialog")!;
     const contents = document.getElementById("dialog-contents")!;
     const closer = document.getElementById("dialog-close")!;
@@ -343,20 +340,17 @@ function shiftWeekday(weekday: number) {
     const dateRange = document.getElementById("dialog-date-range")!;
     const price = document.getElementById("dialog-price")!;
     const exceptDates = document.getElementById("dialog-except-dates")!;
-    const exceptDatesList = document.getElementById(
-        "dialog-except-dates-list",
-    )!;
 
     const calendar = document.getElementById("calendar")!;
     const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
 
     let selectedActivity: HTMLDivElement | null = null;
 
-    const close = () => {
+    function close() {
         selectedActivity = null;
         dialog.dataset.open = "false";
         activities.forEach((a) => (a.dataset.showcased = "false"));
-    };
+    }
 
     function paint(activity: HTMLDivElement) {
         const { dataset } = activity;
@@ -369,9 +363,15 @@ function shiftWeekday(weekday: number) {
         dateRange.innerText = `${dataset.firstLesson} au ${dataset.lastLesson}`;
         price.innerText = `${dataset.amount}$ pour ${dataset.lessons} cours`;
 
-        const exceptions = dataset.exceptDates ?? "";
+        const exceptions = (dataset.exceptDates ?? "")
+            .split(",")
+            .filter((str) => str.length > 0);
         exceptDates.dataset.visible = (exceptions.length > 0).toString();
-        exceptDatesList.innerHTML = exceptions;
+        exceptDates.innerHTML = `Hormis ces dates: <span>${listFormatter.format(
+            exceptions.map(
+                (exception) => `<b class="text-nowrap">${exception}</b>`,
+            ),
+        )}.</span>`;
     }
 
     function position(activity: HTMLDivElement, xOffset = 0) {
