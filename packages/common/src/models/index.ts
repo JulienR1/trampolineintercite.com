@@ -1,2 +1,3 @@
 export * from "./partners"
-export * from "./image"
+export * from "./images"
+export * from "./activities"

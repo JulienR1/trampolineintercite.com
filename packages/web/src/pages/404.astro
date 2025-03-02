@@ -1,0 +1,26 @@
+---
+import Logo from "../components/Logo.astro";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout path="/404">
+    <div
+        class="flex items-center flex-col mt-[30%] max-w-52 mx-auto sm:flex-row sm:max-w-96 sm:gap-8"
+    >
+        <a
+            href="/"
+            title="Retour à l'accueil"
+            class="block w-24 h-24 sm:w-36 sm:h-36"
+        >
+            <Logo />
+        </a>
+        <div class="hidden sm:block w-[0.25rem] h-20 rounded bg-slate-900">
+        </div>
+        <div
+            class="flex flex-col gap-2 mt-8 text-center sm:text-left sm:text-lg sm:mt-0"
+        >
+            <h2 class="font-bold text-5xl">404</h2>
+            <p>Impossible de trouver la page spécifiée.</p>
+        </div>
+    </div>
+</Layout>

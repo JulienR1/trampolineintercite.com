@@ -1,29 +1,29 @@
 <a
-  href="#"
-  id="back-to-top"
-  title="Retour en haut"
-  class="fixed flex items-center justify-center w-10 h-10 bottom-6 right-6 group/back-to-top opacity-0 invisible data-[show=true]:visible data-[show=true]:opacity-100 transition-all select-none"
-  data-show="false"
+    href="#"
+    id="back-to-top"
+    title="Retour en haut"
+    class="fixed flex items-center justify-center w-10 h-10 bottom-6 right-6 group/back-to-top opacity-0 invisible data-[show=true]:visible data-[show=true]:opacity-100 transition-all select-none"
+    data-show="false"
 >
-  <div class="absolute w-full h-full bg-black rounded-full opacity-80"></div>
-  <span
-    class="text-4xl text-slate-100 z-10 group-hover/back-to-top:-translate-y-1 transition-all material-symbols-outlined"
-  >
-    keyboard_arrow_up
-  </span>
+    <div class="absolute w-full h-full bg-black rounded-full opacity-80"></div>
+    <span
+        class="text-4xl text-slate-100 z-10 group-hover/back-to-top:-translate-y-1 transition-all material-symbols-outlined"
+    >
+        keyboard_arrow_up
+    </span>
 </a>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const arrow = document.getElementById("back-to-top")!;
+    document.addEventListener("DOMContentLoaded", function () {
+        const arrow = document.getElementById("back-to-top")!;
 
-    arrow.addEventListener("click", function (e) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+        arrow.addEventListener("click", function (e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
 
-    window.addEventListener("scroll", function () {
-      arrow.dataset.show = (window.scrollY >= 200).toString();
+        window.addEventListener("scroll", function () {
+            arrow.dataset.show = (window.scrollY >= 200).toString();
+        });
     });
-  });
 </script>

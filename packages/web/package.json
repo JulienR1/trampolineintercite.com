@@ -6,8 +6,10 @@
         "dev": "astro dev",
         "build": "astro build",
         "preview": "astro preview",
-        "lint": "astro check",
-        "astro": "astro"
+        "lint": "tsc --noEmit && prettier -c . && astro check",
+        "lint:fix": "prettier -w .",
+        "astro": "astro",
+        "test": "vitest"
     },
     "dependencies": {
         "@astrojs/check": "^0.9.4",
@@ -20,6 +22,22 @@
     },
     "devDependencies": {
         "prettier": "^3.4.2",
-        "prettier-plugin-astro": "^0.14.1"
+        "prettier-plugin-astro": "^0.14.1",
+        "tailwind-merge": "^3.0.1",
+        "vitest": "^3.0.4"
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "plugins": [
+            "prettier-plugin-astro"
+        ],
+        "overrides": [
+            {
+                "files": "*.astro",
+                "options": {
+                    "parser": "astro"
+                }
+            }
+        ]
     }
 }
