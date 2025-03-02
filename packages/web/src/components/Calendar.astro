@@ -325,7 +325,10 @@ function shiftWeekday(weekday: number) {
     const calendar = document.getElementById("calendar")!;
     const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
 
+    let selectedActivity: HTMLDivElement | null = null;
+
     const close = () => {
+        selectedActivity = null;
         dialog.dataset.open = "false";
         activities.forEach((a) => (a.dataset.showcased = "false"));
     };
@@ -362,6 +365,13 @@ function shiftWeekday(weekday: number) {
         }
     });
 
+    document.addEventListener("scroll", function () {
+        if (selectedActivity) {
+            contents.style.setProperty("transition", "none");
+            position(selectedActivity);
+        }
+    });
+
     document.addEventListener("DOMContentLoaded", function () {
         closer.addEventListener("click", close);
         clickHandler.addEventListener("click", close);
@@ -372,11 +382,14 @@ function shiftWeekday(weekday: number) {
             const element = target.parentElement! as HTMLDivElement;
 
             target.addEventListener("click", function () {
+                contents.style.removeProperty("transition");
                 paint(element);
                 position(element);
                 activities.forEach((a) => (a.dataset.showcased = "false"));
                 element.dataset.showcased = "true";
                 dialog.dataset.open = "true";
+
+                selectedActivity = element;
             });
 
             target.addEventListener("pointerenter", function () {
