@@ -2,7 +2,7 @@
 import type { Activity, Time } from "common";
 import { gcd } from "../lib/maths";
 import { cn, dark, contrast } from "../lib/utils";
-import { dateFormatter } from "../lib/formatters";
+import { dateFormatter, listFormatter } from "../lib/formatters";
 import { weekdays } from "../lib/constants";
 
 interface Props {
@@ -209,6 +209,14 @@ function shiftWeekday(weekday: number) {
                             data-amount={activity.price.toFixed(2)}
                             data-lessons={activity.lessons.count}
                             data-weekday={weekdays[weekday]}
+                            data-except-dates={listFormatter.format(
+                                activity.lessons.exceptions
+                                    .sort((a, b) => a.getTime() - b.getTime())
+                                    .map(
+                                        (date) =>
+                                            `<b class="text-nowrap">${dateFormatter.format(date)}</b>`,
+                                    ),
+                            )}
                         >
                             <span class="hidden sm:block text-xs whitespace-nowrap overflow-hidden">
                                 {formatTime(activity.time.start)} -{" "}
@@ -303,6 +311,19 @@ function shiftWeekday(weekday: number) {
                         <span class="material-symbols-outlined">sell</span>
                         <span id="dialog-price"></span>
                     </p>
+                    <p
+                        id="dialog-except-dates"
+                        class="items-center text-sm gap-2 hidden data-[visible=true]:flex"
+                        data-visible="false"
+                    >
+                        <span class="material-symbols-outlined">
+                            do_not_disturb_on
+                        </span>
+                        <span class="sm:max-w-56 ml-2 -indent-2">
+                            Hormis ces dates:
+                            <span id="dialog-except-dates-list"></span>{"."}
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -321,6 +342,10 @@ function shiftWeekday(weekday: number) {
     const time = document.getElementById("dialog-time")!;
     const dateRange = document.getElementById("dialog-date-range")!;
     const price = document.getElementById("dialog-price")!;
+    const exceptDates = document.getElementById("dialog-except-dates")!;
+    const exceptDatesList = document.getElementById(
+        "dialog-except-dates-list",
+    )!;
 
     const calendar = document.getElementById("calendar")!;
     const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
@@ -343,6 +368,10 @@ function shiftWeekday(weekday: number) {
         time.innerText = `${dataset.weekday}, de ${dataset.startTime} à ${dataset.endTime}`;
         dateRange.innerText = `${dataset.firstLesson} au ${dataset.lastLesson}`;
         price.innerText = `${dataset.amount}$ pour ${dataset.lessons} cours`;
+
+        const exceptions = dataset.exceptDates ?? "";
+        exceptDates.dataset.visible = (exceptions.length > 0).toString();
+        exceptDatesList.innerHTML = exceptions;
     }
 
     function position(activity: HTMLDivElement, xOffset = 0) {
