@@ -1,14 +1,20 @@
 ---
 import type { GetStaticPaths } from "astro";
 
+import _articles from "./articles.json";
+import { Article } from "common";
+import { z } from "zod";
+
 export const getStaticPaths = (() => {
-    const articles = ["article 1", "article 2", "article 3"];
-    return articles.map((article) => ({
-        params: { slug: article.replaceAll(/\s+/g, "-") },
-    }));
+    const articles = z.array(Article).parse(_articles);
+    return articles.map(({ slug }) => ({ params: { slug } }));
 }) satisfies GetStaticPaths;
 
 const { slug } = Astro.params;
+const article = z
+    .array(Article)
+    .parse(_articles)
+    .find((article) => article.slug === slug);
 ---
 
-title: "{slug}"
+title: "{article?.title ?? "random page"}"

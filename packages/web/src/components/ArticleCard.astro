@@ -1,0 +1,95 @@
+---
+import { Tag, type ArticlePreview } from "common";
+import { z } from "zod";
+import { cn, dark } from "../lib/utils";
+import { dateTimeFormatter } from "../lib/formatters";
+import AuthorLink from "./AuthorLink.astro";
+
+type Props = ArticlePreview & { class?: string };
+
+// TODO: fetch these from the backend
+import _tags from "../pages/actualites/tags.json";
+const tags = z
+    .array(Tag)
+    .parse(_tags)
+    .reduce(
+        (acc, tag) => ({ ...acc, [tag.key]: tag }),
+        {} as Record<string, Tag>,
+    );
+
+const { class: className, ...article } = Astro.props;
+
+const url = Astro.url.pathname + "/" + article.slug;
+const date = article.updateDate ?? article.releaseDate;
+---
+
+<div class="relative max-w-[480px] overflow-hidden">
+    <a
+        href={url}
+        class="block absolute w-full h-full hocus:border"
+        style={{ "z-index": 1 }}
+    >
+    </a>
+
+    <div
+        class={cn(["flex p-2 gap-2 relative pointer-events-none", className])}
+        style={{ "z-index": 2 }}
+    >
+        <div class="relative w-36 h-24 overflow-hidden shrink-0">
+            <img
+                src={article.image.src}
+                alt={article.image.alt}
+                class="block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 object-cover"
+            />
+        </div>
+        <div class="flex flex-col gap-1 w-full min-w-0">
+            <div
+                class="tag-container flex gap-1 text-xs font-bold w-full overflow-x-auto pointer-events-auto"
+            >
+                {
+                    article.tags.map((tagKey) => {
+                        const tag = tags[tagKey];
+                        return (
+                            <span
+                                class={cn([
+                                    "px-2 rounded-full",
+                                    dark(tag.color) && "text-white",
+                                ])}
+                                style={{ background: tag.color }}
+                            >
+                                {tag.label}
+                            </span>
+                        );
+                    })
+                }
+            </div>
+            <h3
+                class="font-bold text-lg w-full overflow-hidden text-ellipsis line-clamp-2 leading-tight"
+            >
+                {article.title}
+            </h3>
+            <address class="text-xs">
+                Par <AuthorLink {...article.author} />
+                &middot;{" "}
+                <time datetime={date.toISOString().split(".")[0]}>
+                    {dateTimeFormatter.format(date)}
+                </time>
+            </address>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tag-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .tag-container::-webkit-scrollbar-thumb {
+        @apply bg-slate-300;
+        @apply rounded-md;
+    }
+
+    .tag-container::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400;
+    }
+</style>

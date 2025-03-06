@@ -4,9 +4,23 @@ import { Person } from "./people";
 
 const ArticleBase = z.object({
   title: z.string(),
-  subtitle: z.string().optional(),
-  releaseDate: z.date(),
-  updateDate: z.date().optional(),
+  slug: z.string(),
+  tags: z.array(z.string()),
+  releaseDate: z.date().or(
+    z
+      .string()
+      .date()
+      .transform((str) => new Date(str)),
+  ),
+  updateDate: z
+    .date()
+    .or(
+      z
+        .string()
+        .date()
+        .transform((str) => new Date(str)),
+    )
+    .nullable(),
   author: Person,
 });
 
@@ -16,7 +30,7 @@ export const Article = ArticleBase.and(
   z.object({
     images: z.array(Image),
     contents: z.array(z.string()),
-    results: z.unknown().optional(),
+    results: z.unknown().nullable(),
   }),
 );
 

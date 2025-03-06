@@ -1,12 +1,34 @@
 ---
+import ArticleCard from "../../components/ArticleCard.astro";
 import Title from "../../components/Title.astro";
 import Layout from "../../layouts/Layout.astro";
+import { ArticlePreview } from "common";
+import z from "zod";
 
-interface Props {}
-
-const {} = Astro.props;
+// TODO: fetch these from the backend
+import _articles from "./articles.json";
+const articles = z
+    .array(ArticlePreview)
+    .parse(_articles)
+    .sort(
+        (a, b) =>
+            (b.updateDate ?? b.releaseDate).getTime() -
+            (a.updateDate ?? a.releaseDate).getTime(),
+    );
 ---
 
 <Layout path="/horaire">
     <Title title="Actualités" />
+
+    <ul
+        class="grid w-[90%] grid-cols-[minmax(90%,max-content)] justify-center max-w-7xl mx-auto mt-6"
+    >
+        {
+            articles.map((article) => (
+                <li>
+                    <ArticleCard {...article} />
+                </li>
+            ))
+        }
+    </ul>
 </Layout>

@@ -1,0 +1,22 @@
+[
+    {
+        "key": "competitif",
+        "label": "Compétitif",
+        "color": "#ff0000"
+    },
+    {
+        "key": "finales",
+        "label": "Finales",
+        "color": "#00ff00"
+    },
+    {
+        "key": "national",
+        "label": "National",
+        "color": "#0000ff"
+    },
+    {
+        "key": "recreatif",
+        "label": "Récréatif",
+        "color": "#ff00ff"
+    }
+]
