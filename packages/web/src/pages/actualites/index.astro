@@ -10,6 +10,7 @@ import _articles from "./articles.json";
 const articles = z
     .array(ArticlePreview)
     .parse(_articles)
+    .map((article) => ({ ...article, tags: [...new Set(article.tags)] }))
     .sort(
         (a, b) =>
             (b.updateDate ?? b.releaseDate).getTime() -
@@ -17,7 +18,7 @@ const articles = z
     );
 ---
 
-<Layout path="/horaire">
+<Layout>
     <Title title="Actualités" />
 
     <ul

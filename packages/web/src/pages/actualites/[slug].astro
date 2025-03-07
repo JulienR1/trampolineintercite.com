@@ -1,9 +1,11 @@
 ---
 import type { GetStaticPaths } from "astro";
-
-import _articles from "./articles.json";
 import { Article } from "common";
 import { z } from "zod";
+import Layout from "../../layouts/Layout.astro";
+import Title from "../../components/Title.astro";
+
+import _articles from "./articles.json";
 
 export const getStaticPaths = (() => {
     const articles = z.array(Article).parse(_articles);
@@ -14,7 +16,15 @@ const { slug } = Astro.params;
 const article = z
     .array(Article)
     .parse(_articles)
-    .find((article) => article.slug === slug);
+    .find((article) => article.slug === slug)!;
 ---
 
-title: "{article?.title ?? "random page"}"
+<Layout title={article.title}>
+    <>
+        <Title title={article.title} />
+
+        <pre>
+                {JSON.stringify(article,null,2)}
+        </pre>
+    </>
+</Layout>

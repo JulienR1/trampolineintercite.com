@@ -10,16 +10,17 @@ import UpdateTitle from "./UpdateTitle.astro";
 type Path = Routes<["footer-only", "disabled"]>;
 
 interface Props {
-    path: Path | Path[];
+    path?: Path | Path[];
+    title?: string;
 }
 
-const paths = asArray(Astro.props.path);
+const paths = asArray(Astro.props.path ?? (Astro.url.pathname as Path));
 const labels = paths.reduce(
     (acc, path) => ({ ...acc, [path]: routerLabels[path] }),
     {} as Record<Path, string>,
 );
 
-const label = labels[paths[0]];
+const label = Astro.props.title ?? labels[paths[0]];
 const title = "Trampoline Intercité" + (label ? ` | ${label}` : "");
 ---
 
