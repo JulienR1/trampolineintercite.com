@@ -2,7 +2,7 @@
 import ArticleCard from "../../components/ArticleCard.astro";
 import Title from "../../components/Title.astro";
 import Layout from "../../layouts/Layout.astro";
-import { ArticlePreview } from "common";
+import { ArticlePreview, Tag } from "common";
 import z from "zod";
 
 // TODO: fetch these from the backend
@@ -16,10 +16,45 @@ const articles = z
             (b.updateDate ?? b.releaseDate).getTime() -
             (a.updateDate ?? a.releaseDate).getTime(),
     );
+
+import _tags from "./tags.json";
+import Chip from "../../components/Chip.astro";
+import { contrast } from "../../lib/utils";
+const tags = z.array(Tag).parse(_tags);
 ---
 
 <Layout>
     <Title title="Actualités" />
+
+    <div class="flex gap-1 px-8 py-2 mt-8 w-fit mx-auto border rounded-full">
+        <span class="material-symbols-outlined mr-4">filter_alt</span>
+        <fieldset>
+            {
+                tags.map((tag) => (
+                    <>
+                        <input
+                            type="checkbox"
+                            class="tag-filter invisible w-0"
+                            id={`tag-filter-${tag.key}`}
+                        />
+                        <label
+                            for={`tag-filter-${tag.key}`}
+                            class="opacity-50 hocus:opacity-100"
+                        >
+                            <Chip
+                                {...tag}
+                                class="cursor-pointer border-2 border-[var(--col)]"
+                                style={{
+                                    "--col": tag.color,
+                                    "--col-contrast": contrast(tag.color),
+                                }}
+                            />
+                        </label>
+                    </>
+                ))
+            }
+        </fieldset>
+    </div>
 
     <ul
         class="grid w-[90%] grid-cols-[minmax(0_max-content)] justify-center max-w-7xl mx-auto mt-6"
@@ -33,3 +68,13 @@ const articles = z
         }
     </ul>
 </Layout>
+
+<style>
+    input.tag-filter:checked + label {
+        @apply opacity-100;
+    }
+
+    input.tag-filter:checked + label span {
+        @apply border-[var(--col-contrast)];
+    }
+</style>
