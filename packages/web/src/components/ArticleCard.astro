@@ -20,7 +20,7 @@ const tags = z
 
 const { class: className, ...article } = Astro.props;
 
-const url = Astro.url.pathname + "/" + article.slug;
+const url = (Astro.url.pathname + "/" + article.slug).replaceAll("//", "/");
 const date = article.updateDate ?? article.releaseDate;
 ---
 

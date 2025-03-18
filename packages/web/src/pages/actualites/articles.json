@@ -13,7 +13,7 @@
             "finales"
         ],
         "releaseDate": "2025-06-06",
-        "updateDate": null,
+        "updateDate": "2025-07-06",
         "author": {
             "firstname": "Stéphane",
             "lastname": "Meunier",
@@ -60,11 +60,12 @@
             "recreatif"
         ],
         "releaseDate": "2025-03-10",
-        "updateDate": null,
+        "updateDate": "2025-05-13",
         "author": {
             "firstname": "Martin",
             "lastname": "Yi",
-            "url": "https://google.ca"
+            "url": "https://google.ca",
+            "role": "entraineur"
         },
         "image": {
             "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
@@ -72,8 +73,32 @@
             "width": 94,
             "height": 94
         },
-        "images": [],
-        "contents": [],
+        "images": [
+            {
+                "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+                "alt": "Random dog",
+                "width": 200,
+                "height": 200
+            },
+            {
+                "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+                "alt": "Random dog",
+                "width": 200,
+                "height": 200
+            },
+            {
+                "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+                "alt": "Random dog",
+                "width": 200,
+                "height": 200
+            }
+        ],
+        "contents": [
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        ],
         "results": {}
     }
 ]

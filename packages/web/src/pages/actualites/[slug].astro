@@ -6,6 +6,8 @@ import Layout from "../../layouts/Layout.astro";
 import Title from "../../components/Title.astro";
 
 import _articles from "./articles.json";
+import { dateTimeFormatter } from "../../lib/formatters";
+import AuthorLink from "../../components/AuthorLink.astro";
 
 export const getStaticPaths = (() => {
     const articles = z.array(Article).parse(_articles);
@@ -20,11 +22,148 @@ const article = z
 ---
 
 <Layout title={article.title}>
-    <>
-        <Title title={article.title} />
+    <Title title={article.title} />
 
-        <pre>
-                {JSON.stringify(article,null,2)}
-        </pre>
-    </>
+    <article class="p-4 px-6">
+        <div id="carousel" style={{ "--selected": 0 }}>
+            <ul
+                class="flex transition-all duration-300"
+                style={{
+                    width: article.images.length * 100 + "%",
+                    transform: `translateX(calc(-100% * var(--selected) / ${article.images.length}))`,
+                }}
+            >
+                {
+                    article.images.map((image) => (
+                        <li class="flex-1">
+                            <img {...image} class="article-img block mx-auto" />
+                        </li>
+                    ))
+                }
+            </ul>
+            {
+                article.images.length > 1 && (
+                    <ul class="flex gap-1 justify-center pt-4 pb-2">
+                        {article.images.map((_, i) => (
+                            <li
+                                class="indicator w-2 h-2 rounded-full bg-black opacity-50 data-[selected=true]:opacity-75"
+                                data-selected={(i === 0).toString()}
+                            />
+                        ))}
+                    </ul>
+                )
+            }
+        </div>
+
+        {
+            article.contents.map((paragraph) => (
+                <p class="text-justify pb-2">{paragraph}</p>
+            ))
+        }
+
+        <footer>
+            <p class="py-2">
+                <span>Source: </span>
+                <AuthorLink {...article.author} />
+                {
+                    (article.author.role ?? "").length > 0 && (
+                        <span>, {article.author.role}</span>
+                    )
+                }
+            </p>
+
+            <div class="pt-2">
+                <p>
+                    <span>Publié le</span>
+                    <time
+                        datetime={article.releaseDate
+                            .toISOString()
+                            .split(".")[0]}
+                    >
+                        {dateTimeFormatter.format(article.releaseDate)}.
+                    </time>
+                </p>
+                {
+                    article.updateDate && (
+                        <p>
+                            <span>Mis à jour le</span>
+                            <time
+                                datetime={
+                                    article.updateDate
+                                        .toISOString()
+                                        .split(".")[0]
+                                }
+                            >
+                                {dateTimeFormatter.format(article.updateDate)}.
+                            </time>
+                        </p>
+                    )
+                }
+            </div>
+        </footer>
+    </article>
 </Layout>
+
+<script>
+    import { clamp } from "../../lib/maths";
+
+    const carousel = document.getElementById("carousel")!;
+    const images = carousel.querySelectorAll("img");
+    const indicators = carousel.querySelectorAll<HTMLElement>(".indicator");
+
+    let startX: number | null = null;
+    let startY: number | null = null;
+
+    document.addEventListener("DOMContentLoaded", function () {
+        for (const image of images) {
+            image.addEventListener("touchstart", function (event) {
+                if (
+                    "changedTouches" in event &&
+                    event.changedTouches.length > 0
+                ) {
+                    startX = event.changedTouches[0].screenX;
+                    startY = event.changedTouches[0].screenY;
+                }
+            });
+
+            image.addEventListener("touchend", function (event) {
+                if (
+                    startX !== null &&
+                    startY !== null &&
+                    "changedTouches" in event &&
+                    event.changedTouches.length > 0
+                ) {
+                    const endX = event.changedTouches[0].screenX;
+                    const endY = event.changedTouches[0].screenY;
+
+                    if (Math.abs(endX - startX) > Math.abs(endY - startY)) {
+                        const direction = startX > endX ? 1 : -1;
+                        const currentlySelected = parseInt(
+                            carousel.style.getPropertyValue("--selected") ||
+                                "0",
+                        );
+                        const selected = clamp(
+                            currentlySelected + direction,
+                            0,
+                            images.length - 1,
+                        );
+
+                        carousel.style.setProperty(
+                            "--selected",
+                            selected.toString(),
+                        );
+
+                        indicators.forEach(
+                            (indicator) =>
+                                (indicator.dataset.selected = "false"),
+                        );
+                        indicators.item(selected).dataset.selected = "true";
+                    }
+                }
+
+                startX = null;
+                startY = null;
+            });
+        }
+    });
+</script>
