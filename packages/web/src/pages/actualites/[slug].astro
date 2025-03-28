@@ -25,13 +25,13 @@ const article = z
 <Layout title={article.title}>
     <Title title={article.title} />
 
-    <article class="p-4 px-6 md:bg-red-300 max-w-4xl">
+    <article class="p-4 px-6 max-w-4xl mx-auto">
         {
             article.images.length > 0 && (
                 <div
                     id="carousel"
                     style={{ "--selected": 0 }}
-                    class="pb-2 sm:flex sm:max-h-72 sm:items-center sm:justify-center sm:gap-2"
+                    class="pb-2 sm:flex sm:max-h-72 sm:items-center sm:justify-center sm:gap-2 md:w-fit md:float-right md:pl-8 md:pb-4"
                 >
                     <div class="hidden sm:block">
                         <img {...article.images[0]} id="showcase" />
