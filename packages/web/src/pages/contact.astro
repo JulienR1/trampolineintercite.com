@@ -16,13 +16,19 @@ const formattedPhone = () => {
 <Layout>
     <Title title="Contactez-nous" />
 
-    <div class="w-[90%] max-w-7xl mx-auto mt-6">
+    <div
+        class="w-[90%] max-w-7xl mx-auto mt-6 md:grid md:grid-cols-[1fr_auto] md:gap-4"
+    >
         <div>
-            <div class="bg-pink-400 w-[100vw] absolute left-0 h-64">map</div>
-            <div class="h-64 mb-6"></div>
+            <div
+                class="bg-pink-400 w-[100vw] absolute left-0 h-64 md:relative sm:h-80 md:w-auto md:h-[40vw] md:min-h-[300px] md:max-h-[500px]"
+            >
+                map
+            </div>
+            <div class="h-64 sm:h-80 mb-6 md:hidden"></div>
         </div>
 
-        <div>
+        <div class="md:flex md:flex-col md:justify-center">
             <address class="text-center not-italic">
                 <div>
                     <span class="block font-semibold">Église Ste-Cécile</span>
