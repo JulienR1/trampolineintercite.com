@@ -97,6 +97,68 @@ const article = z
             ))
         }
 
+        {
+            article.results && (
+                <table class="block mx-auto my-2 overflow-x-auto">
+                    <caption class="mb-2">
+                        {article.results.title ?? "Résultats complets"}
+                    </caption>
+                    <thead>
+                        <tr class="font-semibold text-sm text-nowrap">
+                            <th />
+                            {article.results.columns.map((column) => (
+                                <th class="min-w-24 h-6">{column}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {article.results.sections.map((section) => (
+                            <>
+                                <tr>
+                                    <td
+                                        colspan={
+                                            article.results!.columns.length + 1
+                                        }
+                                        class="bg-primary text-white font-semibold text-xs uppercase text-center h-6"
+                                    >
+                                        {section.label}
+                                    </td>
+                                </tr>
+                                {section.rows.map((row) => (
+                                    <tr class="text-center text-sm h-8">
+                                        <td class="text-nowrap px-2">
+                                            {row.athlete.url ? (
+                                                <a
+                                                    href={row.athlete.url}
+                                                    class="underline"
+                                                >
+                                                    {row.athlete.firstname}{" "}
+                                                    {row.athlete.lastname}
+                                                </a>
+                                            ) : (
+                                                `${row.athlete.firstname} ${row.athlete.lastname}`
+                                            )}
+                                        </td>
+                                        {row.positions.map((position) => (
+                                            <td
+                                                class={cn([
+                                                    "px-1",
+                                                    position === null &&
+                                                        "bg-slate-100",
+                                                ])}
+                                            >
+                                                {position}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </>
+                        ))}
+                    </tbody>
+                </table>
+            )
+        }
+
         <footer>
             <p class="py-2">
                 <span>Source: </span>
@@ -154,5 +216,11 @@ const article = z
 
     #carousel-extra::-webkit-scrollbar-thumb:hover {
         @apply bg-slate-400;
+    }
+
+    td,
+    th {
+        @apply border;
+        @apply border-black;
     }
 </style>

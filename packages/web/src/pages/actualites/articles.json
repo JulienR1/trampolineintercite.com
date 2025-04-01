@@ -26,16 +26,12 @@
             "height": 94
         },
         "images": [],
-        "contents": [],
-        "results": {}
+        "contents": []
     },
     {
         "title": "Maison blanche en Gaspésie avec un titre très long mais qui doit etre encore plus long",
         "slug": "maison-blanche",
-        "tags": [
-            "national",
-            "finales"
-        ],
+        "tags": ["national", "finales"],
         "releaseDate": "2025-06-06",
         "updateDate": null,
         "author": {
@@ -50,15 +46,12 @@
             "height": 94
         },
         "images": [],
-        "contents": [],
-        "results": {}
+        "contents": []
     },
     {
         "title": "Un titre un peu plus court",
         "slug": "article-le-huitieme",
-        "tags": [
-            "recreatif"
-        ],
+        "tags": ["recreatif"],
         "releaseDate": "2025-03-10",
         "updateDate": "2025-05-13",
         "author": {
@@ -105,6 +98,44 @@
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         ],
-        "results": {}
+        "results": {
+            "columns": ["Trampoline", "Double-mini", "Synchro"],
+            "sections": [
+                {
+                    "label": "National 6 Femme",
+                    "rows": [
+                        {
+                            "athlete": {
+                                "firstname": "Denise",
+                                "lastname": "Tremblay",
+                                "url": null
+                            },
+                            "positions": ["Médaille d'argent", null, null]
+                        }
+                    ]
+                },
+                {
+                    "label": "National 5 Femme 17 ans et plus",
+                    "rows": [
+                        {
+                            "athlete": {
+                                "firstname": "Michelle",
+                                "lastname": "Cloutier",
+                                "url": "https://google.ca"
+                            },
+                            "positions": ["5e", null, "Médaille d'argent"]
+                        },
+                        {
+                            "athlete": {
+                                "firstname": "Dominique",
+                                "lastname": "Meunier",
+                                "url": "https://google.ca"
+                            },
+                            "positions": ["6e", null, "4e"]
+                        }
+                    ]
+                }
+            ]
+        }
     }
 ]
