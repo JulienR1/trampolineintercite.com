@@ -1,26 +1,18 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { Article } from "common";
-import { z } from "zod";
 import Layout from "../../layouts/Layout.astro";
 import Title from "../../components/Title.astro";
-
-import _articles from "./articles.json";
 import { dateTimeFormatter } from "../../lib/formatters";
 import AuthorLink from "../../components/AuthorLink.astro";
 import { cn } from "../../lib/utils";
 import Carousel from "../../components/Carousel.astro";
+import { articles, findBySlug } from "../../resources/articles";
 
 export const getStaticPaths = (() => {
-    const articles = z.array(Article).parse(_articles);
     return articles.map(({ slug }) => ({ params: { slug } }));
 }) satisfies GetStaticPaths;
 
-const { slug } = Astro.params;
-const article = z
-    .array(Article)
-    .parse(_articles)
-    .find((article) => article.slug === slug)!;
+const article = findBySlug(Astro.params.slug)!;
 ---
 
 <Layout title={article.title}>

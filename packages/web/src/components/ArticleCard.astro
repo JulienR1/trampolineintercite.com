@@ -1,22 +1,12 @@
 ---
-import { Tag, type ArticlePreview } from "common";
-import { z } from "zod";
+import { type ArticlePreview } from "common";
 import { cn } from "../lib/utils";
 import { dateTimeFormatter } from "../lib/formatters";
 import AuthorLink from "./AuthorLink.astro";
 import Chip from "./Chip.astro";
+import { tags } from "../resources/tags";
 
 type Props = ArticlePreview & { class?: string };
-
-// TODO: fetch these from the backend
-import _tags from "../pages/actualites/tags.json";
-const tags = z
-    .array(Tag)
-    .parse(_tags)
-    .reduce(
-        (acc, tag) => ({ ...acc, [tag.key]: tag }),
-        {} as Record<string, Tag>,
-    );
 
 const { class: className, ...article } = Astro.props;
 

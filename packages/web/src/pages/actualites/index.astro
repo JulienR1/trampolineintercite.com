@@ -2,22 +2,7 @@
 import ArticleCard from "../../components/ArticleCard.astro";
 import Title from "../../components/Title.astro";
 import Layout from "../../layouts/Layout.astro";
-import { ArticlePreview } from "common";
-import z from "zod";
-
-// TODO: fetch these from the backend
-import _articles from "./articles.json";
-const articles = z
-    .array(ArticlePreview)
-    .parse(_articles)
-    .map((article) => ({ ...article, tags: [...new Set(article.tags)] }))
-    .sort(
-        (a, b) =>
-            (b.updateDate ?? b.releaseDate).getTime() -
-            (a.updateDate ?? a.releaseDate).getTime(),
-    );
-
-import _tags from "./tags.json";
+import { previews } from "../../resources/articles";
 ---
 
 <Layout>
@@ -27,7 +12,7 @@ import _tags from "./tags.json";
         class="grid w-[90%] grid-cols-[minmax(0_max-content)] justify-center max-w-7xl mx-auto mt-6 gap-2"
     >
         {
-            articles.map((article) => (
+            previews.map((article) => (
                 <li>
                     <ArticleCard {...article} />
                 </li>
