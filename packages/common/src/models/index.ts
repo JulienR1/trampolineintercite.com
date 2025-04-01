@@ -4,3 +4,4 @@ export * from "./activities";
 export * from "./articles";
 export * from "./people";
 export * from "./tags";
+export * from "./date";

@@ -1,26 +1,14 @@
-import { object, z } from "zod";
+import { z } from "zod";
 import { Image } from "./images";
 import { Person } from "./people";
+import { LooseDate } from "./date";
 
 const ArticleBase = z.object({
   title: z.string(),
   slug: z.string(),
   tags: z.array(z.string()),
-  releaseDate: z.date().or(
-    z
-      .string()
-      .date()
-      .transform((str) => new Date(str)),
-  ),
-  updateDate: z
-    .date()
-    .or(
-      z
-        .string()
-        .date()
-        .transform((str) => new Date(str)),
-    )
-    .nullable(),
+  releaseDate: LooseDate,
+  updateDate: LooseDate.nullable(),
   author: Person,
 });
 
