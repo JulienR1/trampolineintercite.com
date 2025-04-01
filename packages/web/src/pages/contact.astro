@@ -1,0 +1,53 @@
+---
+import Title from "../components/Title.astro";
+import Layout from "../layouts/Layout.astro";
+
+const email = "coordo.trampoline.intercite@gmail.com";
+const phone = "+18198402950";
+
+const formattedPhone = () => {
+    const area = phone.substring(2, 5);
+    const first = phone.substring(5, 8);
+    const second = phone.substring(8, 12);
+    return `(${area}) ${first}-${second}`;
+};
+---
+
+<Layout>
+    <Title title="Contactez-nous" />
+
+    <div class="w-[90%] max-w-7xl mx-auto mt-6">
+        <div>
+            <div class="bg-pink-400 w-[100vw] absolute left-0 h-64">map</div>
+            <div class="h-64"></div>
+        </div>
+
+        <div>
+            <address>
+                <span>Église Ste-Cécile</span>
+                <span>550 rue Des commissaires</span>
+                <span>Trois-Rivières, Québec</span>
+                <span>G9A 0C3</span>
+
+                <a href={`tel:${phone}`}>
+                    <span class="material-symbols-outlined">call</span>
+                    <span>
+                        {formattedPhone()}
+                    </span>
+                </a>
+                <a href={`mailto:${email}`}>
+                    <span class="material-symbols-outlined">
+                        alternate_email
+                    </span>
+                    <span>
+                        {email}
+                    </span>
+                </a>
+            </address>
+
+            <hr />
+
+            <p>Bien noter, l'entrée est située sur la rue St-Paul.</p>
+        </div>
+    </div>
+</Layout>
