@@ -1,0 +1,32 @@
+---
+import ArticleCard from "../../components/ArticleCard.astro";
+import Title from "../../components/Title.astro";
+import Layout from "../../layouts/Layout.astro";
+import { previews } from "../../resources/articles";
+---
+
+<Layout>
+    <Title title="Actualités" />
+
+    <ul
+        class="grid w-[90%] grid-cols-[minmax(0_max-content)] justify-center max-w-7xl mx-auto mt-6 gap-2"
+    >
+        {
+            previews.map((article) => (
+                <li>
+                    <ArticleCard {...article} />
+                </li>
+            ))
+        }
+    </ul>
+</Layout>
+
+<style>
+    input.tag-filter:checked + label {
+        @apply opacity-100;
+    }
+
+    input.tag-filter:checked + label span {
+        @apply border-[var(--col-contrast)];
+    }
+</style>

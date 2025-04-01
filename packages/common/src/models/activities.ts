@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { LooseDate } from "./date";
 
 export const Time = z.object({ hour: z.number(), minute: z.number() });
 
@@ -9,9 +10,9 @@ export const Activity = z.object({
   time: z.object({ start: Time, end: Time }),
   lessons: z.object({
     count: z.number(),
-    first: z.date(),
-    last: z.date(),
-    exceptions: z.array(z.date()),
+    first: LooseDate,
+    last: LooseDate,
+    exceptions: z.array(LooseDate),
   }),
   price: z.number(),
   color: z.string(),

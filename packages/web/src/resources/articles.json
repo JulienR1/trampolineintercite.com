@@ -1,0 +1,141 @@
+[
+    {
+        "title": "Maison blanche en Gaspésie avec un titre très long mais qui doit etre encore plus long",
+        "slug": "maison-blanche",
+        "tags": [
+            "national",
+            "finales",
+            "national",
+            "national",
+            "national",
+            "finales",
+            "finales",
+            "finales"
+        ],
+        "releaseDate": "2025-06-06",
+        "updateDate": "2025-07-06",
+        "author": {
+            "firstname": "Stéphane",
+            "lastname": "Meunier",
+            "url": null
+        },
+        "image": {
+            "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+            "alt": "Random dog",
+            "width": 94,
+            "height": 94
+        },
+        "images": [],
+        "contents": []
+    },
+    {
+        "title": "Maison blanche en Gaspésie avec un titre très long mais qui doit etre encore plus long",
+        "slug": "maison-blanche",
+        "tags": ["national", "finales"],
+        "releaseDate": "2025-06-06",
+        "updateDate": null,
+        "author": {
+            "firstname": "Stéphane",
+            "lastname": "Meunier",
+            "url": "https://google.ca"
+        },
+        "image": {
+            "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+            "alt": "Random dog",
+            "width": 94,
+            "height": 94
+        },
+        "images": [],
+        "contents": []
+    },
+    {
+        "title": "Un titre un peu plus court",
+        "slug": "article-le-huitieme",
+        "tags": ["recreatif"],
+        "releaseDate": "2025-03-10",
+        "updateDate": "2025-05-13",
+        "author": {
+            "firstname": "Martin",
+            "lastname": "Yi",
+            "url": "https://google.ca",
+            "role": "entraineur"
+        },
+        "image": {
+            "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+            "alt": "Random dog",
+            "width": 94,
+            "height": 94
+        },
+        "images": [
+            {
+                "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+                "alt": "Random dog",
+                "width": 200,
+                "height": 200
+            },
+            {
+                "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+                "alt": "Random dog",
+                "width": 200,
+                "height": 200
+            },
+            {
+                "src": "https://scontent.fyxk1-1.fna.fbcdn.net/v/t1.6435-9/50811794_1241966839285152_5832961223175438336_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=FUZOpMqlxJIQ7kNvgHkAzxo&_nc_oc=Adj5lstWmwyp2aPqNNLRSHdFGLk4M6Xq0pLvjCJfoPa77sB4kys2nkzUzMmaqMNRjDbR7onwCGSmNOLArnLx6KYx&_nc_zt=23&_nc_ht=scontent.fyxk1-1.fna&_nc_gid=A5GCYlHWaO4adNgeJQ8TgDa&oh=00_AYAjKu6Hm3cV3mNPEYRuLUsn0EyZJE-JgHMTNa7AcVpZ9g&oe=67F084B9",
+                "alt": "Random dog",
+                "width": 200,
+                "height": 200
+            },
+            {
+                "src": "https://i.pinimg.com/236x/85/42/1d/85421d99a96b40388c70eea6a1af2d1f.jpg",
+                "alt": "dat face",
+                "width": 200,
+                "height": 200
+            }
+        ],
+        "contents": [
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        ],
+        "results": {
+            "columns": ["Trampoline", "Double-mini", "Synchro"],
+            "sections": [
+                {
+                    "label": "National 6 Femme",
+                    "rows": [
+                        {
+                            "athlete": {
+                                "firstname": "Denise",
+                                "lastname": "Tremblay",
+                                "url": null
+                            },
+                            "positions": ["Médaille d'argent", null, null]
+                        }
+                    ]
+                },
+                {
+                    "label": "National 5 Femme 17 ans et plus",
+                    "rows": [
+                        {
+                            "athlete": {
+                                "firstname": "Michelle",
+                                "lastname": "Cloutier",
+                                "url": "https://google.ca"
+                            },
+                            "positions": ["5e", null, "Médaille d'argent"]
+                        },
+                        {
+                            "athlete": {
+                                "firstname": "Dominique",
+                                "lastname": "Meunier",
+                                "url": "https://google.ca"
+                            },
+                            "positions": ["6e", null, "4e"]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+]

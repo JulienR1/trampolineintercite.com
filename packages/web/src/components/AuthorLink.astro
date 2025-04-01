@@ -1,0 +1,28 @@
+---
+import type { Person } from "common";
+import { cn } from "../lib/utils";
+
+type Props = Person & { class?: string };
+const { class: className, ...author } = Astro.props;
+
+const link = author.url ?? "";
+const name = author.firstname + " " + author.lastname;
+---
+
+{
+    link.length > 0 ? (
+        <a
+            rel="author"
+            href={link}
+            class={cn([
+                "author",
+                "underline pointer-events-auto hocus:text-gray-700",
+                className,
+            ])}
+        >
+            {name}
+        </a>
+    ) : (
+        <span class={className}>{name}</span>
+    )
+}

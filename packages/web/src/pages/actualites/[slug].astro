@@ -1,0 +1,218 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import Title from "../../components/Title.astro";
+import { dateTimeFormatter } from "../../lib/formatters";
+import AuthorLink from "../../components/AuthorLink.astro";
+import { cn } from "../../lib/utils";
+import Carousel from "../../components/Carousel.astro";
+import { articles, findBySlug } from "../../resources/articles";
+
+export const getStaticPaths = (() => {
+    return articles.map(({ slug }) => ({ params: { slug } }));
+}) satisfies GetStaticPaths;
+
+const article = findBySlug(Astro.params.slug)!;
+---
+
+<Layout title={article.title}>
+    <Title title={article.title} />
+
+    <article class="p-4 px-6 max-w-4xl mx-auto">
+        {
+            article.images.length > 0 && (
+                <div
+                    id="carousel"
+                    style={{
+                        "--selected": 0,
+                        "--h": `${Math.max(...article.images.map((img) => img.height))}px`,
+                        "--w": `${Math.max(...article.images.map((img) => img.width))}px`,
+                    }}
+                    class="pb-2 sm:flex sm:max-h-72 sm:items-center sm:justify-center sm:gap-2 md:w-fit md:float-right md:pl-8 md:pb-4 overflow-hidden"
+                >
+                    <div class="hidden sm:block">
+                        <img
+                            {...article.images[0]}
+                            id="showcase"
+                            class="sm:w-[var(--w)] sm:h-[var(--h)] md:w-[calc(1.5*var(--w))] md:h-[calc(1.5*var(--h))]"
+                        />
+                    </div>
+
+                    <div
+                        id="carousel-extra"
+                        class="block sm:overflow-y-auto sm:overflow-x-hidden sm:pr-2 sm:w-[calc(var(--w)/3)] sm:h-[calc(var(--h))] md:h-[calc(1.5*var(--h))]"
+                    >
+                        <ul
+                            class={cn([
+                                "flex transition-all duration-300",
+                                "w-[calc(var(--size)*100%)] translate-x-[var(--tx)]",
+                                "sm:translate-x-0 sm:flex-col sm:w-fit",
+                            ])}
+                            style={{
+                                "--size": article.images.length,
+                                "--tx": "calc(-100% * var(--selected) / var(--size))",
+                            }}
+                        >
+                            {article.images.map((image, i) => (
+                                <li class="flex-1 sm:aspect-square sm:flex-none pb-2 last-of-type:pb-0">
+                                    <button
+                                        class="block mx-auto sm:data-[selected=true]:brightness-50 transition-all"
+                                        data-selected={i === 0}
+                                    >
+                                        <img
+                                            class="article-img block"
+                                            {...image}
+                                        />
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {article.images.length > 1 && (
+                        <ul class="flex gap-1 justify-center pt-4 sm:hidden">
+                            {article.images.map((_, i) => (
+                                <li
+                                    class="indicator w-2 h-2 rounded-full bg-black opacity-50 data-[selected=true]:opacity-75"
+                                    data-selected={(i === 0).toString()}
+                                />
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            )
+        }
+
+        {
+            article.contents.map((paragraph) => (
+                <p class="text-justify pb-2">{paragraph}</p>
+            ))
+        }
+
+        {
+            article.results && (
+                <table class="block mx-auto my-2 overflow-x-auto sm:w-fit">
+                    <caption class="mb-2">
+                        {article.results.title ?? "Résultats complets"}
+                    </caption>
+                    <thead>
+                        <tr class="font-semibold text-sm text-nowrap">
+                            <th />
+                            {article.results.columns.map((column) => (
+                                <th class="min-w-24 h-6">{column}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {article.results.sections.map((section) => (
+                            <>
+                                <tr>
+                                    <td
+                                        colspan={
+                                            article.results!.columns.length + 1
+                                        }
+                                        class="bg-primary text-white font-semibold text-xs uppercase text-center h-6"
+                                    >
+                                        {section.label}
+                                    </td>
+                                </tr>
+                                {section.rows.map((row) => (
+                                    <tr class="text-center text-sm h-8">
+                                        <td class="text-nowrap px-2">
+                                            {row.athlete.url ? (
+                                                <a
+                                                    href={row.athlete.url}
+                                                    class="underline"
+                                                >
+                                                    {row.athlete.firstname}{" "}
+                                                    {row.athlete.lastname}
+                                                </a>
+                                            ) : (
+                                                `${row.athlete.firstname} ${row.athlete.lastname}`
+                                            )}
+                                        </td>
+                                        {row.positions.map((position) => (
+                                            <td
+                                                class={cn([
+                                                    "px-1",
+                                                    position === null &&
+                                                        "bg-slate-100",
+                                                ])}
+                                            >
+                                                {position}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </>
+                        ))}
+                    </tbody>
+                </table>
+            )
+        }
+
+        <footer>
+            <p class="py-2">
+                <span>Source: </span>
+                <AuthorLink {...article.author} />
+                {
+                    (article.author.role ?? "").length > 0 && (
+                        <span>, {article.author.role}</span>
+                    )
+                }
+            </p>
+
+            <div class="pt-2">
+                <p>
+                    <span>Publié le</span>
+                    <time
+                        datetime={article.releaseDate
+                            .toISOString()
+                            .split(".")[0]}
+                    >
+                        {dateTimeFormatter.format(article.releaseDate)}.
+                    </time>
+                </p>
+                {
+                    article.updateDate && (
+                        <p>
+                            <span>Mis à jour le</span>
+                            <time
+                                datetime={
+                                    article.updateDate
+                                        .toISOString()
+                                        .split(".")[0]
+                                }
+                            >
+                                {dateTimeFormatter.format(article.updateDate)}.
+                            </time>
+                        </p>
+                    )
+                }
+            </div>
+        </footer>
+    </article>
+</Layout>
+
+{article.images.length > 0 && <Carousel />}
+
+<style>
+    #carousel-extra::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    #carousel-extra::-webkit-scrollbar-thumb {
+        @apply bg-slate-300;
+        @apply rounded-md;
+    }
+
+    #carousel-extra::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400;
+    }
+
+    td,
+    th {
+        @apply border;
+        @apply border-black;
+    }
+</style>

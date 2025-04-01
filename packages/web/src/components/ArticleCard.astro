@@ -1,0 +1,78 @@
+---
+import { type ArticlePreview } from "common";
+import { cn } from "../lib/utils";
+import { dateTimeFormatter } from "../lib/formatters";
+import AuthorLink from "./AuthorLink.astro";
+import Chip from "./Chip.astro";
+import { tags } from "../resources/tags";
+
+type Props = ArticlePreview & { class?: string };
+
+const { class: className, ...article } = Astro.props;
+
+const url = (Astro.url.pathname + "/" + article.slug).replaceAll("//", "/");
+const date = article.updateDate ?? article.releaseDate;
+---
+
+<div
+    class="relative max-w-[480px] md:max-w-[600px] overflow-hidden border rounded transition-all hocus:shadow-md"
+>
+    <a href={url} class="block absolute w-full h-full" style={{ "z-index": 1 }}>
+    </a>
+
+    <div
+        class={cn(["flex relative pointer-events-none", className])}
+        style={{ "z-index": 2 }}
+    >
+        <div
+            class="relative w-36 min-h-24 sm:w-44 sm:min-h-28 overflow-hidden shrink-0"
+        >
+            <img
+                src={article.image.src}
+                alt={article.image.alt}
+                class="block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 object-cover"
+            />
+        </div>
+        <div class="flex flex-col gap-1 w-full min-w-0 p-2 sm:p-4">
+            <div
+                class="tag-container flex gap-1 w-full overflow-x-auto pointer-events-auto"
+            >
+                {article.tags.map((key) => <Chip {...tags[key]} />)}
+            </div>
+            <h3
+                class="font-bold text-lg w-full overflow-hidden text-ellipsis line-clamp-2 leading-tight"
+            >
+                {article.title}
+            </h3>
+            <address class="text-xs opacity-75">
+                <span>
+                    Par <AuthorLink {...article.author} />
+                </span>
+                <span class="invisible sm:visible">
+                    &middot;{" "}
+                </span>
+                <time
+                    datetime={date.toISOString().split(".")[0]}
+                    class="block sm:inline-block"
+                >
+                    {dateTimeFormatter.format(date)}
+                </time>
+            </address>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tag-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .tag-container::-webkit-scrollbar-thumb {
+        @apply bg-slate-300;
+        @apply rounded-md;
+    }
+
+    .tag-container::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-400;
+    }
+</style>

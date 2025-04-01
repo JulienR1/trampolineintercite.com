@@ -1,0 +1,24 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { cn, dark } from "../lib/utils";
+
+interface Props extends Omit<HTMLAttributes<"span">, "style"> {
+    label: string;
+    color: string;
+    style?: Exclude<HTMLAttributes<"span">["style"], string>;
+}
+const { label, color, ...props } = Astro.props;
+props.style ??= {};
+props.style.background = color;
+---
+
+<span
+    class={cn([
+        "px-2 rounded-full text-xs font-bold",
+        dark(color) && "text-white",
+        props.class,
+    ])}
+    {...props}
+>
+    {label}
+</span>
