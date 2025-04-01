@@ -9,6 +9,7 @@ import _articles from "./articles.json";
 import { dateTimeFormatter } from "../../lib/formatters";
 import AuthorLink from "../../components/AuthorLink.astro";
 import { cn } from "../../lib/utils";
+import Carousel from "../../components/Carousel.astro";
 
 export const getStaticPaths = (() => {
     const articles = z.array(Article).parse(_articles);
@@ -139,86 +140,7 @@ const article = z
     </article>
 </Layout>
 
-<script>
-    import { clamp } from "../../lib/maths";
-
-    const carousel = document.getElementById("carousel")!;
-    const images = carousel.querySelectorAll<HTMLImageElement>(".article-img");
-    const indicators = carousel.querySelectorAll<HTMLElement>(".indicator");
-
-    const extraImages = carousel.querySelectorAll<HTMLButtonElement>(
-        "#carousel-extra button",
-    );
-    const showcaseImage =
-        carousel.querySelector<HTMLImageElement>("#showcase")!;
-
-    let startX: number | null = null;
-    let startY: number | null = null;
-
-    function selectImage(selected: number) {
-        carousel.style.setProperty("--selected", selected.toString());
-
-        indicators.forEach(
-            (indicator) => (indicator.dataset.selected = "false"),
-        );
-        indicators.item(selected).dataset.selected = "true";
-
-        extraImages.forEach((extra) => (extra.dataset.selected = "false"));
-        extraImages.item(selected).dataset.selected = "true";
-
-        showcaseImage.src = images[selected].src;
-        showcaseImage.alt = images[selected].alt;
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-        for (const image of images) {
-            image.addEventListener("touchstart", function (event) {
-                if (
-                    "changedTouches" in event &&
-                    event.changedTouches.length > 0
-                ) {
-                    startX = event.changedTouches[0].screenX;
-                    startY = event.changedTouches[0].screenY;
-                }
-            });
-
-            image.addEventListener("touchend", function (event) {
-                if (
-                    startX !== null &&
-                    startY !== null &&
-                    "changedTouches" in event &&
-                    event.changedTouches.length > 0
-                ) {
-                    const endX = event.changedTouches[0].screenX;
-                    const endY = event.changedTouches[0].screenY;
-
-                    if (Math.abs(endX - startX) > Math.abs(endY - startY)) {
-                        const direction = startX > endX ? 1 : -1;
-                        const currentlySelected = parseInt(
-                            carousel.style.getPropertyValue("--selected") ||
-                                "0",
-                        );
-
-                        selectImage(
-                            clamp(
-                                currentlySelected + direction,
-                                0,
-                                images.length - 1,
-                            ),
-                        );
-                    }
-                }
-
-                startX = null;
-                startY = null;
-            });
-        }
-
-        for (const [index, extra] of extraImages.entries()) {
-            extra.addEventListener("click", () => selectImage(index));
-        }
-    });
-</script>
+{article.images.length > 0 && <Carousel />}
 
 <style>
     #carousel-extra::-webkit-scrollbar {
