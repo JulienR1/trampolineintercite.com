@@ -19,35 +19,49 @@ const formattedPhone = () => {
     <div class="w-[90%] max-w-7xl mx-auto mt-6">
         <div>
             <div class="bg-pink-400 w-[100vw] absolute left-0 h-64">map</div>
-            <div class="h-64"></div>
+            <div class="h-64 mb-6"></div>
         </div>
 
         <div>
-            <address>
-                <span>Église Ste-Cécile</span>
-                <span>550 rue Des commissaires</span>
-                <span>Trois-Rivières, Québec</span>
-                <span>G9A 0C3</span>
+            <address class="text-center not-italic">
+                <div>
+                    <span class="block font-semibold">Église Ste-Cécile</span>
+                    <span class="block -mb-1">550 rue Des commissaires</span>
+                    <span class="block -mb-1">Trois-Rivières, Québec</span>
+                    <span class="block">G9A 0C3</span>
+                </div>
 
-                <a href={`tel:${phone}`}>
-                    <span class="material-symbols-outlined">call</span>
-                    <span>
-                        {formattedPhone()}
-                    </span>
-                </a>
-                <a href={`mailto:${email}`}>
-                    <span class="material-symbols-outlined">
-                        alternate_email
-                    </span>
-                    <span>
-                        {email}
-                    </span>
-                </a>
+                <div class="pt-2">
+                    <a
+                        href={`tel:${phone}`}
+                        class="flex items-center w-fit mx-auto gap-1 -mb-1"
+                    >
+                        <span class="material-symbols-outlined text-lg">
+                            call
+                        </span>
+                        <span>
+                            {formattedPhone()}
+                        </span>
+                    </a>
+                    <a
+                        href={`mailto:${email}`}
+                        class="flex items-center w-fit mx-auto gap-1"
+                    >
+                        <span class="material-symbols-outlined text-lg">
+                            alternate_email
+                        </span>
+                        <span>
+                            {email}
+                        </span>
+                    </a>
+                </div>
             </address>
 
-            <hr />
+            <div class="w-36 mx-auto my-6 border"></div>
 
-            <p>Bien noter, l'entrée est située sur la rue St-Paul.</p>
+            <p class="text-center">
+                Bien noter, l'entrée est située sur la rue St-Paul.
+            </p>
         </div>
     </div>
 </Layout>
