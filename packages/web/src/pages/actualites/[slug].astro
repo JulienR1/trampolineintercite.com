@@ -30,20 +30,24 @@ const article = z
             article.images.length > 0 && (
                 <div
                     id="carousel"
-                    style={{ "--selected": 0 }}
-                    class="pb-2 sm:flex sm:max-h-72 sm:items-center sm:justify-center sm:gap-2 md:w-fit md:float-right md:pl-8 md:pb-4"
+                    style={{
+                        "--selected": 0,
+                        "--h": `${Math.max(...article.images.map((img) => img.height))}px`,
+                        "--w": `${Math.max(...article.images.map((img) => img.width))}px`,
+                    }}
+                    class="pb-2 sm:flex sm:max-h-72 sm:items-center sm:justify-center sm:gap-2 md:w-fit md:float-right md:pl-8 md:pb-4 overflow-hidden"
                 >
                     <div class="hidden sm:block">
-                        <img {...article.images[0]} id="showcase" />
+                        <img
+                            {...article.images[0]}
+                            id="showcase"
+                            class="sm:w-[var(--w)] sm:h-[var(--h)] md:w-[calc(1.5*var(--w))] md:h-[calc(1.5*var(--h))]"
+                        />
                     </div>
 
                     <div
                         id="carousel-extra"
-                        class="block sm:overflow-y-auto sm:overflow-x-hidden sm:pr-2 sm:w-[var(--w)] sm:h-[var(--h)]"
-                        style={{
-                            "--h": `${Math.max(...article.images.map((img) => img.height))}px`,
-                            "--w": `${Math.max(...article.images.map((img) => img.width / 3))}px`,
-                        }}
+                        class="block sm:overflow-y-auto sm:overflow-x-hidden sm:pr-2 sm:w-[calc(var(--w)/3)] sm:h-[calc(var(--h))] md:h-[calc(1.5*var(--h))]"
                     >
                         <ul
                             class={cn([
