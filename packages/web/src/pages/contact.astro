@@ -1,0 +1,96 @@
+---
+import Title from "../components/Title.astro";
+import Layout from "../layouts/Layout.astro";
+
+const email = "coordo.trampoline.intercite@gmail.com";
+const phone = "+18198402950";
+
+const formattedPhone = () => {
+    const area = phone.substring(2, 5);
+    const first = phone.substring(5, 8);
+    const second = phone.substring(8, 12);
+    return `(${area}) ${first}-${second}`;
+};
+---
+
+<Layout>
+    <Title title="Contactez-nous" />
+
+    <div
+        class="w-[90%] max-w-7xl mx-auto mt-6 md:grid md:grid-cols-[1fr_auto] md:gap-4"
+    >
+        <div>
+            <div
+                id="map"
+                class="w-[100vw] absolute left-0 h-64 md:relative sm:h-80 md:w-auto md:h-[40vw] md:min-h-[300px] md:max-h-[500px]"
+            >
+            </div>
+            <div class="h-64 sm:h-80 mb-6 md:hidden"></div>
+        </div>
+
+        <div class="md:flex md:flex-col md:justify-center">
+            <address class="text-center not-italic">
+                <div>
+                    <span class="block font-semibold">Église Ste-Cécile</span>
+                    <span class="block -mb-1">550 rue Des commissaires</span>
+                    <span class="block -mb-1">Trois-Rivières, Québec</span>
+                    <span class="block">G9A 0C3</span>
+                </div>
+
+                <div class="pt-2">
+                    <a
+                        href={`tel:${phone}`}
+                        class="flex items-center w-fit mx-auto gap-1 -mb-1"
+                    >
+                        <span class="material-symbols-outlined text-lg">
+                            call
+                        </span>
+                        <span>
+                            {formattedPhone()}
+                        </span>
+                    </a>
+                    <a
+                        href={`mailto:${email}`}
+                        class="flex items-center w-fit mx-auto gap-1"
+                    >
+                        <span class="material-symbols-outlined text-lg">
+                            alternate_email
+                        </span>
+                        <span>
+                            {email}
+                        </span>
+                    </a>
+                </div>
+            </address>
+
+            <div class="w-36 mx-auto my-6 border"></div>
+
+            <p class="text-center">
+                Bien noter, l'entrée est située sur la rue St-Paul.
+            </p>
+        </div>
+    </div>
+</Layout>
+
+<script>
+    import { Loader } from "@googlemaps/js-api-loader";
+    import { PUBLIC_MAPS_API_KEY } from "astro:env/client";
+
+    const position = { lat: 46.348917, lng: -72.538476 };
+
+    const loader = new Loader({
+        apiKey: PUBLIC_MAPS_API_KEY,
+        version: "quarterly",
+    });
+
+    const { Map } = await loader.importLibrary("maps");
+    const { AdvancedMarkerElement } = await loader.importLibrary("marker");
+
+    const map = new Map(document.getElementById("map"), {
+        center: position,
+        zoom: 15,
+        title: "Trampoline Intercité",
+        mapId: "CONTACT_MAP_ID",
+    });
+    new AdvancedMarkerElement({ map, position });
+</script>
