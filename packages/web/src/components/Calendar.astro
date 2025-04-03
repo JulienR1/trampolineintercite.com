@@ -367,7 +367,7 @@ function shiftWeekday(weekday: number) {
             .split(",")
             .filter((str) => str.length > 0);
         exceptDates.dataset.visible = (exceptions.length > 0).toString();
-        exceptDates.innerHTML = `Hormis ces dates: <span>${listFormatter.format(
+        exceptDates.innerHTML = `Sauf ces dates: <span>${listFormatter.format(
             exceptions.map(
                 (exception) => `<b class="text-nowrap">${exception}</b>`,
             ),
