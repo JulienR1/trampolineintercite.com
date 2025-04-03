@@ -1,24 +1,42 @@
 ---
+import { cn } from "../lib/utils";
+
 interface Props {
     title: string;
     subtitle?: string;
+    hash?: string;
 }
 
-const { title, subtitle = "" } = Astro.props;
+const { title, subtitle = "", hash = "" } = Astro.props;
+const Wrapper = hash ? "a" : Fragment;
 ---
 
-<h1 class="my-6 text-lg sm:text-2xl text-center font-medium">
-    <span class="font-semibold" style={{ "font-variant": "small-caps" }}>
-        {title}
-    </span>
-    {
-        subtitle.length > 0 && (
-            <>
-                <span class="mx-2">&middot;</span>
-                <span>{subtitle}</span>
-            </>
-        )
-    }
-</h1>
+<Wrapper href={"#" + hash}>
+    <h1
+        class={cn([
+            "group/title my-6 text-lg sm:text-2xl font-medium flex w-fit items-center mx-auto relative",
+            hash && "hover:underline",
+        ])}
+    >
+        {
+            hash && (
+                <span class="material-symbols-outlined absolute -left-5 text-xl opacity-0 group-hover/title:opacity-75">
+                    tag
+                </span>
+            )
+        }
+        <span class="font-semibold" style={{ "font-variant": "small-caps" }}>
+            {title}
+        </span>
+        {
+            subtitle.length > 0 && (
+                <>
+                    <span class="mx-2">&middot;</span>
+                    <span>{subtitle}</span>
+                </>
+            )
+        }
+    </h1>
+</Wrapper>
 
 <hr class="w-1/2 max-w-xl mx-auto" />
