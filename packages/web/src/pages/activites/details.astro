@@ -1,5 +1,10 @@
 ---
+import Title from "../../components/Title.astro";
 import Layout from "../../layouts/Layout.astro";
+import { dateTimeFormatter } from "../../lib/formatters";
+
+const lastUpdateDate = new Date();
+const inscriptionPeriod = [new Date(2025, 3, 1), new Date(2025, 4, 1)];
 ---
 
 <Layout
@@ -9,7 +14,108 @@ import Layout from "../../layouts/Layout.astro";
         "/activites/details#competitif",
     ]}
 >
-    <section id="recreatif"></section>
-    <section id="fetes"></section>
-    <section id="competitif"></section>
+    <div class="w-[90%] max-w-7xl mx-auto mt-6">
+        <section id="recreatif">
+            <Title title="Secteur récréatif" hash="recreatif" />
+
+            <div class="">
+                <div>
+                    <img
+                        src="https://trampolineintercite.com/Assets/initiation.jpg"
+                        alt="initiation"
+                    />
+                </div>
+
+                <div>
+                    <header>
+                        <p>Initiation 3-5 ans</p>
+                        <p>sous-titre</p>
+                    </header>
+
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing
+                        elit. Soluta, culpa aliquid? Voluptatem ipsam
+                        praesentium vel, quam reprehenderit magnam veritatis
+                        error.
+                    </p>
+
+                    <div>
+                        <div>
+                            <span class="material-symbols-outlined">
+                                schedule
+                            </span>
+                            <span>1h par semaine</span>
+                        </div>
+                        <div>
+                            <span class="material-symbols-outlined">
+                                sell
+                            </span>
+                            <span>120,00$</span>
+                        </div>
+                        <div>
+                            <span class="material-symbols-outlined">
+                                stat_0
+                            </span>
+                            <span>12 cours</span>
+                        </div>
+                        <div>
+                            <span class="material-symbols-outlined">
+                                date_range
+                            </span>
+                            <span>Consulter l'horaire</span>
+                        </div>
+                    </div>
+
+                    <button
+                        class="inscription-cta"
+                        data-inscription-period={inscriptionPeriod.map((date) =>
+                            date.getTime(),
+                        )}
+                    >
+                        S'inscrire
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="fetes">
+            <Title title="Fêtes d'enfants" hash="fetes" />
+        </section>
+
+        <section id="competitif">
+            <Title title="Secteur compétitif" hash="competitif" />
+        </section>
+
+        <p class="text-slate-600 text-sm">
+            Mis à jour le <strong class="font-semibold">
+                {dateTimeFormatter.format(lastUpdateDate)}
+            </strong>
+            .
+        </p>
+    </div>
 </Layout>
+
+<script>
+    import { dateFormatter } from "../../lib/formatters";
+
+    const now = new Date();
+    const ctas = document.querySelectorAll<HTMLButtonElement>(
+        "button.inscription-cta",
+    );
+
+    document.addEventListener("DOMContentLoaded", function () {
+        for (const cta of ctas) {
+            const [start, end] = (cta.dataset.inscriptionPeriod ?? "")
+                .split(",")
+                .map((str) => new Date(+str));
+
+            if (now.getTime() < start.getTime()) {
+                cta.innerText = `S'inscrire le ${dateFormatter.format(start)}`;
+            } else if (now.getTime() >= end.getTime()) {
+                cta.innerText = "Période d'inscription terminée";
+            } else {
+                cta.innerText = "S'inscrire";
+            }
+        }
+    });
+</script>
