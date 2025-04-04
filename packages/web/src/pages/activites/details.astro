@@ -1,7 +1,7 @@
 ---
 import Title from "../../components/Title.astro";
 import Layout from "../../layouts/Layout.astro";
-import { dateTimeFormatter } from "../../lib/formatters";
+import { dateFormatter, dateTimeFormatter } from "../../lib/formatters";
 
 const lastUpdateDate = new Date();
 const inscriptionPeriod = [new Date(2025, 3, 1), new Date(2025, 4, 1)];
@@ -18,61 +18,102 @@ const inscriptionPeriod = [new Date(2025, 3, 1), new Date(2025, 4, 1)];
         <section id="recreatif">
             <Title title="Secteur récréatif" hash="recreatif" />
 
-            <div class="">
+            <div
+                class="relative max-w-[480px] md:max-w-[600px] overflow-hidden border rounded-lg"
+            >
                 <div>
                     <img
+                        class="block w-full"
                         src="https://trampolineintercite.com/Assets/initiation.jpg"
                         alt="initiation"
                     />
                 </div>
 
-                <div>
-                    <header>
-                        <p>Initiation 3-5 ans</p>
-                        <p>sous-titre</p>
+                <div class="p-4">
+                    <header class="font-semibold">
+                        <span class="text-lg">Initiation</span>
+                        <span class="text-base">&middot;</span>
+                        <span class="text-base">3-5 ans</span>
                     </header>
 
-                    <p>
+                    <p class="text-justify">
                         Lorem ipsum dolor sit amet, consectetur adipisicing
                         elit. Soluta, culpa aliquid? Voluptatem ipsam
                         praesentium vel, quam reprehenderit magnam veritatis
                         error.
                     </p>
 
-                    <div>
-                        <div>
-                            <span class="material-symbols-outlined">
-                                schedule
-                            </span>
-                            <span>1h par semaine</span>
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined">
+                    <div class="py-2">
+                        <div class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xl">
                                 sell
                             </span>
                             <span>120,00$</span>
                         </div>
-                        <div>
-                            <span class="material-symbols-outlined">
+                        <div class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xl">
+                                schedule
+                            </span>
+                            <span>1h par semaine</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-xl">
                                 stat_0
                             </span>
-                            <span>12 cours</span>
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined">
-                                date_range
-                            </span>
-                            <span>Consulter l'horaire</span>
+                            <span>Début le 10 mai (12 cours)</span>
                         </div>
                     </div>
 
-                    <button
-                        class="inscription-cta"
+                    <div
+                        class="inscription-cta mt-2"
                         data-inscription-period={inscriptionPeriod.map((date) =>
                             date.getTime(),
                         )}
                     >
-                        S'inscrire
+                        <div
+                            class="available-soon hidden w-[80%] border-l-4 border-l-primary border rounded px-2 py-1"
+                        >
+                            <span class="block max-w-[85%]">
+                                Inscription disponible à partir du
+                                <u class="underline">
+                                    <strong class="font-semibold">
+                                        {
+                                            dateFormatter.format(
+                                                inscriptionPeriod[0],
+                                            )
+                                        }
+                                    </strong>
+                                </u>.
+                            </span>
+                        </div>
+                        <a
+                            href="#"
+                            style={{ fontVariant: "small-caps" }}
+                            class="available-now hidden w-fit bg-primary px-4 py-2 rounded-full font-semibold text-rose-50 hocus:bg-primary-dark"
+                        >
+                            S'inscrire maintenant
+                        </a>
+                        <div
+                            class="not-available hidden w-[80%] border-l-4 border-l-primary border rounded px-2 py-1"
+                        >
+                            <span class="block max-w-[90%]">
+                                Période d'inscription terminée.
+                            </span>
+                        </div>
+                    </div>
+
+                    <button
+                        class="absolute bottom-0 right-0 -translate-x-4 -translate-y-4 flex items-center"
+                    >
+                        <div
+                            class="rounded-full bg-primary flex items-center justify-center w-10 h-10 hocus:bg-primary-dark transition-all"
+                        >
+                            <span
+                                class="material-symbols-outlined text-rose-50"
+                            >
+                                date_range
+                            </span>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -96,12 +137,8 @@ const inscriptionPeriod = [new Date(2025, 3, 1), new Date(2025, 4, 1)];
 </Layout>
 
 <script>
-    import { dateFormatter } from "../../lib/formatters";
-
     const now = new Date();
-    const ctas = document.querySelectorAll<HTMLButtonElement>(
-        "button.inscription-cta",
-    );
+    const ctas = document.querySelectorAll<HTMLDivElement>(".inscription-cta");
 
     document.addEventListener("DOMContentLoaded", function () {
         for (const cta of ctas) {
@@ -110,11 +147,20 @@ const inscriptionPeriod = [new Date(2025, 3, 1), new Date(2025, 4, 1)];
                 .map((str) => new Date(+str));
 
             if (now.getTime() < start.getTime()) {
-                cta.innerText = `S'inscrire le ${dateFormatter.format(start)}`;
+                cta.querySelector(".available-soon")?.classList.replace(
+                    "hidden",
+                    "block",
+                );
             } else if (now.getTime() >= end.getTime()) {
-                cta.innerText = "Période d'inscription terminée";
+                cta.querySelector(".not-available")?.classList.replace(
+                    "hidden",
+                    "block",
+                );
             } else {
-                cta.innerText = "S'inscrire";
+                cta.querySelector(".available-now")?.classList.replace(
+                    "hidden",
+                    "block",
+                );
             }
         }
     });
