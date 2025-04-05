@@ -4,7 +4,7 @@ export const activities: Activity[][] = [
     [],
     [
         {
-            type: 0,
+            type: "recreatif",
             title: "Récréatif",
             subtitle: "6 ans et plus",
             time: {
@@ -21,7 +21,7 @@ export const activities: Activity[][] = [
             color: "#ff00ff",
         },
         {
-            type: 0,
+            type: "precompetitif",
             title: "Précompétitif",
             time: {
                 start: { hour: 8, minute: 30 },
@@ -37,7 +37,7 @@ export const activities: Activity[][] = [
             color: "#0ff0ff",
         },
         {
-            type: 0,
+            type: "recreatif",
             title: "idk",
             time: {
                 start: { hour: 10, minute: 30 },
@@ -55,7 +55,7 @@ export const activities: Activity[][] = [
     ],
     [
         {
-            type: 2,
+            type: "initiation",
             title: "Initiation",
             subtitle: "3 à 5 ans",
             time: {
@@ -72,7 +72,7 @@ export const activities: Activity[][] = [
             color: "#12fa83",
         },
         {
-            type: 2,
+            type: "recreatif",
             title: "Récréatif",
             subtitle: "6 ans et plus",
             time: {
@@ -91,7 +91,7 @@ export const activities: Activity[][] = [
     ],
     [
         {
-            type: 0,
+            type: "recreatif",
             title: "activite 1",
             time: {
                 start: { hour: 13, minute: 0 },
@@ -107,7 +107,7 @@ export const activities: Activity[][] = [
             color: "#0f0f00",
         },
         {
-            type: 0,
+            type: "competitif",
             title: "activite 2",
             time: {
                 start: { hour: 13, minute: 0 },
@@ -123,7 +123,7 @@ export const activities: Activity[][] = [
             color: "#f0f000",
         },
         {
-            type: 0,
+            type: "precompetitif",
             title: "activite 3",
             time: {
                 start: { hour: 14, minute: 15 },
@@ -139,7 +139,7 @@ export const activities: Activity[][] = [
             color: "#0fff30",
         },
         {
-            type: 0,
+            type: "initiation",
             title: "activite 4",
             time: {
                 start: { hour: 18, minute: 0 },
@@ -158,7 +158,7 @@ export const activities: Activity[][] = [
     [],
     [
         {
-            type: 0,
+            type: "recreatif",
             title: "Récréatif",
             subtitle: "12 ans et plus",
             time: {
@@ -175,7 +175,7 @@ export const activities: Activity[][] = [
             color: "#ff0000",
         },
         {
-            type: 1,
+            type: "competitif",
             title: "Compétitif",
             time: {
                 start: { hour: 14, minute: 0 },

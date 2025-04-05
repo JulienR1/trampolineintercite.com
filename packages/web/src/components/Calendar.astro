@@ -4,6 +4,7 @@ import { gcd } from "../lib/maths";
 import { cn, dark, contrast } from "../lib/utils";
 import { dateFormatter } from "../lib/formatters";
 import { weekdays } from "../lib/constants";
+import { withPositionMetadata } from "../lib/schedule";
 
 interface Props {
     activities: Activity[][];
@@ -12,53 +13,13 @@ interface Props {
     interval?: number;
 }
 
-type ActivityRender = Activity & {
-    inset: number;
-    adjacent?: { position: number; count: number };
-};
-
 const {
     min: timeMin = 8,
     max: timeMax = 22,
     interval: minutesPerTick = 60,
 } = Astro.props;
 
-const activities = Astro.props.activities.map((w) => {
-    const weekday: ActivityRender[] = w
-        .sort((a, b) => decimal(a.time.start) - decimal(b.time.start))
-        .map((a) => ({ ...a, inset: 0 }));
-
-    const adjacents = new Set<ActivityRender>();
-    for (let i = 1; i < weekday.length; i++) {
-        const adjacentCount = adjacents.size;
-        const current = weekday[i];
-        const previous = weekday[i - 1];
-
-        if (overlap(previous, current)) {
-            if (
-                decimal(current.time.start) - decimal(previous.time.start) <
-                0.5
-            ) {
-                adjacents.add(previous);
-                adjacents.add(current);
-            } else {
-                current.inset = previous.inset + 1;
-            }
-        }
-
-        if (
-            adjacents.size === adjacentCount ||
-            (adjacents.size > 0 && i === weekday.length - 1)
-        ) {
-            for (const [position, activity] of [...adjacents].entries()) {
-                activity.adjacent = { position, count: adjacents.size };
-            }
-            adjacents.clear();
-        }
-    }
-
-    return weekday;
-});
+const activities = withPositionMetadata(Astro.props.activities);
 
 // NOTE: CSS grid does not allow to have fractional spans.
 // Therefore, it is needed to scale it by the smallest time interval in every activity.
@@ -76,17 +37,6 @@ const minuteScale = gcd(minutes);
 const gridScale = minutesPerTick / minuteScale;
 const timeStep = minutesPerTick / 60;
 const cellScale = gridScale / timeStep;
-
-function decimal(time: Time): number {
-    return time.hour + time.minute / 60;
-}
-
-function overlap(a: Activity, b: Activity): boolean {
-    return (
-        decimal(a.time.start) <= decimal(b.time.start) &&
-        decimal(b.time.start) < decimal(a.time.end)
-    );
-}
 
 function formatTime(time: number | Time): string {
     const hour = typeof time === "number" ? Math.floor(time) : time.hour;
@@ -167,73 +117,59 @@ function shiftWeekday(weekday: number) {
         {
             // --- Activity squares ---
             activities.map((list, weekday) =>
-                list.map((activity) => {
-                    const width =
-                        (activity.adjacent
-                            ? 100 / activity.adjacent.count
-                            : 100 - 10 * activity.inset) + "%";
-                    const marginLeft = activity.adjacent
-                        ? (activity.adjacent.position /
-                              activity.adjacent.count) *
-                              100 +
-                          "%"
-                        : undefined;
+                list.map((activity) => (
+                    <div
+                        style={{
+                            background: activity.color,
+                            "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
+                            "grid-column": shiftWeekday(weekday) + 2,
+                            "outline-style": "solid",
+                            "outline-color": contrast(activity.color),
+                            "--count": activity.adjacent?.count,
+                            "--pos": activity.adjacent?.position,
+                        }}
+                        class={cn([
+                            "activity",
+                            "hidden min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative overflow-hidden",
+                            "outline-0 hocus:outline-2 hocus:border-none",
+                            dark(activity.color) && "text-white",
+                        ])}
+                        data-inset={activity.inset}
+                        data-title={activity.title}
+                        data-subtitle={activity.subtitle}
+                        data-start-time={formatTime(activity.time.start)}
+                        data-end-time={formatTime(activity.time.end)}
+                        data-first-lesson={dateFormatter.format(
+                            activity.lessons.first,
+                        )}
+                        data-last-lesson={dateFormatter.format(
+                            activity.lessons.last,
+                        )}
+                        data-amount={activity.price.toFixed(2)}
+                        data-lessons={activity.lessons.count}
+                        data-weekday={weekdays[weekday]}
+                        data-except-dates={activity.lessons.exceptions
+                            .sort((a, b) => a.getTime() - b.getTime())
+                            .map((date) => dateFormatter.format(date))}
+                        data-type={activity.type}
+                    >
+                        <span class="hidden sm:block text-xs whitespace-nowrap overflow-hidden">
+                            {formatTime(activity.time.start)} -{" "}
+                            {formatTime(activity.time.end)}
+                        </span>
 
-                    return (
-                        <div
-                            style={{
-                                width,
-                                marginLeft,
-                                background: activity.color,
-                                "grid-row": `${(activity.time.start.hour - timeMin) * cellScale + activity.time.start.minute / minuteScale + 2} / span ${(activity.time.end.hour - activity.time.start.hour) * cellScale + (activity.time.end.minute - activity.time.start.minute) / minuteScale}`,
-                                "grid-column": shiftWeekday(weekday) + 2,
-                                "outline-style": "solid",
-                                "outline-color": contrast(activity.color),
-                            }}
-                            class={cn([
-                                "activity",
-                                "min-w-0 min-h-0 rounded p-1 ml-auto bg-primary relative overflow-hidden",
-                                "outline-0 hocus:outline-2 hocus:border-none",
-                                "data-[showcased=true]:outline-2 data-[showcased=true]:border-none data-[showcased=true]:z-20 ",
-                                dark(activity.color) && "text-white",
-                                activity.inset > 0 &&
-                                    "border-l-[1px] border-t-[1px] border-white",
-                            ])}
-                            data-title={activity.title}
-                            data-subtitle={activity.subtitle}
-                            data-start-time={formatTime(activity.time.start)}
-                            data-end-time={formatTime(activity.time.end)}
-                            data-first-lesson={dateFormatter.format(
-                                activity.lessons.first,
-                            )}
-                            data-last-lesson={dateFormatter.format(
-                                activity.lessons.last,
-                            )}
-                            data-amount={activity.price.toFixed(2)}
-                            data-lessons={activity.lessons.count}
-                            data-weekday={weekdays[weekday]}
-                            data-except-dates={activity.lessons.exceptions
-                                .sort((a, b) => a.getTime() - b.getTime())
-                                .map((date) => dateFormatter.format(date))}
-                        >
-                            <span class="hidden sm:block text-xs whitespace-nowrap overflow-hidden">
-                                {formatTime(activity.time.start)} -{" "}
-                                {formatTime(activity.time.end)}
+                        <span class="block text-xs sm:text-sm font-semibold sm:font-bold overflow-hidden break-words">
+                            {activity.title}
+                        </span>
+                        {activity.subtitle?.length && (
+                            <span class="block text-xs sm:text-sm sm:font-medium">
+                                {activity.subtitle}
                             </span>
+                        )}
 
-                            <span class="block text-xs sm:text-sm font-semibold sm:font-bold overflow-hidden break-words">
-                                {activity.title}
-                            </span>
-                            {activity.subtitle?.length && (
-                                <span class="block text-xs sm:text-sm sm:font-medium">
-                                    {activity.subtitle}
-                                </span>
-                            )}
-
-                            <button class="absolute top-0 left-0 w-full h-full opacity-0" />
-                        </div>
-                    );
-                }),
+                        <button class="absolute top-0 left-0 w-full h-full opacity-0" />
+                    </div>
+                )),
             )
         }
     </div>
@@ -301,8 +237,9 @@ function shiftWeekday(weekday: number) {
                         <span id="dialog-time"></span>
                     </p>
                     <p class="flex items-center text-sm gap-2">
-                        <span class="material-symbols-outlined">date_range</span
-                        >
+                        <span class="material-symbols-outlined">
+                            date_range
+                        </span>
                         <span id="dialog-date-range"></span>
                     </p>
                     <p class="flex items-center text-sm gap-2">
@@ -327,6 +264,7 @@ function shiftWeekday(weekday: number) {
 
 <script>
     import { listFormatter } from "../lib/formatters";
+    import { withPositionMetadata, type Schedulable } from "../lib/schedule";
 
     const dialog = document.getElementById("calendar-dialog")!;
     const contents = document.getElementById("dialog-contents")!;
@@ -342,7 +280,24 @@ function shiftWeekday(weekday: number) {
     const exceptDates = document.getElementById("dialog-except-dates")!;
 
     const calendar = document.getElementById("calendar")!;
-    const activities = calendar.querySelectorAll<HTMLDivElement>(".activity");
+    const elements = calendar.querySelectorAll<HTMLDivElement>(".activity");
+
+    const activities = elements
+        .values()
+        .map((element) => {
+            const start = (element.dataset.startTime ?? "")
+                .split(":")
+                .map((str) => parseInt(str));
+            const end = (element.dataset.endTime ?? "")
+                .split(":")
+                .map((str) => parseInt(str));
+            (element as HTMLDivElement & Schedulable).time = {
+                start: { hour: start[0], minute: start[1] },
+                end: { hour: end[0], minute: end[1] },
+            };
+            return element as HTMLDivElement & Schedulable;
+        })
+        .toArray();
 
     let selectedActivity: HTMLDivElement | null = null;
 
@@ -388,6 +343,57 @@ function shiftWeekday(weekday: number) {
         contents.style.setProperty("--y", `${y}px`);
     }
 
+
+    function applyFilters() {
+        const params = new URLSearchParams(document.location.search);
+        const types =
+            params
+                .get("filtre")
+                ?.split(",")
+                .filter((str) => str.length > 0) ?? [];
+
+        const visibleActivities: Record<
+            string,
+            Array<HTMLDivElement & Schedulable>
+        > = {};
+        for (const activity of activities) {
+            if (
+                types.length === 0 ||
+                types.includes(activity.dataset.type ?? "")
+            ) {
+                activity.classList.remove("hidden");
+                activity.classList.add("block");
+
+                const weekday = activity.dataset.weekday ?? "";
+                visibleActivities[weekday] ??= [];
+                visibleActivities[weekday].push(activity);
+            } else {
+                activity.classList.remove("block");
+                activity.classList.add("hidden");
+            }
+        }
+
+        const metadata = withPositionMetadata(
+            Object.values(visibleActivities),
+        ).flat();
+        for (const activity of metadata) {
+            activity.dataset.inset = activity.inset.toString();
+            if (activity.adjacent) {
+                activity.style.setProperty(
+                    "--pos",
+                    activity.adjacent.position.toString(),
+                );
+                activity.style.setProperty(
+                    "--count",
+                    activity.adjacent.count.toString(),
+                );
+            } else {
+                activity.style.removeProperty("--pos");
+                activity.style.removeProperty("--count");
+            }
+        }
+    }
+
     document.addEventListener("keyup", function (event) {
         if (event.code === "Escape") {
             close();
@@ -428,6 +434,8 @@ function shiftWeekday(weekday: number) {
                 }
             });
         }
+
+        applyFilters();
     });
 </script>
 
@@ -437,5 +445,24 @@ function shiftWeekday(weekday: number) {
         width: var(--weight);
         height: var(--weight);
         @apply bg-slate-200;
+    }
+
+    .activity[data-showcased="true"] {
+        @apply outline-2;
+        @apply border-none;
+        @apply z-20;
+    }
+
+    .activity:not([data-inset="0"]) {
+        @apply border-l-[1px];
+        @apply border-t-[1px];
+        @apply border-white;
+
+        width: calc(100% - 10% * attr(data-inset type(<number>), 0));
+    }
+
+    .activity[data-inset="0"] {
+        width: calc(100% / var(--count));
+        margin-left: calc(var(--pos) / var(--count) * 100%);
     }
 </style>

@@ -4,7 +4,7 @@ import { LooseDate } from "./date";
 export const Time = z.object({ hour: z.number(), minute: z.number() });
 
 export const Activity = z.object({
-  type: z.number(),
+  type: z.string(),
   title: z.string(),
   subtitle: z.string().optional(),
   time: z.object({ start: Time, end: Time }),
