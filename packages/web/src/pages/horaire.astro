@@ -8,7 +8,35 @@ import { activities } from "../resources/activities";
 <Layout>
     <Title title="Horaire" subtitle="Session printemps 2025" />
 
-    <div class="w-[90%] max-w-7xl mx-auto mt-6">
+    <div class="w-[90%] max-w-7xl mx-auto mt-6 relative" id="calendar-wrapper">
         <Calendar activities={activities} />
+
+        <div class="absolute right-0 top-0">
+            <button
+                id="calendar-filter"
+                class="flex w-8 h-8 bg-primary rounded-full p-6 items-center justify-center"
+            >
+                <span class="material-symbols-outlined text-2xl text-rose-50">
+                    search
+                </span>
+            </button>
+        </div>
     </div>
 </Layout>
+
+<script>
+    const filterButton = document.getElementById("calendar-filter")!;
+    const wrapper = document.getElementById("calendar-wrapper")!;
+
+    function positionFilter() {
+        const dy = Math.min(
+            window.innerHeight + window.scrollY - wrapper.offsetTop,
+            wrapper.clientHeight,
+        );
+
+        filterButton.parentElement!.style.transform = `translate(-0.5rem, -2rem) translateY(-100%) translateY(${dy}px)`;
+    }
+
+    document.addEventListener("scroll", positionFilter);
+    document.addEventListener("DOMContentLoaded", positionFilter);
+</script>
