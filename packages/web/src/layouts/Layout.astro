@@ -21,7 +21,7 @@ const labels = paths.reduce(
 );
 
 const label = Astro.props.title ?? labels[paths[0]];
-const title = "Trampoline Intercité" + (label ? ` | ${label}` : "");
+const title = (label ? `${label} | ` : "") + "Trampoline Intercité";
 ---
 
 <!doctype html>
