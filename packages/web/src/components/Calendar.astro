@@ -343,7 +343,6 @@ function shiftWeekday(weekday: number) {
         contents.style.setProperty("--y", `${y}px`);
     }
 
-
     function applyFilters() {
         const params = new URLSearchParams(document.location.search);
         const types =
@@ -411,6 +410,7 @@ function shiftWeekday(weekday: number) {
         closer.addEventListener("click", close);
         clickHandler.addEventListener("click", close);
         contents.addEventListener("click", (e) => e.stopPropagation());
+        calendar.addEventListener("scheduleupdate", applyFilters);
 
         for (const activity of activities) {
             const target = activity.querySelector("button")!;

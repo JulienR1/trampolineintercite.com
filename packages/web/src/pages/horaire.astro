@@ -2,7 +2,12 @@
 import Calendar from "../components/Calendar.astro";
 import Title from "../components/Title.astro";
 import Layout from "../layouts/Layout.astro";
+import { cn } from "../lib/utils";
 import { activities } from "../resources/activities";
+
+const filters = [
+    ...new Set(activities.flat().map((activity) => activity.type)),
+];
 ---
 
 <Layout>
@@ -24,9 +29,66 @@ import { activities } from "../resources/activities";
     </div>
 </Layout>
 
+<div
+    role="dialog"
+    data-open="false"
+    id="calendar-filter-modal"
+    class={cn([
+        "group absolute w-[100vw] h-[100vh] left-0 top-0 overflow-hidden z-50 sm:hidden",
+        "invisible opacity-0 data-[open=true]:visible data-[open=true]:opacity-100 transition-all",
+    ])}
+>
+    <div
+        class="absolute bg-black w-full h-full opacity-0 group-data-[open=true]:opacity-20 transition-all"
+    >
+    </div>
+    <div
+        id="calendar-filter-content"
+        class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-6 shadow-md"
+    >
+        <div
+            class="flex gap-2 font-semibold text-lg text-nowrap justify-between"
+        >
+            <p>Filtrer l'horaire</p>
+
+            <button class="closer translate-x-4 -translate-y-4 cursor-pointer">
+                <span class="material-symbols-outlined text-base">close</span>
+            </button>
+        </div>
+
+        <div class="py-2">
+            {
+                filters.map((filter) => (
+                    <div class="flex items-center gap-2">
+                        <input
+                            id={`filter-${filter}`}
+                            name={filter}
+                            type="checkbox"
+                        />
+                        <label for={`filter-${filter}`}>{filter}</label>
+                    </div>
+                ))
+            }
+        </div>
+
+        <button id="calendar-no-filter" class="underline block mx-auto">
+            Retirer les filtres
+        </button>
+    </div>
+</div>
+
 <script>
+    import { scheduleEvent } from "../lib/schedule";
+
+    const calendar = document.getElementById("calendar")!;
+
+    const modal = document.getElementById("calendar-filter-modal")!;
+    const content = document.getElementById("calendar-filter-content")!;
     const filterButton = document.getElementById("calendar-filter")!;
     const wrapper = document.getElementById("calendar-wrapper")!;
+    const closers = modal.querySelectorAll("button.closer");
+    const selectors = modal.querySelectorAll<HTMLInputElement>("input");
+    const noFilterButton = document.getElementById("calendar-no-filter")!;
 
     function positionFilter() {
         const dy = Math.min(
@@ -37,6 +99,52 @@ import { activities } from "../resources/activities";
         filterButton.parentElement!.style.transform = `translate(-0.5rem, -2rem) translateY(-100%) translateY(${dy}px)`;
     }
 
+    function toggleModal(state: boolean) {
+        document.body.dataset.noScroll = state.toString();
+        modal.dataset.open = state.toString();
+    }
+
+    const open = () => toggleModal(true);
+    const close = () => toggleModal(false);
+
+    function filter() {
+        const filters = selectors
+            .values()
+            .filter((selector) => selector.checked)
+            .map((selector) => selector.name)
+            .toArray();
+
+        const search = `filtre=${filters.join(",")}`;
+        const url = location.pathname + "?" + search;
+        window.history.replaceState(null, "", url);
+        calendar.dispatchEvent(scheduleEvent);
+    }
+
+    filterButton.addEventListener("click", open);
+    content.addEventListener("click", (e) => e.stopPropagation());
+    closers.forEach((closer) => closer.addEventListener("click", close));
+    modal.addEventListener("click", close);
+
     document.addEventListener("scroll", positionFilter);
     document.addEventListener("DOMContentLoaded", positionFilter);
+    selectors.forEach((s) => s.addEventListener("change", filter));
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const params = new URLSearchParams(document.location.search);
+        params
+            .get("filtre")
+            ?.split(",")
+            .filter((str) => str.length > 0)
+            .forEach((type) =>
+                selectors
+                    .values()
+                    .find((selector) => selector.name === type)
+                    ?.setAttribute("checked", "true"),
+            );
+    });
+
+    noFilterButton.addEventListener("click", function () {
+        selectors.forEach((s) => (s.checked = false));
+        filter();
+    });
 </script>

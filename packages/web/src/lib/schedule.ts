@@ -21,6 +21,14 @@ function overlap(a: Schedulable, b: Schedulable): boolean {
 export function withPositionMetadata<T extends Schedulable>(
     activities: T[][],
 ): (T & RenderMetadata)[][] {
+    for (const weekday of activities) {
+        for (const activity of weekday) {
+            if ("adjacent" in activity) {
+                delete activity.adjacent;
+            }
+        }
+    }
+
     return activities.map((w) => {
         const weekday = w
             .sort((a, b) => decimal(a.time.start) - decimal(b.time.start))
@@ -61,3 +69,5 @@ export function withPositionMetadata<T extends Schedulable>(
         return weekday;
     });
 }
+
+export const scheduleEvent = new CustomEvent("scheduleupdate");
